@@ -74,7 +74,9 @@ int main(int argc, char **argv, char **env)
 	prompt = init_cmds(argv, env);
 	while()
 	{
-
+		//TODO
+		//stampare utente(whoami command), cwd
+		//creare una funzione per usare i comandi linux con execve(PIPE is needed for that) 
 	}
 	exit(g_status);
 }
