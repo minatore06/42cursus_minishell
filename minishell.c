@@ -30,6 +30,31 @@ pid_t	mini_getpid()
 	return (pid - 1);
 }
 
+t_prompt init_vars(t_prompt prompt, char **argv)
+{
+	char	*str;
+	char	*str2;
+
+	prompt.envi = set_env(prompt.envi, getcwd(NULL, 0), "PWD=", 4);
+	str = get_env(prompt.envi, "SHLVL=", 6);
+	if (!str)
+		str2 = ft_strdup("1");
+	else
+		str2 = ft_itoa(ft_atoi(str) + 1);
+	free(str);
+	prompt.envi = set_env(prompt.envi, str2, "SHLVL=", 6);
+	free(str2);
+	str = get_env(prompt.envi, "PATH=", 5);
+	if (!str)
+		prompt.envi = set_env(prompt.envi, "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin", "PATH=", 5);
+	free(str);
+	str = get_env(prompt.envi, "_=", 2);
+	if (!str)
+		prompt.envi = set_env(prompt.envi, argv[0], "_=", 2);
+	free(str);
+	return(prompt);
+}
+
 t_prompt init_cmds(char **argv, char **env)
 {
 	t_prompt	prompt;
@@ -38,6 +63,7 @@ t_prompt init_cmds(char **argv, char **env)
 	prompt.env = dup_matrix(env);
 	g_status = 0;
 	prompt.pid = mini_getpid();
+	prompt = init_vars(prompt, argv);
 	return(prompt);
 }
 
