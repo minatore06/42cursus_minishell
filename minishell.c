@@ -67,16 +67,26 @@ t_prompt init_cmds(char **argv, char **env)
 	return(prompt);
 }
 
+void	put_prompt()
+{
+	char **out;
+
+	exec_cmds(&out, "/usr/bin/whoami", "whoami", prompt.envi);
+	out = ft_strjoin(out, "@epicshell");
+	out = ft_strjoin(out, getcwd(NULL, 0));//da abbreviare la home con ~
+	out = ft_strjoin(out, " $");
+	readline(out);
+}
+
 int main(int argc, char **argv, char **env)
 {
     t_prompt	prompt;
 	
 	prompt = init_cmds(argv, env);
-	while()
+	while(argc && argv)
 	{
-		//TODO
-		//stampare utente(whoami command), cwd
-		//creare una funzione per usare i comandi linux con execve(PIPE is needed for that) 
+		put_prompt();
+
 	}
 	exit(g_status);
 }

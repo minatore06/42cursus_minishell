@@ -47,4 +47,6 @@ typedef struct s_cmd
 	s_cmd	*next;
 }	t_cmd;
 
+void    exec_cmds(char ***out, char *cmd, char *args, char **envi);
+
 #endif
