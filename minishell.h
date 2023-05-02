@@ -26,17 +26,10 @@
 # include <dirent.h>
 # include <string.h>
 # include <errno.h>
-# include <stropts.h>
+# include <sys/ioctl.h>
 # include <termios.h>
 
 int exit_status;
-
-typedef struct s_prompt
-{
-	s_cmd	*cmds;
-	char	**envi;
-	pid_t	 pid;
-}   t_prompt;
 
 typedef struct s_cmd
 {
@@ -47,6 +40,33 @@ typedef struct s_cmd
 	s_cmd	*next;
 }	t_cmd;
 
-void    exec_cmds(char ***out, char *cmd, char *args, char **envi);
+typedef struct s_prompt
+{
+	t_cmd	*cmds;
+	char	**envi;
+	pid_t	 pid;
+}   t_prompt;
+
+
+char 		*get_env(char **envi, char *name, int n);
+char 		**set_env(char **envi, char *value, char *name, int n);
+
+void   		exec_cmds(char ***out, char *cmd, char *args, char **envi);
+
+char		**ft_cmdsplit(char const *s, char c)
+
+char 		**dup_matrix(char **matx);
+char		**extend_matrix(char **og_mat, char *var);
+void		free_matrix(char **mat);
+
+void		print_error(int err, char *str, int g);
+void		manage_signal(int s);
+
+pid_t		mini_getpid();
+t_prompt	init_vars(t_prompt prompt, char **argv);
+t_prompt	init_cmds(char **argv, char **env);
+char		*put_prompt(t_prompt prompt);
+int			main(int argc, char **argv, char **env);
+
 
 #endif

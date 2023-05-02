@@ -21,7 +21,7 @@ pid_t	mini_getpid()
 	pid = fork();
 	if(pid < 0)
 	{
-		//inserire errore
+		print_error(1, NULL, 1);
 		exit(1);
 	}
 	if(!pid)
@@ -67,26 +67,43 @@ t_prompt init_cmds(char **argv, char **env)
 	return(prompt);
 }
 
-void	put_prompt()
+char	*put_prompt(t_prompt prompt)
 {
-	char **out;
+	char	**out;
+	char	*temp;
+	char	*temp2;
 
 	exec_cmds(&out, "/usr/bin/whoami", "whoami", prompt.envi);
-	out = ft_strjoin(out, "@epicshell");
-	out = ft_strjoin(out, getcwd(NULL, 0));//da abbreviare la home con ~
-	out = ft_strjoin(out, " $");
-	readline(out);
+	if(!out)
+		extend_matrix(out, "guest");
+	temp = ft_strjoin(*out, "@epicshell");
+	free_matrix(out);
+	temp2 = ft_strjoin(temp, getcwd(NULL, 0));//da abbreviare la home con ~
+	free(temp);
+	temp = ft_strjoin(temp2, "$ ");
+	free(temp2);
+	return(temp);
 }
 
-int main(int argc, char **argv, char **env)
+int		main(int argc, char **argv, char **env)
 {
     t_prompt	prompt;
+	char	*str;
+	char	*out;
 	
 	prompt = init_cmds(argv, env);
 	while(argc && argv)
 	{
-		put_prompt();
-
+		signal(SIGINT, manage_signal);
+		signal(SIGQUIT, SIG_IGN);
+		str = put_prompt(prompt);
+		if(str)
+			out = readline(str);
+		else
+			out = readline("guest@epicshell$ ");
+		free(str);
+		if(check_loop(&prompt, out))
+			break ;
 	}
 	exit(g_status);
 }
