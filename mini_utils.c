@@ -54,3 +54,21 @@ void	manage_signal(int s)
 		rl_on_new_line();
 	}
 }
+
+int	get_position(char *str, char c, int bypass)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+		{
+			if (!bypass)
+				break ;
+			bypass--;
+		}
+		i++;
+	}
+	return (i);
+}

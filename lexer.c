@@ -9,9 +9,26 @@
 /*   Updated: 2023/05/02 16:41:26 by scaiazzo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 extern int g_status;
+
+static int check_quote(int quote, char const s)
+{
+	int q;
+
+	q = 0;
+	if (!quote && s == '"')
+		q = 2;
+	else if (!quote && s == '\'')
+		q = -1;
+	else if (quote > 0 && s == '"')
+		q = 0;
+	else if (quote < 0 && s == '\'')
+		q = 0;
+	return (q);
+}
 
 static int	count_words(char const *s, char c)
 {
@@ -28,14 +45,7 @@ static int	count_words(char const *s, char c)
 		{
 			while (s[i] && (s[i] != c || quote))
 			{
-				if (!quote && s[i] == '"')
-					quote = 2;
-				else if (!quote && s[i] == '\'')
-					quote = -1;
-				else if (quote > 0 && s[i] == '"')
-					quote = 0;
-				else if (quote < 0 && s[i] == '\'')
-					quote = 0;
+				quote = check_quote(quote, s[i]);
 				i++;
 			}
 			count++;
@@ -57,14 +67,7 @@ static int	count_chr(const char *s, char c)
 	count = 0;
 	while (s[i] && (s[i] != c || quote))
 	{
-		if (!quote && s[i] == '"')
-			quote = 2;
-		else if (!quote && s[i] == '\'')
-			quote = -1;
-		else if (quote > 0 && s[i] == '"')
-			quote = 0;
-		else if (quote < 0 && s[i] == '\'')
-			quote = 0;
+		quote = check_quote(quote, s[i]);
 		i++;
 		count++;
 	}
@@ -82,7 +85,7 @@ char	**ft_cmdsplit(char const *s, char c)
 	count = count_words(s, c);
 	pnt = malloc(sizeof(char *) * (count + 1));
 	if (!pnt)
-		return (pnt);
+		return (NULL);
 	pnt[count] = 0;
 	i = 0;
 	j = 0;

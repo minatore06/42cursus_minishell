@@ -21,7 +21,7 @@ char *get_env(char **envi, char *name, int n)
     while (envi[i])
     {
         if (ft_strnstr(envi[i], name, n))
-            return (envi[i][n])
+            return (envi[i][n]);
         i++;
     }
     return (NULL);
@@ -39,7 +39,7 @@ char **set_env(char **envi, char *value, char *name, int n)
         if (ft_strnstr(envi[i], name, n))
         {
             free(envi[i]);
-            envi[i] = malloc((ft_strjoin(var) + 1) * sizeof(char));
+            envi[i] = malloc((ft_strlen(var) + 1) * sizeof(char));
             free(var);
             return (envi);
         }

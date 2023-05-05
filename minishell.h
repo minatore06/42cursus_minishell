@@ -37,7 +37,7 @@ typedef struct s_cmd
 	char	*path;
 	int		outfile;
 	int		infile;
-	s_cmd	*next;
+	void	*next;
 }	t_cmd;
 
 typedef struct s_prompt
@@ -53,7 +53,15 @@ char 		**set_env(char **envi, char *value, char *name, int n);
 
 void   		exec_cmds(char ***out, char *cmd, char *args, char **envi);
 
-char		**ft_cmdsplit(char const *s, char c)
+//executor
+
+char    *cmd_replace(char *cmd, char *env_value, int n, int env_len);
+char    *search_and_replace(char *cmd, char **envi, int i);
+char    **expander(char **cmd, char **envi);
+char    **cmd_split_redir_and_pipes(char **cmd);
+char    **ft_trim_cmd(char **cmd);
+
+char	**ft_cmdsplit(char const *s, char c);
 
 char 		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
@@ -61,6 +69,7 @@ void		free_matrix(char **mat);
 
 void		print_error(int err, char *str, int g);
 void		manage_signal(int s);
+int			get_position(char *str, char c, int bypass);
 
 pid_t		mini_getpid();
 t_prompt	init_vars(t_prompt prompt, char **argv);
@@ -68,5 +77,6 @@ t_prompt	init_cmds(char **argv, char **env);
 char		*put_prompt(t_prompt prompt);
 int			main(int argc, char **argv, char **env);
 
+//parser
 
 #endif
