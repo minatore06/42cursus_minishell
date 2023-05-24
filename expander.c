@@ -12,18 +12,19 @@
 
 #include "minishell.h"
 
-extern int g_status;
-
 char	*cmd_replace(char *cmd, char *env_value, int n, int env_len)
 {
 	char	*new_cmd;
 	int	 i;
 	int	 j;
 
-	i = 0;
 	new_cmd = malloc((ft_strlen(cmd) - env_len + ft_strlen(env_value) + 1) * sizeof(char));
+	i = 0;
 	while (i != n)
-		new_cmd[i] = cmd[i++];
+	{
+		new_cmd[i] = cmd[i];
+		
+	}
 	j = 0;
 	while (env_value[j])
 		new_cmd[i++] = env_value[j++];
@@ -110,8 +111,8 @@ char	**cmd_split_aux(char **cmd, int x, int y, char *s)
 		y = ft_strlen(s);
 	tmp = ft_strdup(cmd[x]);
 	free(cmd[x]);
-	cmd[i] = ft_substr(cmd[x], y, ft_strlen(&cmd[x][y]));
-	cmd[x] = ft_substr(cmd[x], 0, y);
+	cmd[i] = ft_substr(tmp, y, ft_strlen(&tmp[y]));
+	cmd[x] = ft_substr(tmp, 0, y);
 	return (cmd);
 }
 
@@ -167,7 +168,7 @@ char	**ft_trim_cmd(char **cmd)
 	{
 		if (cmd[i][0] == '\'')
 			cmd[i] = ft_strtrim(cmd[i], "\'");
-		else if (cmd[i][0] == "\"")
+		else if (cmd[i][0] == '\"')
 			cmd[i] = ft_strtrim(cmd[i], "\"");
 		i++;
 	}

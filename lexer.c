@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern int g_status;
-
 static int check_quote(int quote, char const s)
 {
 	int q;

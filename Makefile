@@ -14,7 +14,16 @@ NAME = minishell.a
 
 OUT = minishell
 
-SRCS = \
+SRCS = builtins.c \
+		enviroment.c \
+		exec_cmds.c \
+		executor.c \
+		expander.c \
+		lexer.c \
+		matrix.c \
+		mini_utils.c \
+		minishell.c \
+		parser.c \
 
 OBJS = ${SRCS:.c=.o}
 
@@ -24,24 +33,26 @@ RM = rm -f
 
 FLAGS = -Wall -Werror -Wextra
 
+LINKS = -lreadline
+
 LIBFT = libft
 
 LIBFTNAME = libft.a
 	
 %.o: %.c
-	${CC} ${FLAGS} -g -c $< -o ${<:.c=.o}
+	${CC} ${FLAGS} -g -c $< -o ${<:.c=.o} ${LINKS}
 
 $(NAME): ${OBJS}
 	make bonus -C ${LIBFT}
 	mv ${LIBFT}/${LIBFTNAME} ${NAME}
-	${CC} ${FLAGS} ${OBJS} ${NAME} -o ${OUT}
+	${CC} ${FLAGS} ${OBJS} ${NAME} -o ${OUT} ${LINKS}
 
 all: ${NAME}
 
 bonus:	${OBJS}
 	make bonus -C ${LIBFT}
 	mv ${LIBFT}/${LIBFTNAME} ${NAME}
-	${CC} ${FLAGS} ${OBJS} ${NAME} -o ${OUT}
+	${CC} ${FLAGS} ${OBJS} ${NAME} -o ${OUT} ${LINKS}
 
 clean: 
 	${RM} ${OBJS}

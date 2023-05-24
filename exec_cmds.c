@@ -10,26 +10,43 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-void    exec_cmds(char ***out, char *cmd, char *args, char **envi)
+void	do_something_output(char ***out, int fd)
 {
-    pid_t   pid;
-    int     fd[2];
-    char    **matrix;
+	char	*line;
+	char	*temp;
+	char	**mat;
 
-    pipe(fd);
-    pid = fork();
-    if (!pid)
-    {
-        close(fd[0]);
-        matrix = ft_split(args, ' ');
-        dup2(fd[1], STDOUT_FILENO);
-        close(fd[1]);
-        execve(cmd, matrix, envi);
-        exit(1);
-    }
-    close(fd[1]);
-    waitpid(pid, NULL, 0);
-    //fare cose con l'output
-    close(fd[0]);
+	mat = NULL;
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break;
+		temp = ft_strtrim(line, "\n");
+		free(line);
+		mat = extend_matrix(mat, temp);
+		free(temp);
+	}
+	*out = mat;
+}
+
+void	exec_cmds(char ***out, char *cmd, char **args, char **envi)
+{
+	pid_t   pid;
+	int	 fd[2];
+
+	pipe(fd);
+	pid = fork();
+	if (!pid)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		execve(cmd, args, envi);
+		exit(1);
+	}
+	close(fd[1]);
+	waitpid(pid, NULL, 0);
+	do_something_output(out, fd[0]);
+	close(fd[0]);
 }

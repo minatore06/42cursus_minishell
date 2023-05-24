@@ -12,7 +12,12 @@
 
 #include "minishell.h"
 
-extern int g_status;
+int	g_status;
+//history
+//search and launch executables
+//&?
+//signals???
+//rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
 
 pid_t	mini_getpid()
 {
@@ -69,19 +74,30 @@ t_prompt init_cmds(char **argv, char **env)
 
 char	*put_prompt(t_prompt prompt)
 {
+	char	**mat;
 	char	**out;
 	char	*temp;
 	char	*temp2;
+	char	*temp3;
 
-	exec_cmds(&out, "/usr/bin/whoami", "whoami", prompt.envi);
+	mat = malloc(sizeof(char *) * 2);
+	mat[0] = "whoami";
+	mat[1] = NULL;
+	exec_cmds(&out, "/usr/bin/whoami", mat, prompt.envi);
+	free(mat);
 	if(!out)
 		extend_matrix(out, "guest");
 	temp = ft_strjoin(*out, "@epicshell");
 	free_matrix(out);
-	temp2 = ft_strjoin(temp, getcwd(NULL, 0));//da abbreviare la home con ~
-	free(temp);
-	temp = ft_strjoin(temp2, "$ ");
+	temp2 = getcwd(NULL, 0);
+	temp3 = get_env(prompt.envi, "HOME=", 5);
+	if (temp3 && ft_strnstr(temp2, temp3 + 5, ft_strlen(temp3 + 5)))
+		temp = ft_strjoin(temp, ft_strjoin("~", temp2 + ft_strlen(temp3 + 5)));
+	else
+		temp = ft_strjoin(temp, temp2);
 	free(temp2);
+	free(temp3);
+	temp = ft_strjoin(temp, "$ ");
 	return(temp);
 }
 
@@ -90,7 +106,7 @@ int		main(int argc, char **argv, char **env)
     t_prompt	prompt;
 	char	*str;
 	char	*out;
-	
+
 	prompt = init_cmds(argv, env);
 	while(argc && argv)
 	{
@@ -102,6 +118,7 @@ int		main(int argc, char **argv, char **env)
 		else
 			out = readline("guest@epicshell$ ");
 		free(str);
+		add_history(out);
 		if(check_loop(&prompt, out))
 			break ;
 	}

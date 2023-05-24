@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-extern int g_status;
-
 char *get_env(char **envi, char *name, int n)
 {
     int i;
@@ -21,7 +19,7 @@ char *get_env(char **envi, char *name, int n)
     while (envi[i])
     {
         if (ft_strnstr(envi[i], name, n))
-            return (envi[i][n]);
+            return (envi[i]);
         i++;
     }
     return (NULL);
