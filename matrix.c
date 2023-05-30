@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+void	print_matrix(char **mat)
+{
+	int	i;
+
+    i = 0;
+    if (!mat)
+        return ;
+    while (mat[i])
+    {
+        ft_printf("%s\n", mat[i]);
+        i++;
+    }
+}
+
 char **dup_matrix(char **matx)
 {
     int     i;

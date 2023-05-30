@@ -37,7 +37,7 @@ char **set_env(char **envi, char *value, char *name, int n)
         if (ft_strnstr(envi[i], name, n))
         {
             free(envi[i]);
-            envi[i] = malloc((ft_strlen(var) + 1) * sizeof(char));
+            envi[i] = ft_strdup(var);
             free(var);
             return (envi);
         }

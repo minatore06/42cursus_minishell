@@ -39,9 +39,9 @@ int     ft_is_builtin(char *array)
 int		echo_builtin(t_cmd *cmd)
 {
 	if (!ft_strncmp(cmd->command[1], "-n", 2))
-		ft_putendl_fd(cmd->command[2], cmd->outfile);
+		ft_putstr_fd(cmd->command[2], cmd->outfile);
 	else
-		ft_putstr_fd(cmd->command[1], cmd->outfile);
+		ft_putendl_fd(cmd->command[1], cmd->outfile);
 	return (0);
 }
 
@@ -143,7 +143,7 @@ int		execute_builtins(t_prompt *prompt, t_cmd *cmd)
 
     while(cmd)
     {
-        a = cmd->command;
+        a = dup_matrix(cmd->command);
 		l = 0;
         if(a)
 		{
@@ -168,6 +168,7 @@ int		execute_builtins(t_prompt *prompt, t_cmd *cmd)
 				signal(SIGQUIT, SIG_IGN);
 				exec_cmds(&a, cmd->path, cmd->command, prompt->envi);
 			}
+			free(a);
 		}
     	cmd = cmd->next;
     }

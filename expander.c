@@ -23,7 +23,7 @@ char	*cmd_replace(char *cmd, char *env_value, int n, int env_len)
 	while (i != n)
 	{
 		new_cmd[i] = cmd[i];
-		
+		i++;
 	}
 	j = 0;
 	while (env_value[j])
@@ -47,17 +47,18 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 		env_name = ft_strdup("HOME=");
 	else
 	{
-		while (cmd[i + 1 + len] != ' ') 
+		while (cmd[i + 1 + len] && cmd[i + 1 + len] != ' ') 
 			len++;
 		env_name = ft_substr(cmd, i + 1, len);
 		env_name = ft_strjoin(env_name, "=");
 	}
 	env_value = get_env(envi, env_name, ft_strlen(env_name));
-	if (!env_value)
-		env_name = "";
+	env_value = ft_substr(env_value, ft_strlen(env_name), ft_strlen(env_value));
 	len = ft_strlen(env_name);
-	if (ft_strncmp(env_name, "HOME=", 5))
-		len = 2;
+	if (!ft_strncmp(env_name, "HOME=", 5))
+		len = 1;
+	if (!env_value)
+		len = 0;
 	free(env_name);
 	return (cmd_replace(cmd, env_value, i, len));
 }
@@ -99,8 +100,8 @@ char	**cmd_split_aux(char **cmd, int x, int y, char *s)
 	i = x;
 	while (cmd[i])
 		i++;
-	cmd = extend_matrix(cmd, cmd[--i]);
-	while (i - 1 != x)
+	cmd = extend_matrix(cmd, NULL);
+	while (i - 1 > x)
 	{
 		free(cmd[i]);
 		cmd[i] = ft_strdup(cmd[i - 1]);
@@ -124,19 +125,11 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 	i = 0;
 	while (cmd[i])
 	{
-		j = -1;
-		while (cmd[i][++j])
+		j = 0;
+		while (cmd[i][j])
 		{
 			if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
-			{
 				break ;
-				/* if(cmd[i][j + 1] == '\'')
-					while(cmd[i][j] && cmd[i][j] != '\'')
-						j++;
-				else if(cmd[i][j + 1] == '\"')
-					while(cmd[i][j] && cmd[i][j] != '\"')
-						j++; */
-			}
 			if(cmd[i][j] == '<')
 			{
 				if(cmd[i][j + 1] == '<')
@@ -153,6 +146,7 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 			}
 			else if(cmd[i][j] == '|')
 				cmd = cmd_split_aux(cmd, i, j, "|");
+			j++;
 		}
 		i++;
 	}

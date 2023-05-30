@@ -46,17 +46,14 @@ t_prompt init_vars(t_prompt prompt, char **argv)
 		str2 = ft_strdup("1");
 	else
 		str2 = ft_itoa(ft_atoi(str) + 1);
-	free(str);
 	prompt.envi = set_env(prompt.envi, str2, "SHLVL=", 6);
 	free(str2);
 	str = get_env(prompt.envi, "PATH=", 5);
 	if (!str)
 		prompt.envi = set_env(prompt.envi, "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin", "PATH=", 5);
-	free(str);
 	str = get_env(prompt.envi, "_=", 2);
 	if (!str)
 		prompt.envi = set_env(prompt.envi, argv[0], "_=", 2);
-	free(str);
 	return(prompt);
 }
 
@@ -69,6 +66,7 @@ t_prompt init_cmds(char **argv, char **env)
 	g_status = 0;
 	prompt.pid = mini_getpid();
 	prompt = init_vars(prompt, argv);
+	//print_matrix(prompt.envi);
 	return(prompt);
 }
 
@@ -96,7 +94,6 @@ char	*put_prompt(t_prompt prompt)
 	else
 		temp = ft_strjoin(temp, temp2);
 	free(temp2);
-	free(temp3);
 	temp = ft_strjoin(temp, "$ ");
 	return(temp);
 }

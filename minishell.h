@@ -74,6 +74,7 @@ char    **ft_trim_cmd(char **cmd);
 
 char	**ft_cmdsplit(char const *s, char c);
 
+void		print_matrix(char **mat);
 char 		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
 void		free_matrix(char **mat);
@@ -93,7 +94,7 @@ void	init_cmd_node(t_cmd *cmd);
 int		get_outfile(char *file, char append);
 int		get_here_doc(char *delimiter);
 int		get_infile(char *file, char append);
-t_cmd	*fill_cmds(t_cmd *cmd, char **cmd_mat);
-t_cmd	*parser(char **cmd);
+t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat);
+t_cmd	*parser(t_prompt *prompt, char **cmd);
 
 #endif

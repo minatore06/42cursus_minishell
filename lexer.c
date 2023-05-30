@@ -25,6 +25,8 @@ static int check_quote(int quote, char const s)
 		q = 0;
 	else if (quote < 0 && s == '\'')
 		q = 0;
+	else
+		q = quote;
 	return (q);
 }
 

@@ -16,12 +16,13 @@ int		count_cmds(char **cmd)
 	int	i;
 	int	count;
 
-	count = 0;
+	count = 1;
 	i = 0;
 	while (cmd[i])
 	{
 		if (cmd[i][0] == '|')
 			count++;
+		i++;
 	}
 	return (count);
 }
@@ -81,7 +82,83 @@ int	get_infile(char *file, char append)
 		return (open(file, O_RDONLY, 0666));
 }
 
-t_cmd	*fill_cmds(t_cmd *cmd, char **cmd_mat)
+char	**get_paths(char **envi)
+{
+	char	*paths;
+
+	paths = get_env(envi, "PATH=", 5);
+	if (!paths)
+		return (NULL);
+	paths = ft_substr(paths, 5, strlen(paths));
+	return (ft_split(paths, ':'));
+}
+
+char	*get_cmd_path(t_prompt *prompt, char *cmd)
+{
+	int				i;
+	char			**dirs;
+	char			*ret;
+	DIR				*dp;
+	struct dirent	*entry;
+
+	
+	if (ft_is_builtin(cmd))
+		return (cmd);
+	ret = NULL;
+	dirs = get_paths(prompt->envi);
+	if (!dirs)
+		return (NULL);
+	i = 0;
+	while (dirs && dirs[i])
+	{
+		dp = opendir(dirs[i]);
+		if (!dp)
+		{
+			i++;
+			continue ;
+		}
+		entry = readdir(dp);
+		while (entry)
+		{
+			if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
+			{
+				ret = ft_strdup(dirs[i]);
+				dirs = NULL;
+				break ;
+			}
+			entry = readdir(dp);
+		}
+		closedir(dp);
+		i++;
+	}
+	if (!ret)
+		return (cmd);
+	ret = ft_strjoin(ret, "/");
+	return (ft_strjoin(ret, cmd));
+}
+
+char	**get_full_cmd(char **cmd_mat)
+{
+	int		i;
+	char	**cmd;
+
+	if (!cmd_mat)
+		return (NULL);
+	i = 0;
+	while (cmd_mat[i] && cmd_mat[i][0] != '|')
+		i++;
+	cmd = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (cmd_mat[i] && cmd_mat[i][0] != '|')
+	{
+		cmd[i] = ft_strdup(cmd_mat[i]);
+		i++;
+	}
+	cmd[i] = NULL;
+	return (cmd);
+}
+
+t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 {
 	int	i;
 
@@ -96,15 +173,33 @@ t_cmd	*fill_cmds(t_cmd *cmd, char **cmd_mat)
 	}
 	if (cmd->infile == -1 || cmd->outfile == -1)
 	{
-		//error
+		print_error(5, NULL, 1);
+		return (NULL);
 	}
-	//TODO
-/* 	cmd->path = get_cmd_path();
-	cmd->command = get_full_cmd(); */
+ 	cmd->path = get_cmd_path(prompt, cmd_mat[0]);
+	cmd->command = get_full_cmd(cmd_mat);
 	return (cmd);
 }
 
-t_cmd	*parser(char **cmd)
+char	**reduce_cmd(char **cmd)
+{
+	int		i;
+	char	**epic_cmd;
+
+	i = 0;
+	while (cmd[i] && cmd[i][0] != '|')
+		i++;
+	if (cmd[i] && cmd[i][0] == '|')
+	{
+		i++;
+		epic_cmd = dup_matrix(&cmd[i]);
+		free_matrix(cmd);
+		return (epic_cmd);
+	}
+	return (NULL);
+}
+
+t_cmd	*parser(t_prompt *prompt, char **cmd)
 {
 	t_cmd		*ret;
 	t_cmd		*cmds;
@@ -115,13 +210,18 @@ t_cmd	*parser(char **cmd)
 	i = 0;
 	cmds = malloc(sizeof(t_cmd));
 	ret = cmds;
+	//ft_printf("a %d\n", cmd_count);
 	while (i < cmd_count)
 	{
 		init_cmd_node(cmds);
-		cmds = fill_cmds(cmds, cmd);
-		cmds->next = malloc(sizeof(t_cmd));
+		cmds = fill_cmds(prompt, cmds, cmd);
+		cmd = reduce_cmd(cmd);
+		i++;
+		if (i < cmd_count)
+			cmds->next = malloc(sizeof(t_cmd));
+		else
+			cmds->next = NULL;
 		cmds = cmds->next;
 	}
-	free(cmds);
 	return (ret);
 }
