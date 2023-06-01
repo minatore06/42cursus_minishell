@@ -136,6 +136,7 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 					cmd = cmd_split_aux(cmd, i, j, "<<");
 				else
 					cmd = cmd_split_aux(cmd, i, j, "<");
+				break ;
 			}
 			else if(cmd[i][j] == '>')
 			{
@@ -143,6 +144,7 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 					cmd = cmd_split_aux(cmd, i, j, ">>");
 				else
 					cmd = cmd_split_aux(cmd, i, j, ">");
+				break ;
 			}
 			else if(cmd[i][j] == '|')
 				cmd = cmd_split_aux(cmd, i, j, "|");

@@ -108,7 +108,8 @@ int		main(int argc, char **argv, char **env)
 	while(argc && argv)
 	{
 		signal(SIGINT, manage_signal);
-		signal(SIGQUIT, SIG_IGN);
+		signal(EOF, manage_signal);
+		signal(SIGQUIT, manage_signal);
 		str = put_prompt(prompt);
 		if(str)
 			out = readline(str);

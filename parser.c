@@ -158,6 +158,26 @@ char	**get_full_cmd(char **cmd_mat)
 	return (cmd);
 }
 
+char	**remove_redirects(char **cmd_mat)
+{
+	int	i;
+
+	i = 0;
+	while (cmd_mat[i])
+	{
+		if(cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
+		{
+			ft_printf("ciao\n");
+			cmd_mat = reduce_matrix(cmd_mat, i + 1);
+			cmd_mat = reduce_matrix(cmd_mat, i);
+			i = 0;
+			continue ;
+		}
+		i++;
+	}
+	return (cmd_mat);
+}
+
 t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 {
 	int	i;
@@ -176,8 +196,9 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 		print_error(5, NULL, 1);
 		return (NULL);
 	}
- 	cmd->path = get_cmd_path(prompt, cmd_mat[0]);
 	cmd->command = get_full_cmd(cmd_mat);
+	cmd->command = remove_redirects(cmd->command);
+ 	cmd->path = get_cmd_path(prompt, cmd_mat[0]);
 	return (cmd);
 }
 

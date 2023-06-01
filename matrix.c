@@ -26,6 +26,20 @@ void	print_matrix(char **mat)
     }
 }
 
+void	print_matrix_fd(char **mat, int fd)
+{
+	int	i;
+
+    i = 0;
+    if (!mat)
+        return ;
+    while (mat[i])
+    {
+        ft_putendl_fd(mat[i], fd);
+        i++;
+    }
+}
+
 char **dup_matrix(char **matx)
 {
     int     i;
@@ -67,6 +81,32 @@ char    **extend_matrix(char **og_mat, char *var)
     }
     new_mat[i] = ft_strdup(var);
     new_mat[i + 1] = 0;
+    free_matrix(og_mat);
+    return (new_mat);
+}
+
+char    **reduce_matrix(char **og_mat, int x)
+{
+    int     i;
+    int     j;
+    char    **new_mat;
+
+    i = 0;
+    while(og_mat && og_mat[i])
+        i++;
+    new_mat = malloc(i * sizeof(char *));
+    i = 0;
+    j = 0;
+    while (og_mat && og_mat[i])
+    {
+        if (i != x)
+        {
+            new_mat[j] = ft_strdup(og_mat[i]);
+            j++;
+        }
+        i++;
+    }
+    new_mat[j] = 0;
     free_matrix(og_mat);
     return (new_mat);
 }

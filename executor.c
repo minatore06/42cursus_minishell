@@ -37,7 +37,7 @@ int		check_loop(t_prompt *prompt, char *input)
 	ft_printf("trim\n");
 	cmd_mat = ft_trim_cmd(cmd_mat);
 	print_matrix(cmd_mat);
-	ft_printf("==================================\n");//funziona fino a qui apparentemente
+	ft_printf("==================================\n");
 	prompt->cmds = parser(prompt, cmd_mat);
 	cmd = prompt->cmds;
 	while (cmd)
@@ -54,7 +54,7 @@ int		check_loop(t_prompt *prompt, char *input)
 		else
 		{
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
-			print_matrix(out);
+			print_matrix_fd(out, cmd->outfile);
 			free_matrix(out);
 		}
 		cmd = cmd->next;

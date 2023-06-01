@@ -75,8 +75,10 @@ char    **ft_trim_cmd(char **cmd);
 char	**ft_cmdsplit(char const *s, char c);
 
 void		print_matrix(char **mat);
+void		print_matrix_fd(char **mat, int fd);
 char 		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
+char    	**reduce_matrix(char **og_mat, int x);
 void		free_matrix(char **mat);
 
 void		print_error(int err, char *str, int g);
