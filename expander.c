@@ -117,6 +117,31 @@ char	**cmd_split_aux(char **cmd, int x, int y, char *s)
 	return (cmd);
 }
 
+char	**cmd_split_redir_and_pipes2(char **cmd, int i, int j)
+{
+	if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
+		break ;
+	if (cmd[i][j] == '<')
+	{
+		if (cmd[i][j + 1] == '<')
+			cmd = cmd_split_aux(cmd, i, j, "<<");
+		else
+			cmd = cmd_split_aux(cmd, i, j, "<");
+		break ;
+	}
+	else if (cmd[i][j] == '>')
+	{
+		if (cmd[i][j + 1] == '>')
+			cmd = cmd_split_aux(cmd, i, j, ">>");
+		else
+			cmd = cmd_split_aux(cmd, i, j, ">");
+		break ;
+	}
+	else if (cmd[i][j] == '|')
+		cmd = cmd_split_aux(cmd, i, j, "|");
+	return (cmd);
+}
+
 char	**cmd_split_redir_and_pipes(char **cmd)
 {
 	int	 i;
@@ -128,26 +153,7 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 		j = 0;
 		while (cmd[i][j])
 		{
-			if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
-				break ;
-			if(cmd[i][j] == '<')
-			{
-				if(cmd[i][j + 1] == '<')
-					cmd = cmd_split_aux(cmd, i, j, "<<");
-				else
-					cmd = cmd_split_aux(cmd, i, j, "<");
-				break ;
-			}
-			else if(cmd[i][j] == '>')
-			{
-				if(cmd[i][j + 1] == '>')
-					cmd = cmd_split_aux(cmd, i, j, ">>");
-				else
-					cmd = cmd_split_aux(cmd, i, j, ">");
-				break ;
-			}
-			else if(cmd[i][j] == '|')
-				cmd = cmd_split_aux(cmd, i, j, "|");
+			cmd = cmd_split_redir_and_pipes2(cmd, i, j);
 			j++;
 		}
 		i++;

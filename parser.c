@@ -101,7 +101,6 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd)
 	DIR				*dp;
 	struct dirent	*entry;
 
-	
 	if (ft_is_builtin(cmd))
 		return (cmd);
 	ret = NULL;
@@ -165,7 +164,7 @@ char	**remove_redirects(char **cmd_mat)
 	i = 0;
 	while (cmd_mat[i])
 	{
-		if(cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
+		if (cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
 		{
 			ft_printf("ciao\n");
 			cmd_mat = reduce_matrix(cmd_mat, i + 1);
@@ -185,9 +184,9 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	i = 0;
 	while (cmd_mat[i] && cmd_mat[i][0] != '|')
 	{
-		if(cmd_mat[i][0] == '<')
+		if (cmd_mat[i][0] == '<')
 			cmd->infile = get_infile(cmd_mat[i + 1], cmd_mat[i][1]);
-		else if(cmd_mat[i][0] == '>')
+		else if (cmd_mat[i][0] == '>')
 			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
 		i++;
 	}

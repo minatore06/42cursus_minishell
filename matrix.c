@@ -49,11 +49,11 @@ char **dup_matrix(char **matx)
     if (!matx)
         return (NULL);
     i = 0;
-    while(matx[i])
+    while (matx[i])
         i++;
     maty = malloc((i + 1) * sizeof(char *));
     i = 0;
-    while(matx[i])
+    while (matx[i])
     {
 		j = ft_strlen(matx[i]) + 1;
 		maty[i] = malloc(j * sizeof(char));
@@ -70,7 +70,7 @@ char    **extend_matrix(char **og_mat, char *var)
     char    **new_mat;
 
     i = 0;
-    while(og_mat && og_mat[i])
+    while (og_mat && og_mat[i])
         i++;
     new_mat = malloc((i + 2) * sizeof(char *));
     i = 0;
@@ -92,7 +92,7 @@ char    **reduce_matrix(char **og_mat, int x)
     char    **new_mat;
 
     i = 0;
-    while(og_mat && og_mat[i])
+    while (og_mat && og_mat[i])
         i++;
     new_mat = malloc(i * sizeof(char *));
     i = 0;
@@ -118,7 +118,7 @@ void	free_matrix(char **mat)
     if (!mat)
         return ;
     i = 0;
-    while(mat[i])
+    while (mat[i])
     {
 		free(mat[i]);
         i++;

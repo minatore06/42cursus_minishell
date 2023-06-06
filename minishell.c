@@ -24,12 +24,12 @@ pid_t	mini_getpid()
 	pid_t	pid;
 
 	pid = fork();
-	if(pid < 0)
+	if (pid < 0)
 	{
 		print_error(1, NULL, 1);
 		exit(1);
 	}
-	if(!pid)
+	if (!pid)
 		exit(1);
 	waitpid(pid, NULL, 0);
 	return (pid - 1);
@@ -54,7 +54,7 @@ t_prompt init_vars(t_prompt prompt, char **argv)
 	str = get_env(prompt.envi, "_=", 2);
 	if (!str)
 		prompt.envi = set_env(prompt.envi, argv[0], "_=", 2);
-	return(prompt);
+	return (prompt);
 }
 
 t_prompt init_cmds(char **argv, char **env)
@@ -67,7 +67,7 @@ t_prompt init_cmds(char **argv, char **env)
 	prompt.pid = mini_getpid();
 	prompt = init_vars(prompt, argv);
 	//print_matrix(prompt.envi);
-	return(prompt);
+	return (prompt);
 }
 
 char	*put_prompt(t_prompt prompt)
@@ -83,7 +83,7 @@ char	*put_prompt(t_prompt prompt)
 	mat[1] = NULL;
 	exec_cmds(&out, "/usr/bin/whoami", mat, prompt.envi);
 	free(mat);
-	if(!out)
+	if (!out)
 		extend_matrix(out, "guest");
 	temp = ft_strjoin(*out, "@epicshell");
 	free_matrix(out);
@@ -95,7 +95,7 @@ char	*put_prompt(t_prompt prompt)
 		temp = ft_strjoin(temp, temp2);
 	free(temp2);
 	temp = ft_strjoin(temp, "$ ");
-	return(temp);
+	return (temp);
 }
 
 int		main(int argc, char **argv, char **env)
@@ -105,19 +105,19 @@ int		main(int argc, char **argv, char **env)
 	char	*out;
 
 	prompt = init_cmds(argv, env);
-	while(argc && argv)
+	while (argc && argv)
 	{
 		signal(SIGINT, manage_signal);
 		signal(EOF, manage_signal);
 		signal(SIGQUIT, manage_signal);
 		str = put_prompt(prompt);
-		if(str)
+		if (str)
 			out = readline(str);
 		else
 			out = readline("guest@epicshell$ ");
 		free(str);
 		add_history(out);
-		if(check_loop(&prompt, out))
+		if (check_loop(&prompt, out))
 			break ;
 	}
 	exit(g_status);
