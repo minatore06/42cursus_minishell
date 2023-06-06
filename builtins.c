@@ -84,7 +84,9 @@ int		export_builtin(t_prompt *p, t_cmd *cmd)
 char	**unset_builtin2(t_prompt *p, int i, int j)
 {
 	char	**temp;
+	char	*cmd;
 
+	cmd = p->cmds->command[1];
 	while (p->envi[j])
 		j++;
 	temp = malloc(j * sizeof(char *));
@@ -92,7 +94,7 @@ char	**unset_builtin2(t_prompt *p, int i, int j)
 	i = 0;
 	while (p->envi[i])
 	{
-		if (!ft_strncmp(p->envi[i], p->cmds->command[1], ft_strlen(p->cmds->command[1])))
+		if (!ft_strncmp(p->envi[i], cmd, ft_strlen(cmd)))
 			i++;
 		else
 		{
@@ -110,12 +112,14 @@ int		unset_builtin(t_prompt *p)
 	int		i;
 	int	 	j;
 	char	**temp;
+	char	*cmd;
 
+	cmd = p->cmds->command[1];
 	i = 0;
 	j = 0;
 	while (p->envi[i])
 	{
-		if (!ft_strncmp(p->envi[i], p->cmds->command[1], ft_strlen(p->cmds->command[1])))
+		if (!ft_strncmp(p->envi[i], cmd, ft_strlen(cmd)))
 		{
 			temp = unset_builtin2(p, i, j);
 			free_matrix(p->envi);

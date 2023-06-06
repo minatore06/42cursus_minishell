@@ -12,13 +12,14 @@
 
 #include "minishell.h"
 
-char	*cmd_replace(char *cmd, char *env_value, int n, int env_len)
+char	*cmd_replace(char *cmd, char *env_val, int n, int env_len)
 {
 	char	*new_cmd;
 	int	 i;
 	int	 j;
 
-	new_cmd = malloc((ft_strlen(cmd) - env_len + ft_strlen(env_value) + 1) * sizeof(char));
+	i = ft_strlen(cmd) - env_len + ft_strlen(env_val) + 1;
+	new_cmd = malloc((i) * sizeof(char));
 	i = 0;
 	while (i != n)
 	{
@@ -26,8 +27,8 @@ char	*cmd_replace(char *cmd, char *env_value, int n, int env_len)
 		i++;
 	}
 	j = 0;
-	while (env_value[j])
-		new_cmd[i++] = env_value[j++];
+	while (env_val[j])
+		new_cmd[i++] = env_val[j++];
 	n += env_len;
 	while (cmd[n])
 		new_cmd[i++] = cmd[n++];
@@ -40,7 +41,7 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 {
 	int	 len;
 	char	*env_name;
-	char	*env_value;
+	char	*env_val;
 
 	len = 0;
 	if (cmd[i] == '~')
@@ -52,15 +53,15 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 		env_name = ft_substr(cmd, i + 1, len);
 		env_name = ft_strjoin(env_name, "=");
 	}
-	env_value = get_env(envi, env_name, ft_strlen(env_name));
-	env_value = ft_substr(env_value, ft_strlen(env_name), ft_strlen(env_value));
+	env_val = get_env(envi, env_name, ft_strlen(env_name));
+	env_val = ft_substr(env_val, ft_strlen(env_name), ft_strlen(env_val));
 	len = ft_strlen(env_name);
 	if (!ft_strncmp(env_name, "HOME=", 5))
 		len = 1;
-	if (!env_value)
+	if (!env_val)
 		len = 0;
 	free(env_name);
-	return (cmd_replace(cmd, env_value, i, len));
+	return (cmd_replace(cmd, env_val, i, len));
 }
 
 char	**expander(char **cmd, char **envi)

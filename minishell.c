@@ -49,8 +49,9 @@ t_prompt init_vars(t_prompt prompt, char **argv)
 	prompt.envi = set_env(prompt.envi, str2, "SHLVL=", 6);
 	free(str2);
 	str = get_env(prompt.envi, "PATH=", 5);
+	str2 = "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin";
 	if (!str)
-		prompt.envi = set_env(prompt.envi, "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin", "PATH=", 5);
+		prompt.envi = set_env(prompt.envi, str2, "PATH=", 5);
 	str = get_env(prompt.envi, "_=", 2);
 	if (!str)
 		prompt.envi = set_env(prompt.envi, argv[0], "_=", 2);
