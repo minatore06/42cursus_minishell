@@ -74,12 +74,11 @@ int	get_here_doc(char *delimiter)
 
 int	get_infile(char *file, char append)
 {
-	if (!file)
-		return (-1);
 	if (append)
 		return (get_here_doc(file));
-	else
-		return (open(file, O_RDONLY, 0666));
+	if (!file)
+		return (-1);
+	return (open(file, O_RDONLY, 0666));
 }
 
 char	**get_paths(char **envi)
