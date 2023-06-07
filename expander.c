@@ -39,7 +39,7 @@ char	*cmd_replace(char *cmd, char *env_val, int n, int env_len)
 
 char	*search_and_replace(char *cmd, char **envi, int i)
 {
-	int	 len;
+	int		len;
 	char	*env_name;
 	char	*env_val;
 
@@ -48,13 +48,18 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 		env_name = ft_strdup("HOME=");
 	else
 	{
-		while (cmd[i + 1 + len] && cmd[i + 1 + len] != ' ') 
+		while (cmd[i + 1 + len] && (cmd[i + 1 + len] != ' ' && cmd[i + 1 + len] != '"')) 
 			len++;
 		env_name = ft_substr(cmd, i + 1, len);
 		env_name = ft_strjoin(env_name, "=");
 	}
-	env_val = get_env(envi, env_name, ft_strlen(env_name));
-	env_val = ft_substr(env_val, ft_strlen(env_name), ft_strlen(env_val));
+	if (!ft_strncmp(env_name, "?=", ft_strlen(env_name)))
+		env_val = ft_itoa(g_status);
+	else
+	{
+		env_val = get_env(envi, env_name, ft_strlen(env_name));
+		env_val = ft_substr(env_val, ft_strlen(env_name), ft_strlen(env_val));
+	}
 	len = ft_strlen(env_name);
 	if (!ft_strncmp(env_name, "HOME=", 5))
 		len = 1;
@@ -118,17 +123,17 @@ char	**cmd_split_aux(char **cmd, int x, int y, char *s)
 	return (cmd);
 }
 
-char	**cmd_split_redir_and_pipes2(char **cmd, int i, int j)
+char	**cmd_split_redir_and_pipes2(char **cmd, int i, int j, int *brek)
 {
 	if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
-		break ;
-	if (cmd[i][j] == '<')
+		*brek = 1;
+	else if (cmd[i][j] == '<')
 	{
 		if (cmd[i][j + 1] == '<')
 			cmd = cmd_split_aux(cmd, i, j, "<<");
 		else
 			cmd = cmd_split_aux(cmd, i, j, "<");
-		break ;
+		*brek = 1;
 	}
 	else if (cmd[i][j] == '>')
 	{
@@ -136,7 +141,7 @@ char	**cmd_split_redir_and_pipes2(char **cmd, int i, int j)
 			cmd = cmd_split_aux(cmd, i, j, ">>");
 		else
 			cmd = cmd_split_aux(cmd, i, j, ">");
-		break ;
+		*brek = 1;
 	}
 	else if (cmd[i][j] == '|')
 		cmd = cmd_split_aux(cmd, i, j, "|");
@@ -147,19 +152,54 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 {
 	int	 i;
 	int	 j;
+	int	brek;
 
 	i = 0;
 	while (cmd[i])
 	{
 		j = 0;
+		brek = 0;
 		while (cmd[i][j])
 		{
-			cmd = cmd_split_redir_and_pipes2(cmd, i, j);
+			cmd = cmd_split_redir_and_pipes2(cmd, i, j, &brek);
+			if (brek)
+				break ;
 			j++;
 		}
 		i++;
 	}
 	return (cmd);
+}
+
+char	*epic_trim(char *cmd, char c)
+{
+	int		i;
+	int		j;
+	int		count;
+	char	*new_cmd;
+
+	new_cmd = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
+	i = 0;
+	j = 0;
+	count = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == c)
+		{
+			count++;
+			i++;
+			continue ;
+		}
+		new_cmd[j] = cmd[i];
+		i++;
+		j++;
+	}
+	new_cmd[j] = 0;
+	if (count % 2)
+		print_error(3, NULL, 1);
+	if (count % 2)
+		return (NULL);\
+	return (new_cmd);
 }
 
 char	**ft_trim_cmd(char **cmd)
@@ -169,10 +209,12 @@ char	**ft_trim_cmd(char **cmd)
 	i = 0;
 	while (cmd[i])
 	{
-		if (cmd[i][0] == '\'')
-			cmd[i] = ft_strtrim(cmd[i], "\'");
+		if (cmd[i][0] == '\'')//delete first 2 quotes, not trim
+			//cmd[i] = ft_strtrim(cmd[i], "\'");
+			cmd[i] = epic_trim(cmd[i], '\'');
 		else if (cmd[i][0] == '\"')
-			cmd[i] = ft_strtrim(cmd[i], "\"");
+			//cmd[i] = ft_strtrim(cmd[i], "\"");
+			cmd[i] = epic_trim(cmd[i], '\"');
 		i++;
 	}
 	return (cmd);

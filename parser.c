@@ -119,11 +119,14 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd)
 		entry = readdir(dp);
 		while (entry)
 		{
-			if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
+			if (ft_strlen(cmd) == ft_strlen(entry->d_name))
 			{
-				ret = ft_strdup(dirs[i]);
-				dirs = NULL;
-				break ;
+				if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
+				{
+					ret = ft_strdup(dirs[i]);
+					dirs = NULL;
+					break ;
+				}
 			}
 			entry = readdir(dp);
 		}
@@ -166,7 +169,7 @@ char	**remove_redirects(char **cmd_mat)
 	{
 		if (cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
 		{
-			ft_printf("ciao\n");
+			//ft_printf("ciao\n");
 			cmd_mat = reduce_matrix(cmd_mat, i + 1);
 			cmd_mat = reduce_matrix(cmd_mat, i);
 			i = 0;

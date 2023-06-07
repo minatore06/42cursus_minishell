@@ -34,7 +34,7 @@ void	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
 	pid_t   pid;
 	int	 fd[2];
-
+	int		test;
 	pipe(fd);
 	pid = fork();
 	if (!pid)
@@ -42,7 +42,9 @@ void	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		execve(cmd, args, envi);
+		test = execve(cmd, args, envi);
+		ft_printf("Test=%i\n", test);
+		print_error(9, out[0][0], 127); //out[0][0] e' vuoto
 		exit(1);
 	}
 	close(fd[1]);

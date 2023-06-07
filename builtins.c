@@ -183,7 +183,6 @@ int		execute_builtins(t_prompt *prompt, t_cmd *cmd)
     while (cmd)
     {
         a = dup_matrix(cmd->command);
-		l = 0;
         if (a)
 		{
 			g_status = choose_builtin(prompt, cmd, a);

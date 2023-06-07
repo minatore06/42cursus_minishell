@@ -53,6 +53,7 @@ int		check_loop(t_prompt *prompt, char *input)
 		}
 		else
 		{
+			ft_printf("It's execve time\n");
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
 			print_matrix_fd(out, cmd->outfile);
 			free_matrix(out);
