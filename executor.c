@@ -12,6 +12,26 @@
 
 #include "minishell.h"
 
+void	get_args(char ***out, int fd)
+{
+	char	*line;
+	char	*temp;
+	char	**mat;
+
+	mat = NULL;
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		temp = ft_strtrim(line, "\n");
+		free(line);
+		mat = extend_matrix(mat, temp);
+		free(temp);
+	}
+	*out = mat;
+}
+
 int		check_loop(t_prompt *prompt, char *input)
 {
 	char	**cmd_mat;
@@ -53,6 +73,11 @@ int		check_loop(t_prompt *prompt, char *input)
 		}
 		else
 		{
+			if (!cmd->command[1] && cmd->infile)
+			{
+				free_matrix(cmd->command);
+				get_args(&cmd->command, cmd->infile);
+			}
 			ft_printf("It's execve time\n");
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
 			print_matrix_fd(out, cmd->outfile);

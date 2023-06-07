@@ -51,9 +51,10 @@ int	get_here_doc(char *delimiter)
 	char	*str;
 	char	*tmp;
 
+	ft_printf("sos\n");
 	tmp = malloc(0);
 	str = malloc(0);
-	while (!ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
+	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
 	{
 		str = ft_strjoin(str, tmp);
 		free(tmp);
@@ -74,10 +75,10 @@ int	get_here_doc(char *delimiter)
 
 int	get_infile(char *file, char append)
 {
-	if (append)
-		return (get_here_doc(file));
 	if (!file)
 		return (-1);
+	if (append)
+		return (get_here_doc(file));
 	return (open(file, O_RDONLY, 0666));
 }
 

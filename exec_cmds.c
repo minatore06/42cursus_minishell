@@ -21,7 +21,7 @@ void	do_something_output(char ***out, int fd)
 	{
 		line = get_next_line(fd);
 		if (!line)
-			break;
+			break ;
 		temp = ft_strtrim(line, "\n");
 		free(line);
 		mat = extend_matrix(mat, temp);
