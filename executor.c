@@ -39,7 +39,10 @@ int		check_loop(t_prompt *prompt, char *input)
 	t_cmd	*cmd;
 
 	if (!input)
+	{
+		ft_printf("exit\n");
 		return (0);
+	}
 	add_history(input);
 	ft_printf("split\n");
 	cmd_mat = ft_cmdsplit(input, ' ');
@@ -78,6 +81,8 @@ int		check_loop(t_prompt *prompt, char *input)
 				free_matrix(cmd->command);
 				get_args(&cmd->command, cmd->infile);
 			}
+			signal(SIGINT, manage_signal);
+			signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
 			print_matrix_fd(out, cmd->outfile);
@@ -87,7 +92,7 @@ int		check_loop(t_prompt *prompt, char *input)
 	}
 	
 	//prompt->envi = set_env(prompt->envi, ,);
-	return (0);
+	return (1);
 }
 
 void    executor()

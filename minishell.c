@@ -109,8 +109,7 @@ int		main(int argc, char **argv, char **env)
 	while (argc && argv)
 	{
 		signal(SIGINT, manage_signal);
-		signal(EOF, manage_signal);
-		signal(SIGQUIT, manage_signal);
+		signal(SIGQUIT, SIG_IGN);
 		str = put_prompt(prompt);
 		if (str)
 			out = readline(str);
@@ -118,7 +117,7 @@ int		main(int argc, char **argv, char **env)
 			out = readline("guest@epicshell$ ");
 		free(str);
 		add_history(out);
-		if (check_loop(&prompt, out))
+		if (!check_loop(&prompt, out))
 			break ;
 	}
 	exit(g_status);

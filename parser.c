@@ -200,7 +200,7 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	}
 	cmd->command = get_full_cmd(cmd_mat);
 	cmd->command = remove_redirects(cmd->command);
- 	cmd->path = get_cmd_path(prompt, cmd_mat[0]);
+ 	cmd->path = get_cmd_path(prompt, cmd->command[0]);
 	return (cmd);
 }
 
