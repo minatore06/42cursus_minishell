@@ -76,10 +76,13 @@ int		check_loop(t_prompt *prompt, char *input)
 		}
 		else
 		{
-			if (!cmd->command[1] && cmd->infile)
+			if (/*!cmd->command[1] &&*/ cmd->infile)
 			{
-				free_matrix(cmd->command);
-				get_args(&cmd->command, cmd->infile);
+				if (!has_args(cmd->command))
+					cmd->command = extend_matrix(cmd->command, cmd->infile_name);
+				close(cmd->infile);
+				//free_matrix(cmd->command);
+				//get_args(&cmd->command, cmd->infile);
 			}
 			signal(SIGINT, manage_signal);
 			signal(SIGQUIT, SIG_IGN);

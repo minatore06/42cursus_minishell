@@ -31,6 +31,7 @@ void	init_cmd_node(t_cmd *cmd)
 {
 	cmd->command = NULL;
 	cmd->path = NULL;
+	cmd->infile_name = NULL;
 	cmd->infile = 0;
 	cmd->outfile = 1;
 }
@@ -62,6 +63,7 @@ int	get_here_doc(char *delimiter)
 		tmp = ft_strjoin(tmp, "\n");
 	}
 	free(tmp);
+	//I have no idea on how to update the history
 	if (pipe(fd) == -1)
 	{
 		print_error(4, NULL, 1);
@@ -188,7 +190,10 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	while (cmd_mat[i] && cmd_mat[i][0] != '|')
 	{
 		if (cmd_mat[i][0] == '<')
+		{
+			cmd->infile_name = ft_strdup(cmd_mat[i + 1]);
 			cmd->infile = get_infile(cmd_mat[i + 1], cmd_mat[i][1]);
+		}
 		else if (cmd_mat[i][0] == '>')
 			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
 		i++;

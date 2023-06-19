@@ -55,6 +55,7 @@ t_prompt init_vars(t_prompt prompt, char **argv)
 	str = get_env(prompt.envi, "_=", 2);
 	if (!str)
 		prompt.envi = set_env(prompt.envi, argv[0], "_=", 2);
+	prompt.expo = NULL;
 	return (prompt);
 }
 

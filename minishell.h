@@ -35,8 +35,9 @@ typedef struct s_cmd
 {
 	char	**command;
 	char	*path;
-	int		outfile;
+	char	*infile_name;
 	int		infile;
+	int		outfile;
 	void	*next;
 }	t_cmd;
 
@@ -44,6 +45,7 @@ typedef struct s_prompt
 {
 	t_cmd	*cmds;
 	char	**envi;
+	char	**expo;
 	pid_t	 pid;
 }   t_prompt;
 
@@ -84,6 +86,8 @@ void		free_matrix(char **mat);
 void		print_error(int err, char *str, int g);
 void		manage_signal(int s);
 int			get_position(char *str, char c, int bypass);
+int			ft_strcmp(char *s1, char *s2);
+int 		has_args(char **cmd);
 
 pid_t		mini_getpid();
 t_prompt	init_vars(t_prompt prompt, char **argv);
