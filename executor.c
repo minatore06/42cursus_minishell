@@ -78,9 +78,10 @@ int		check_loop(t_prompt *prompt, char *input)
 		{
 			if (/*!cmd->command[1] &&*/ cmd->infile)
 			{
-				if (!has_args(cmd->command))
-					cmd->command = extend_matrix(cmd->command, cmd->infile_name);
-				close(cmd->infile);
+				if (!has_args(cmd->command) /* && cmd->infile_name */)
+					dup2(cmd->infile, STDIN_FILENO);
+					//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
+				//close(cmd->infile);
 				//free_matrix(cmd->command);
 				//get_args(&cmd->command, cmd->infile);
 			}
@@ -88,7 +89,10 @@ int		check_loop(t_prompt *prompt, char *input)
 			signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
+			//dup2(0, STDIN_FILENO);
 			print_matrix_fd(out, cmd->outfile);
+			close(cmd->infile);
+			close(cmd->outfile);
 			free_matrix(out);
 		}
 		cmd = cmd->next;

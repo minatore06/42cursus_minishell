@@ -35,7 +35,6 @@ typedef struct s_cmd
 {
 	char	**command;
 	char	*path;
-	char	*infile_name;
 	int		infile;
 	int		outfile;
 	void	*next;

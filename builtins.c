@@ -63,7 +63,6 @@ int     pwd_builtin(void)
 char	*find_low(char *old, char **envi)
 {
 	int		i;
-	//int		diff;
 	char	*new;
 
 	i = 0;
@@ -116,43 +115,42 @@ char	**sort_alpha(char **expo, char **envi)
 	int		k;
 	int		c;
 	char	*low;
-	char	*temp;
 
 	if (expo)
 		free_matrix(expo);
-	expo = dup_matrix(envi);
 	i = 0;
-	temp = NULL;
-	while(expo[i])
-	{
-		low = find_low(temp, envi);
-		if (temp)
-			free(temp);
-		temp = ft_strdup(low);
-		free(expo[i]);
-		expo[i] = malloc((ft_strlen(low) + 2) * sizeof(char));
-		j = 0;
-		k = 0;
-		c = 0;
-		while(low[k])
-		{
-			if (k > 0 && low[k - 1] == '=' && c == 0)
-			{
-				c = 1;
-				expo[i][j++] = '\"';
-			}
-			expo[i][j] = low[k];
-			j++;
-			k++;
-		}
-		expo[i][j] = 0;
-		expo[i] = ft_strjoin(expo[i], "\"");
-		expo[i] = ft_strjoin("declare -x ", expo[i]);
+	while (envi[i])
 		i++;
+	expo = malloc(i * sizeof(char *));
+	i = 0;
+	low = NULL;
+	while(envi[i + 1])
+	{
+		low = find_low(low, envi);
+		if(ft_strncmp(low, "_=", 2))
+		{
+			expo[i] = malloc((ft_strlen(low) + 2) * sizeof(char));
+			j = 0;
+			k = 0;
+			c = 0;
+			while(low[k])
+			{
+				if (k > 0 && low[k - 1] == '=' && c == 0)
+				{
+					c = 1;
+					expo[i][j++] = '\"';
+				}
+				expo[i][j] = low[k];
+				j++;
+				k++;
+			}
+			expo[i][j] = 0;
+			expo[i] = ft_strjoin(expo[i], "\"");
+			expo[i] = ft_strjoin("declare -x ", expo[i]);
+			i++;
+		}
 	}
-	free(expo[i - 1]);
-	expo[i - 1] = NULL;
-	free(temp);
+	free(low);
 	return (expo);
 }
 
@@ -163,8 +161,8 @@ int		export_builtin(t_prompt *p, t_cmd *cmd)
 		print_matrix(p->expo);
 	else
 	{
-		ft_printf("SUS!!\n");
-		extend_matrix(p->envi, cmd->command[1]);
+		//ft_printf("%s\n", cmd->command[1]);
+		p->envi = extend_matrix(p->envi, cmd->command[1]);
 	}
 	return (0);
 }
