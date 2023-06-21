@@ -34,6 +34,8 @@ void	get_args(char ***out, int fd)
 
 int		check_loop(t_prompt *prompt, char *input)
 {
+	int		fd[2];
+	int		i;
 	char	**cmd_mat;
 	char	**out;
 	t_cmd	*cmd;
@@ -90,7 +92,21 @@ int		check_loop(t_prompt *prompt, char *input)
 			ft_printf("It's execve time\n");
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
 			//dup2(0, STDIN_FILENO);
-			print_matrix_fd(out, cmd->outfile);
+			if (cmd->next)
+			{
+				if (pipe(fd) == -1)
+				{
+					print_error(4, NULL, 1);
+					return (-1);
+				}
+				i = 0;
+				while (out[i])
+					write(fd[1], out[i++], ft_strlen(str));
+				close(fd[1]);
+				cmd->next->infile(fd[0]);
+			}
+			else
+				print_matrix_fd(out, cmd->outfile);
 			close(cmd->infile);
 			close(cmd->outfile);
 			free_matrix(out);
