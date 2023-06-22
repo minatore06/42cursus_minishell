@@ -12,31 +12,31 @@
 
 #include "minishell.h"
 
-int     ft_is_builtin(char *array)
+int	ft_is_builtin(char *array)
 {
-    int i;
+	int	i;
 
-    if (!array)
-        return (0);
-    i = ft_strlen(array);
-    if (!ft_strncmp(array, "echo", i) && i == 4)
-        return (1);
-    if (!ft_strncmp(array, "cd", i) && i == 2)
-        return (1);
-    if (!ft_strncmp(array, "pwd", i) && i == 3)
-        return (1);
-    if (!ft_strncmp(array, "export", i) && i == 6)
-        return (1);
-    if (!ft_strncmp(array, "unset", i) && i == 5)
-        return (1);
-    if (!ft_strncmp(array, "env", i) && i == 3)
-        return (1);
-    if (!ft_strncmp(array, "exit", i) && i == 4)
-        return (1);
-    return (0);
+	if (!array)
+		return (0);
+	i = ft_strlen(array);
+	if (!ft_strncmp(array, "echo", i) && i == 4)
+		return (1);
+	if (!ft_strncmp(array, "cd", i) && i == 2)
+		return (1);
+	if (!ft_strncmp(array, "pwd", i) && i == 3)
+		return (1);
+	if (!ft_strncmp(array, "export", i) && i == 6)
+		return (1);
+	if (!ft_strncmp(array, "unset", i) && i == 5)
+		return (1);
+	if (!ft_strncmp(array, "env", i) && i == 3)
+		return (1);
+	if (!ft_strncmp(array, "exit", i) && i == 4)
+		return (1);
+	return (0);
 }
 
-int		echo_builtin(t_cmd *cmd)
+int	echo_builtin(t_cmd *cmd)
 {
 	if (!ft_strncmp(cmd->command[1], "-n", 2))
 		ft_putstr_fd(cmd->command[2], cmd->outfile);
@@ -45,12 +45,12 @@ int		echo_builtin(t_cmd *cmd)
 	return (0);
 }
 
-int		cd_builtin(t_cmd *cmd)
+int	cd_builtin(t_cmd *cmd)
 {
 	return (chdir(cmd->command[1]));
 }
 
-int     pwd_builtin(void)
+int	pwd_builtin(void)
 {
 	char *str;
 
@@ -154,6 +154,46 @@ char	**sort_alpha(char **expo, char **envi)
 	return (expo);
 }
 
+int		already_present(char **envi, char *cmd)
+{
+	int		i;
+	int	 	j;
+
+	i = 0;
+	while(cmd[i] && cmd[i] != '=')
+		i++;
+	j = 0;
+	while(envi[j])
+	{
+		if(!ft_strncmp(envi[j], cmd, i))
+			return(1);
+		j++;
+	}
+	return (0);
+}
+
+char	**export_update(char **envi, char *cmd)
+{
+	int		i;
+	int	 	j;
+
+	i = 0;
+	while(cmd[i] && cmd[i] != '=')
+		i++;
+	j = 0;
+	while(envi[j])
+	{
+		if(!ft_strncmp(envi[j], cmd, i))
+			break;
+		j++;
+	}
+	if(!envi[j])
+		return(envi);
+	free(envi[j]);
+	envi[j] = ft_strdup(cmd);
+	return (envi);
+}
+
 int		export_builtin(t_prompt *p, t_cmd *cmd)
 {
 	p->expo = sort_alpha(p->expo, p->envi);
@@ -161,8 +201,19 @@ int		export_builtin(t_prompt *p, t_cmd *cmd)
 		print_matrix(p->expo);
 	else
 	{
-		//ft_printf("%s\n", cmd->command[1]);
-		p->envi = extend_matrix(p->envi, cmd->command[1]);
+		if (already_present(p->envi, cmd->command[1]) > 0)
+		{
+			ft_printf("epics\n");
+			p->envi = export_update(p->envi, cmd->command[1]);
+		}
+			
+		else if (already_present(p->envi, cmd->command[1]) < 0)
+		{
+			ft_printf("epicshell: export: `=': not a valid identifier\n"); //corregere il messaggio di errore
+			return (1);
+		}
+		else
+			p->envi = extend_matrix(p->envi, cmd->command[1]);
 	}
 	return (0);
 }
@@ -229,7 +280,7 @@ void	env_builtin(t_prompt *prompt)
 	}
 }
 
-int	exit_builtin()
+int	exit_builtin(void)
 {
 	exit(g_status);
 }

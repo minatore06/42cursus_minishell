@@ -40,7 +40,6 @@ void	print_error2(int err)
 void	print_error(int err, char *str, int g)
 {
 	g_status = g;
-
 	print_error2(err);
 	if (str)
 		ft_putstr_fd(str, 2);
@@ -90,16 +89,16 @@ int	ft_strcmp(char *s1, char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-int has_args(char **cmd)
+int	has_args(char **cmd)
 {
-    int i;
+	int	i;
 
-    i = 1;
-    while (cmd[i])
-    {
-        if (cmd[i][0] != '-')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 1;
+	while (cmd[i])
+	{
+		if (cmd[i][0] != '-')
+			return (1);
+		i++;
+	}
+	return (0);
 }

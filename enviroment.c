@@ -11,39 +11,39 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-char *get_env(char **envi, char *name, int n)
+char	*get_env(char **envi, char *name, int n)
 {
-    int i;
+	int		i;
 
-    i = 0;
-    while (envi[i])
-    {
-        if (ft_strnstr(envi[i], name, n))
-            return (envi[i]);
-        i++;
-    }
-    return (NULL);
+	i = 0;
+	while (envi[i])
+	{
+		if (ft_strnstr(envi[i], name, n))
+			return (envi[i]);
+		i++;
+	}
+	return (NULL);
 }
 
-char **set_env(char **envi, char *value, char *name, int n)
+char	**set_env(char **envi, char *value, char *name, int n)
 {
-    int     i;
-    char    *var;
+	int		i;
+	char	*var;
 
-    i = 0;
-    var = ft_strjoin(name, value);
-    while (envi[i])
-    {
-        if (ft_strnstr(envi[i], name, n))
-        {
-            free(envi[i]);
-            envi[i] = ft_strdup(var);
-            free(var);
-            return (envi);
-        }
-        i++;
-    }
-    envi = extend_matrix(envi, var);
-    free(var);
-    return (envi);
+	i = 0;
+	var = ft_strjoin(name, value);
+	while (envi[i])
+	{
+		if (ft_strnstr(envi[i], name, n))
+		{
+			free(envi[i]);
+			envi[i] = ft_strdup(var);
+			free(var);
+			return (envi);
+		}
+		i++;
+	}
+	envi = extend_matrix(envi, var);
+	free(var);
+	return (envi);
 }

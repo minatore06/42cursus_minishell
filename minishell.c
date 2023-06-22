@@ -19,7 +19,7 @@ int	g_status;
 //signals???
 //rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
 
-pid_t	mini_getpid()
+pid_t	mini_getpid(void)
 {
 	pid_t	pid;
 
@@ -35,7 +35,7 @@ pid_t	mini_getpid()
 	return (pid - 1);
 }
 
-t_prompt init_vars(t_prompt prompt, char **argv)
+t_prompt	init_vars(t_prompt prompt, char **argv)
 {
 	char	*str;
 	char	*str2;
@@ -59,7 +59,7 @@ t_prompt init_vars(t_prompt prompt, char **argv)
 	return (prompt);
 }
 
-t_prompt init_cmds(char **argv, char **env)
+t_prompt	init_cmds(char **argv, char **env)
 {
 	t_prompt	prompt;
 
@@ -100,11 +100,11 @@ char	*put_prompt(t_prompt prompt)
 	return (temp);
 }
 
-int		main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
-    t_prompt	prompt;
-	char	*str;
-	char	*out;
+	t_prompt	prompt;
+	char		*str;
+	char		*out;
 
 	prompt = init_cmds(argv, env);
 	while (argc && argv)

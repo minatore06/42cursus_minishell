@@ -32,7 +32,7 @@ void	get_args(char ***out, int fd)
 	*out = mat;
 }
 
-int		check_loop(t_prompt *prompt, char *input)
+int	check_loop(t_prompt *prompt, char *input)
 {
 	int		fd[2];
 	int		i;
@@ -67,6 +67,7 @@ int		check_loop(t_prompt *prompt, char *input)
 	cmd = prompt->cmds;
 	while (cmd)
 	{
+		//ft_printf("sos\n");
 		print_matrix(cmd->command);
 		ft_printf("path=%s\n", (cmd->path));
 		ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
@@ -101,9 +102,12 @@ int		check_loop(t_prompt *prompt, char *input)
 				}
 				i = 0;
 				while (out[i])
-					write(fd[1], out[i++], ft_strlen(str));
+				{
+					write(fd[1], out[i], ft_strlen(out[i]));
+					i++;
+				}
 				close(fd[1]);
-				cmd->next->infile(fd[0]);
+				((t_cmd *)cmd->next)->infile = fd[0];
 			}
 			else
 				print_matrix_fd(out, cmd->outfile);
@@ -111,14 +115,8 @@ int		check_loop(t_prompt *prompt, char *input)
 			close(cmd->outfile);
 			free_matrix(out);
 		}
-		cmd = cmd->next;
+		cmd = cmd->next;//no looping
 	}
-	
 	//prompt->envi = set_env(prompt->envi, ,);
 	return (1);
-}
-
-void    executor()
-{
-    
 }

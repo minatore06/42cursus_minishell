@@ -9,7 +9,9 @@
 /*   Updated: 2023/05/02 16:41:20 by scaiazzo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
+
 void	do_something_output(char ***out, int fd)
 {
 	char	*line;
@@ -32,9 +34,10 @@ void	do_something_output(char ***out, int fd)
 
 void	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
-	pid_t   pid;
-	int	 fd[2];
+	pid_t	pid;
+	int		fd[2];
 	int		test;
+
 	pipe(fd);
 	pid = fork();
 	if (!pid)

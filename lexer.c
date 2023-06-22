@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-static int check_quote(int quote, char const s)
+static int	check_quote(int quote, char const s)
 {
-	int q;
+	int	q;
 
 	q = 0;
 	if (!quote && s == '"')
