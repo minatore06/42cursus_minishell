@@ -74,7 +74,7 @@ int	check_loop(t_prompt *prompt, char *input)
 		ft_printf("path=%s\n", (cmd->path));
 		ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
 		ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-		if (ft_is_builtin(cmd->command[0]))
+		if (ft_is_builtin(cmd->command, 0))
 		{
 			if (execute_builtins(prompt, cmd))
 				return (1);

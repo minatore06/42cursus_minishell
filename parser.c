@@ -93,7 +93,7 @@ char	**get_paths(char **envi)
 	return (ft_split(paths, ':'));
 }
 
-char	*get_cmd_path(t_prompt *prompt, char *cmd)
+char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 {
 	int				i;
 	char			**dirs;
@@ -101,7 +101,7 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd)
 	DIR				*dp;
 	struct dirent	*entry;
 
-	if (ft_is_builtin(cmd))
+	if (ft_is_builtin(a, 0))
 		return (cmd);
 	ret = NULL;
 	dirs = get_paths(prompt->envi);
@@ -200,7 +200,7 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	}
 	cmd->command = get_full_cmd(cmd_mat);
 	cmd->command = remove_redirects(cmd->command);
-	cmd->path = get_cmd_path(prompt, cmd->command[0]);
+	cmd->path = get_cmd_path(prompt, cmd->command[0], cmd->command);
 	return (cmd);
 }
 

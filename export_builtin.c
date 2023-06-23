@@ -154,10 +154,7 @@ int	export_builtin(t_prompt *p, t_cmd *cmd)
 	else
 	{
 		if (already_present(p->envi, cmd->command[1]) > 0)
-		{
-			ft_printf("epics\n");
 			p->envi = export_update(p->envi, cmd->command[1]);
-		}
 		else if (already_present(p->envi, cmd->command[1]) < 0)
 		{
 			ft_printf("epicshell: export: `=': not a valid identifier\n");

@@ -48,7 +48,7 @@ typedef struct s_prompt
 	pid_t	pid;
 }	t_prompt;
 
-int			ft_is_builtin(char *array);
+int			ft_is_builtin(char **c, int i);
 void		env_builtin(t_prompt *prompt);
 int			exit_builtin(void);
 int			execute_builtins(t_prompt *prompt, t_cmd *cmd);

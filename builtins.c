@@ -12,27 +12,32 @@
 
 #include "minishell.h"
 
-int	ft_is_builtin(char *array)
+int	ft_is_builtin(char **c, int i)
 {
-	int	i;
-
-	if (!array)
+	if (!c[0])
 		return (0);
-	i = ft_strlen(array);
-	if (!ft_strncmp(array, "echo", i) && i == 4)
+	i = ft_strlen(c[0]);
+	if (!ft_strncmp(c[0], "echo", i) && i == 4 && (!c[1] || (c[1] && 
+				((!ft_strncmp(c[1], "-n", 2) && ft_strlen(c[1]) == 2) 
+					|| ft_strncmp(c[1], "-", 1)))))
 		return (1);
-	if (!ft_strncmp(array, "cd", i) && i == 2)
+	if (!ft_strncmp(c[0], "cd", i) && i == 2)
+		if ((c[1] && ft_strncmp(c[1], "-", 1)) || !c[1])
+			return (1);
+	if (!ft_strncmp(c[0], "pwd", i) && i == 3)
+		if (!c[1] || ft_strncmp(c[1], "-", 1))
+			return (1);
+	if (!ft_strncmp(c[0], "export", i) && i == 6)
+		if (!c[1] || ft_strncmp(c[1], "-", 1))
+			return (1);
+	if (!ft_strncmp(c[0], "unset", i) && i == 5)
+		if (!c[1] || ft_strncmp(c[1], "-", 1))
+			return (1);
+	if (!ft_strncmp(c[0], "env", i) && i == 3 && !c[1])
 		return (1);
-	if (!ft_strncmp(array, "pwd", i) && i == 3)
-		return (1);
-	if (!ft_strncmp(array, "export", i) && i == 6)
-		return (1);
-	if (!ft_strncmp(array, "unset", i) && i == 5)
-		return (1);
-	if (!ft_strncmp(array, "env", i) && i == 3)
-		return (1);
-	if (!ft_strncmp(array, "exit", i) && i == 4)
-		return (1);
+	if (!ft_strncmp(c[0], "exit", i) && i == 4)
+		if (!c[1] || ft_strncmp(c[1], "-", 1))
+			return (1);
 	return (0);
 }
 
