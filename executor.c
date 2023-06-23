@@ -36,6 +36,8 @@ int	check_loop(t_prompt *prompt, char *input)
 {
 	int		fd[2];
 	int		i;
+	int		saved_stdin;
+	int		saved_stdout;
 	char	**cmd_mat;
 	char	**out;
 	t_cmd	*cmd;
@@ -82,7 +84,12 @@ int	check_loop(t_prompt *prompt, char *input)
 			if (/*!cmd->command[1] &&*/ cmd->infile)
 			{
 				if (!has_args(cmd->command) /* && cmd->infile_name */)
-					dup2(cmd->infile, STDIN_FILENO);
+				{
+					saved_stdin = dup(STDIN_FILENO);
+					close(STDIN_FILENO);
+					if (dup2(cmd->infile, STDIN_FILENO) == -1)
+						ft_printf("ERROR");
+				}
 					//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
 				//close(cmd->infile);
 				//free_matrix(cmd->command);
@@ -91,8 +98,8 @@ int	check_loop(t_prompt *prompt, char *input)
 			signal(SIGINT, manage_signal);
 			signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
+			saved_stdout = dup(STDOUT_FILENO);
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
-			//dup2(0, STDIN_FILENO);
 			if (cmd->next)
 			{
 				if (pipe(fd) == -1)
@@ -103,7 +110,7 @@ int	check_loop(t_prompt *prompt, char *input)
 				i = 0;
 				while (out[i])
 				{
-					write(fd[1], out[i], ft_strlen(out[i]));
+					ft_putendl_fd(out[i], fd[1]);
 					i++;
 				}
 				close(fd[1]);
@@ -111,8 +118,18 @@ int	check_loop(t_prompt *prompt, char *input)
 			}
 			else
 				print_matrix_fd(out, cmd->outfile);
-			close(cmd->infile);
-			close(cmd->outfile);
+			if (cmd->infile)
+			{
+				close(cmd->infile);
+				dup2(saved_stdin, STDIN_FILENO);
+				close(saved_stdin);
+			}
+			if (cmd->outfile != 1)
+			{
+				close(cmd->outfile);
+				dup2(saved_stdout, STDOUT_FILENO);
+				close(saved_stdout);
+			}
 			free_matrix(out);
 		}
 		cmd = cmd->next;//no looping

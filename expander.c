@@ -75,7 +75,7 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 	}
 	len = env_size(env_val, env_name);
 	free(env_name);
-	return (cmd_replace(cmd, env_val, i, len)); //troppo lunga di 4 righe, usare len_size
+	return (cmd_replace(cmd, env_val, i, len));
 }
 
 char	**expander(char **cmd, char **envi)

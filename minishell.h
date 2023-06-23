@@ -49,14 +49,16 @@ typedef struct s_prompt
 }	t_prompt;
 
 int			ft_is_builtin(char *array);
-int			echo_builtin(t_cmd *cmd);
-int			cd_builtin(t_cmd *cmd);
-int			pwd_builtin(void);
-int			export_builtin(t_prompt *p, t_cmd *cmd);
-int			unset_builtin(t_prompt *p);
 void		env_builtin(t_prompt *prompt);
 int			exit_builtin(void);
 int			execute_builtins(t_prompt *prompt, t_cmd *cmd);
+
+int			echo_builtin(t_cmd *cmd);
+int			cd_builtin(t_cmd *cmd);
+int			pwd_builtin(void);
+int			unset_builtin(t_prompt *p);
+
+int			export_builtin(t_prompt *p, t_cmd *cmd);
 
 char		*get_env(char **envi, char *name, int n);
 char		**set_env(char **envi, char *value, char *name, int n);

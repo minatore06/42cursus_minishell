@@ -15,10 +15,12 @@ NAME = minishell.a
 OUT = minishell
 
 SRCS = builtins.c \
+		builtins_2.c \
 		enviroment.c \
 		exec_cmds.c \
 		executor.c \
 		expander.c \
+		export_builtin.c \
 		lexer.c \
 		matrix.c \
 		mini_utils.c \
