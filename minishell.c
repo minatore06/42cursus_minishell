@@ -121,5 +121,6 @@ int	main(int argc, char **argv, char **env)
 		if (!check_loop(&prompt, out))
 			break ;
 	}
+	ft_free_all(&prompt, prompt.cmds);
 	exit(g_status);
 }

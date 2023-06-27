@@ -24,6 +24,7 @@ SRCS = builtins.c \
 		lexer.c \
 		matrix.c \
 		mini_utils.c \
+		mini_utils2.c \
 		minishell.c \
 		parser.c \
 		split_and_trim.c \

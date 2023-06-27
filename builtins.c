@@ -53,9 +53,10 @@ void	env_builtin(t_prompt *prompt)
 	}
 }
 
-int	exit_builtin(void)
+int	exit_builtin(t_prompt *p, t_cmd *cmd)
 {
 	printf("exit\n");
+	ft_free_all(p, cmd);
 	exit(g_status);
 }
 
@@ -71,7 +72,7 @@ int	choose_builtin(t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
 		g_status = cd_builtin(cmd);
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)
-		g_status = exit_builtin();
+		g_status = exit_builtin(prompt, cmd);
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)
 		g_status = echo_builtin(cmd);
 	else if (!ft_strncmp(a[0], "env", l) && l == 3)

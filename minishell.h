@@ -50,7 +50,7 @@ typedef struct s_prompt
 
 int			ft_is_builtin(char **c, int i);
 void		env_builtin(t_prompt *prompt);
-int			exit_builtin(void);
+int			exit_builtin(t_prompt *p, t_cmd *cmd);
 int			execute_builtins(t_prompt *prompt, t_cmd *cmd);
 
 int			echo_builtin(t_cmd *cmd);
@@ -79,13 +79,17 @@ void		print_matrix_fd(char **mat, int fd);
 char		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);
-void		free_matrix(char **mat);
 
 void		print_error(int err, char *str, int g);
 void		manage_signal(int s);
 int			get_position(char *str, char c, int bypass);
-int			ft_strcmp(char *s1, char *s2);
 int			has_args(char **cmd);
+
+int			ft_strcmp(char *s1, char *s2);
+void		free_matrix(char **mat);
+char		*find_low_aux(char **envi, char *new, int i, int n);
+char		*sort_alpha_aux(char **expo, char *low, int i);
+void		ft_free_all(t_prompt *p, t_cmd *cmd);
 
 pid_t		mini_getpid(void);
 t_prompt	init_vars(t_prompt prompt, char **argv);

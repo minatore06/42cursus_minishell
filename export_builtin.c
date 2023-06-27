@@ -18,33 +18,12 @@ char	*find_low(char *old, char **envi)
 	char	*new;
 
 	i = 0;
+	new = ft_strdup(envi[i]);
 	if (!old)
-	{
-		new = ft_strdup(envi[i]);
-		while (envi[i])
-		{
-			if (ft_strcmp(new, envi[i]) > 0)
-			{
-				if (new)
-					free(new);
-				new = ft_strdup(envi[i]);
-			}
-			i++;
-		}
-	}
+		new = find_low_aux(envi, new, i, 1);
 	else
 	{
-		new = ft_strdup(envi[i]);
-		while (envi[i])
-		{
-			if (ft_strcmp(new, envi[i]) < 0)
-			{
-				if (new)
-					free(new);
-				new = ft_strdup(envi[i]);
-			}
-			i++;
-		}
+		new = find_low_aux(envi, new, i, 0);
 		i = 0;
 		while (envi[i])
 		{
@@ -63,9 +42,6 @@ char	*find_low(char *old, char **envi)
 char	**sort_alpha(char **expo, char **envi)
 {
 	int		i;
-	int		j;
-	int		k;
-	int		c;
 	char	*low;
 
 	if (expo)
@@ -81,24 +57,7 @@ char	**sort_alpha(char **expo, char **envi)
 		low = find_low(low, envi);
 		if (ft_strncmp(low, "_=", 2))
 		{
-			expo[i] = malloc((ft_strlen(low) + 2) * sizeof(char));
-			j = 0;
-			k = 0;
-			c = 0;
-			while (low[k])
-			{
-				if (k > 0 && low[k - 1] == '=' && c == 0)
-				{
-					c = 1;
-					expo[i][j++] = '\"';
-				}
-				expo[i][j] = low[k];
-				j++;
-				k++;
-			}
-			expo[i][j] = 0;
-			expo[i] = ft_strjoin(expo[i], "\"");
-			expo[i] = ft_strjoin("declare -x ", expo[i]);
+			expo[i] = sort_alpha_aux(expo, low, i);
 			i++;
 		}
 	}

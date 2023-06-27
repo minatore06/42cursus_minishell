@@ -110,18 +110,3 @@ char	**reduce_matrix(char **og_mat, int x)
 	free_matrix(og_mat);
 	return (new_mat);
 }
-
-void	free_matrix(char **mat)
-{
-	int	i;
-
-	if (!mat)
-		return ;
-	i = 0;
-	while (mat[i])
-	{
-		free(mat[i]);
-		i++;
-	}
-	free(mat);
-}
