@@ -12,12 +12,27 @@
 
 #include "minishell.h"
 
-int	echo_builtin(t_cmd *cmd)
+int	echo_builtin(char ***out, t_cmd *cmd)
 {
+	int	i;
+
+	*out = ft_calloc(2, sizeof(char *));
+	**out = ft_strdup("");
+	if (!cmd->command[1])
+		return (0);
 	if (!ft_strncmp(cmd->command[1], "-n", 2))
-		ft_putstr_fd(cmd->command[2], cmd->outfile);
+		i = 2;
 	else
-		ft_putendl_fd(cmd->command[1], cmd->outfile);
+		i = 1;
+	while (cmd->command[i])
+	{
+		(*out)[0] = ft_strjoin(**out, cmd->command[i]);
+		if (cmd->command[i + 1])
+			(*out)[0] = ft_strjoin(**out, " ");
+		i++;
+	}
+	if (!ft_strncmp(cmd->command[1], "-n", 2))
+		cmd->nl = 0;
 	return (0);
 }
 
@@ -26,13 +41,10 @@ int	cd_builtin(t_cmd *cmd)
 	return (chdir(cmd->command[1]));
 }
 
-int	pwd_builtin(void)
+int	pwd_builtin(char ***out)
 {
-	char	*str;
-
-	str = getcwd(NULL, 0);
-	printf("%s\n", str);
-	free(str);
+	*out = calloc(2, sizeof(char *));
+	(*out)[0] = ft_strdup(getcwd(NULL, 0));
 	return (0);
 }
 

@@ -41,16 +41,9 @@ int	ft_is_builtin(char **c, int i)
 	return (0);
 }
 
-void	env_builtin(t_prompt *prompt)
+void	env_builtin(char ***out, t_prompt *prompt)
 {
-	int		i;
-
-	i = 0;
-	while (prompt->envi[i])
-	{
-		printf("%s\n", prompt->envi[i]);
-		i++;
-	}
+	*out = dup_matrix(prompt->envi);
 }
 
 int	exit_builtin(t_prompt *p, t_cmd *cmd)
@@ -60,13 +53,13 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd)
 	exit(g_status);
 }
 
-int	choose_builtin(t_prompt *prompt, t_cmd *cmd, char **a)
+int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 {
 	int	l;
 
 	l = ft_strlen(a[0]);
 	if (!ft_strncmp(a[0], "export", l) && l == 6)
-		g_status = export_builtin(prompt, cmd);
+		g_status = export_builtin(out, prompt, cmd);
 	else if (!ft_strncmp(a[0], "unset", l) && l == 5)
 		g_status = unset_builtin(prompt);
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
@@ -74,11 +67,11 @@ int	choose_builtin(t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)
 		g_status = exit_builtin(prompt, cmd);
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)
-		g_status = echo_builtin(cmd);
+		g_status = echo_builtin(out, cmd);
 	else if (!ft_strncmp(a[0], "env", l) && l == 3)
-		env_builtin(prompt);
+		env_builtin(out, prompt);
 	else if (!ft_strncmp(a[0], "pwd", l) && l == 3)
-		g_status = pwd_builtin();
+		g_status = pwd_builtin(out);
 	else
 	{
 		signal(SIGINT, SIG_IGN);
@@ -88,19 +81,19 @@ int	choose_builtin(t_prompt *prompt, t_cmd *cmd, char **a)
 	return (g_status);
 }
 
-int	execute_builtins(t_prompt *prompt, t_cmd *cmd)
+int	execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd)
 {
 	char	**a;
 
-	while (cmd)
-	{
+/* 	while (cmd)
+	{ */
 		a = dup_matrix(cmd->command);
 		if (a)
 		{
-			g_status = choose_builtin(prompt, cmd, a);
+			g_status = choose_builtin(out, prompt, cmd, a);
 			free(a);
 		}
-		cmd = cmd->next;
-	}
+/* 		cmd = cmd->next;
+	} */
 	return (g_status);
 }

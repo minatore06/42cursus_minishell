@@ -17,7 +17,7 @@ void	print_matrix(char **mat)
 	int	i;
 
 	i = 0;
-	if (!mat)
+	if (!mat || !mat[i])
 		return ;
 	while (mat[i])
 	{
@@ -26,7 +26,7 @@ void	print_matrix(char **mat)
 	}
 }
 
-void	print_matrix_fd(char **mat, int fd)
+void	print_matrix_fd(char **mat, int fd, int nl)
 {
 	int	i;
 
@@ -35,7 +35,10 @@ void	print_matrix_fd(char **mat, int fd)
 		return ;
 	while (mat[i])
 	{
-		ft_putendl_fd(mat[i], fd);
+		if (nl)
+			ft_putendl_fd(mat[i], fd);
+		else
+			ft_putstr_fd(mat[i], fd);
 		i++;
 	}
 }

@@ -106,9 +106,7 @@ char	*epic_trim(char *cmd, char c)
 			i++;
 			continue ;
 		}
-		new_cmd[j] = cmd[i];
-		i++;
-		j++;
+		new_cmd[j++] = cmd[i++];
 	}
 	new_cmd[j] = 0;
 	if (count % 2)
@@ -118,6 +116,50 @@ char	*epic_trim(char *cmd, char c)
 	return (new_cmd);
 }
 
+// char	*epic_trim(char *cmd, char c)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		count;
+// 	char	*new_cmd;
+
+// 	new_cmd = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
+// 	i = 0;
+// 	j = ft_strlen(cmd);
+// 	count = 0;
+// 	while (cmd[i])
+// 	{
+// 		while (cmd[i] != c && cmd[i])
+// 		{
+// 			new_cmd[i] = cmd[i];
+// 			i++;
+// 		}
+// 		if (cmd[i] == c)
+// 		{
+// 			count++;
+// 			while (cmd[j] && j > i)
+// 			{
+// 				if (cmd[j] == c)
+// 				{
+// 					count--;
+// 					break;
+// 				}
+// 				j--;
+// 			}
+// 		}
+// 		if (count != 0)
+// 			break ;
+// 		i++;
+// 	}
+// 	if (count % 2)
+// 		ft_printf(">\n");
+// 	//print_error(3, NULL, 1); deve aprire > e leggere finche' non trova la quote mancante
+// 	if (count % 2)
+// 		return (NULL);
+// 	new_cmd[j] = 0;
+// 	return (new_cmd);
+// }
+
 char	**ft_trim_cmd(char **cmd)
 {
 	int	i;
@@ -125,11 +167,9 @@ char	**ft_trim_cmd(char **cmd)
 	i = 0;
 	while (cmd[i])
 	{
-		if (cmd[i][0] == '\'') //delete first 2 quotes, not trim
-			//cmd[i] = ft_strtrim(cmd[i], "\'");
+		if (cmd[i][0] == '\'') //non deve cancellare le prime due quote, ma la prima e l'ultima, la seconda e la penultima, ecc.
 			cmd[i] = epic_trim(cmd[i], '\'');
 		else if (cmd[i][0] == '\"')
-			//cmd[i] = ft_strtrim(cmd[i], "\"");
 			cmd[i] = epic_trim(cmd[i], '\"');
 		i++;
 	}

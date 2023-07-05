@@ -62,6 +62,8 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 	{
 		while (cmd[i + 1 + len] && (cmd[i + 1 + len] != ' '
 				&& cmd[i + 1 + len] != '"'))
+		// while (cmd[i + 1 + len] && ((cmd[i + 1 + len] >= 'A'
+		// 	&& cmd[i + 1 + len] <= 'Z') || cmd[i + 1 + len] == '_')) Nessuno dei due while va bene
 			len++;
 		env_name = ft_substr(cmd, i + 1, len);
 		env_name = ft_strjoin(env_name, "=");

@@ -37,6 +37,7 @@ typedef struct s_cmd
 	char	*path;
 	int		infile;
 	int		outfile;
+	int		nl;
 	void	*next;
 }	t_cmd;
 
@@ -49,16 +50,16 @@ typedef struct s_prompt
 }	t_prompt;
 
 int			ft_is_builtin(char **c, int i);
-void		env_builtin(t_prompt *prompt);
+void		env_builtin(char ***out, t_prompt *prompt);
 int			exit_builtin(t_prompt *p, t_cmd *cmd);
-int			execute_builtins(t_prompt *prompt, t_cmd *cmd);
+int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 
-int			echo_builtin(t_cmd *cmd);
+int			echo_builtin(char ***out, t_cmd *cmd);
 int			cd_builtin(t_cmd *cmd);
-int			pwd_builtin(void);
+int			pwd_builtin(char ***out);
 int			unset_builtin(t_prompt *p);
 
-int			export_builtin(t_prompt *p, t_cmd *cmd);
+int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
 
 char		*get_env(char **envi, char *name, int n);
 char		**set_env(char **envi, char *value, char *name, int n);
@@ -75,7 +76,7 @@ char		**expander(char **cmd, char **envi);
 char		**ft_cmdsplit(char const *s, char c);
 
 void		print_matrix(char **mat);
-void		print_matrix_fd(char **mat, int fd);
+void		print_matrix_fd(char **mat, int fd, int nl);
 char		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);

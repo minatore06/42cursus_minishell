@@ -42,11 +42,14 @@ int	check_loop(t_prompt *prompt, char *input)
 	char	**out;
 	t_cmd	*cmd;
 
+	out = NULL;
 	if (!input)
 	{
 		ft_printf("exit\n");
 		return (0);
 	}
+	if (!strlen(input))
+		return (1);
 	add_history(input);
 	ft_printf("split\n");
 	cmd_mat = ft_cmdsplit(input, ' ');
@@ -69,69 +72,75 @@ int	check_loop(t_prompt *prompt, char *input)
 	cmd = prompt->cmds;
 	while (cmd)
 	{
-		//ft_printf("sos\n");
 		print_matrix(cmd->command);
 		ft_printf("path=%s\n", (cmd->path));
 		ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
 		ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		if (/*!cmd->command[1] &&*/ cmd->infile)
+		{
+			if (!has_args(cmd->command) /* && cmd->infile_name */)
+			{
+				saved_stdin = dup(STDIN_FILENO);
+				close(STDIN_FILENO);
+				if (dup2(cmd->infile, STDIN_FILENO) == -1)
+					ft_printf("ERROR");
+			}
+				//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
+			//close(cmd->infile);
+			//free_matrix(cmd->command);
+			//get_args(&cmd->command, cmd->infile);
+		}
 		if (ft_is_builtin(cmd->command, 0))
 		{
-			if (execute_builtins(prompt, cmd))
+			ft_printf("It's builtin time\n");
+			if (execute_builtins(&out, prompt, cmd))
 				return (1);
 		}
 		else
 		{
-			if (/*!cmd->command[1] &&*/ cmd->infile)
-			{
-				if (!has_args(cmd->command) /* && cmd->infile_name */)
-				{
-					saved_stdin = dup(STDIN_FILENO);
-					close(STDIN_FILENO);
-					if (dup2(cmd->infile, STDIN_FILENO) == -1)
-						ft_printf("ERROR");
-				}
-					//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
-				//close(cmd->infile);
-				//free_matrix(cmd->command);
-				//get_args(&cmd->command, cmd->infile);
-			}
-			signal(SIGINT, manage_signal);
-			signal(SIGQUIT, SIG_IGN);
+			// signal(SIGINT, manage_signal);
+			// signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
 			saved_stdout = dup(STDOUT_FILENO);
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
-			if (cmd->next)
-			{
-				if (pipe(fd) == -1)
-				{
-					print_error(4, NULL, 1);
-					return (-1);
-				}
-				i = 0;
-				while (out[i])
-				{
-					ft_putendl_fd(out[i], fd[1]);
-					i++;
-				}
-				close(fd[1]);
-				((t_cmd *)cmd->next)->infile = fd[0];
-			}
-			else
-				print_matrix_fd(out, cmd->outfile);
-			if (cmd->infile)
-			{
-				close(cmd->infile);
-				dup2(saved_stdin, STDIN_FILENO);
-				close(saved_stdin);
-			}
+		}
+		if (cmd->next)
+		{
 			if (cmd->outfile != 1)
 			{
-				close(cmd->outfile);
-				dup2(saved_stdout, STDOUT_FILENO);
-				close(saved_stdout);
+				print_matrix_fd(out, cmd->outfile, cmd->nl);
+				free_matrix(out);
+				out = malloc(0);
 			}
-			free_matrix(out);
+			if (pipe(fd) == -1)
+			{
+				print_error(4, NULL, 1);
+				return (-1);
+			}
+			i = 0;
+			while (out[i])
+			{
+				ft_putendl_fd(out[i], fd[1]);
+				i++;
+			}
+			close(fd[1]);
+			((t_cmd *)cmd->next)->infile = fd[0];
 		}
+		else
+			print_matrix_fd(out, cmd->outfile, cmd->nl);
+		if (cmd->infile)
+		{
+			close(cmd->infile);
+			dup2(saved_stdin, STDIN_FILENO);
+			close(saved_stdin);
+		}
+		if (cmd->outfile != 1)
+		{
+			close(cmd->outfile);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdout);
+		}
+		free_matrix(out);
 		cmd = cmd->next;//no looping
 	}
 	//prompt->envi = set_env(prompt->envi, ,);

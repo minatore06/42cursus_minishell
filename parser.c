@@ -31,6 +31,7 @@ void	init_cmd_node(t_cmd *cmd)
 {
 	cmd->command = NULL;
 	cmd->path = NULL;
+	cmd->nl = 1;
 	cmd->infile = 0;
 	cmd->outfile = 1;
 }
@@ -52,8 +53,8 @@ int	get_here_doc(char *delimiter)
 	char	*tmp;
 
 	ft_printf("sos\n");
-	tmp = malloc(0);
-	str = malloc(0);
+	tmp = ft_strdup("");
+	str = ft_strdup("");
 	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
 	{
 		str = ft_strjoin(str, tmp);

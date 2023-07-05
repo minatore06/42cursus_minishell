@@ -36,6 +36,8 @@ char	*find_low(char *old, char **envi)
 			i++;
 		}
 	}
+	if (old)
+		free(old);
 	return (new);
 }
 
@@ -105,11 +107,11 @@ char	**export_update(char **envi, char *cmd)
 	return (envi);
 }
 
-int	export_builtin(t_prompt *p, t_cmd *cmd)
+int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 {
 	p->expo = sort_alpha(p->expo, p->envi);
 	if (!cmd->command[1])
-		print_matrix(p->expo);
+		*out = dup_matrix(p->expo);
 	else
 	{
 		if (already_present(p->envi, cmd->command[1]) > 0)

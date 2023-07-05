@@ -13,11 +13,7 @@
 #include "minishell.h"
 
 int	g_status;
-//history
-//search and launch executables
 //&?
-//signals???
-//rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
 
 pid_t	mini_getpid(void)
 {
@@ -45,7 +41,7 @@ t_prompt	init_vars(t_prompt prompt, char **argv)
 	if (!str)
 		str2 = ft_strdup("1");
 	else
-		str2 = ft_itoa(ft_atoi(str) + 1);
+		str2 = ft_itoa(ft_atoi(&str[6]) + 1);
 	prompt.envi = set_env(prompt.envi, str2, "SHLVL=", 6);
 	free(str2);
 	str = get_env(prompt.envi, "PATH=", 5);
@@ -68,7 +64,6 @@ t_prompt	init_cmds(char **argv, char **env)
 	g_status = 0;
 	prompt.pid = mini_getpid();
 	prompt = init_vars(prompt, argv);
-	//print_matrix(prompt.envi);
 	return (prompt);
 }
 
