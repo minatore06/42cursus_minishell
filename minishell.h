@@ -55,7 +55,7 @@ int			exit_builtin(t_prompt *p, t_cmd *cmd);
 int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 
 int			echo_builtin(char ***out, t_cmd *cmd);
-int			cd_builtin(t_cmd *cmd);
+int			cd_builtin(t_cmd *cmd, t_prompt *p);
 int			pwd_builtin(char ***out);
 int			unset_builtin(t_prompt *p);
 

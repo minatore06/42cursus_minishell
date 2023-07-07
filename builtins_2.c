@@ -27,7 +27,7 @@ int	echo_builtin(char ***out, t_cmd *cmd)
 	while (cmd->command[i])
 	{
 		(*out)[0] = ft_strjoin(**out, cmd->command[i]);
-		if (cmd->command[i + 1])
+		if (cmd->command[i + 1] && ft_strlen(cmd->command[i]))
 			(*out)[0] = ft_strjoin(**out, " ");
 		i++;
 	}
@@ -36,9 +36,21 @@ int	echo_builtin(char ***out, t_cmd *cmd)
 	return (0);
 }
 
-int	cd_builtin(t_cmd *cmd)
+int	cd_builtin(t_cmd *cmd, t_prompt *p)
 {
-	return (chdir(cmd->command[1]));
+	int		err;
+	char	*pwd;
+
+	err = chdir(cmd->command[1]);
+	if (err < 0)
+		print_error(7, cmd->command[1], err);
+	else
+	{
+		pwd = get_env(p->envi, "PWD=", 4);
+		set_env(p->envi, ft_substr(pwd, 4, ft_strlen(pwd)), "OLDPWD=", 7);
+		set_env(p->envi, getcwd(NULL, 0), "PWD=", 4);
+	}
+	return (err);
 }
 
 int	pwd_builtin(char ***out)

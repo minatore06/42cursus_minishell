@@ -78,13 +78,13 @@ int	check_loop(t_prompt *prompt, char *input)
 		ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		if (/*!cmd->command[1] &&*/ cmd->infile)
 		{
-			if (!has_args(cmd->command) /* && cmd->infile_name */)
-			{
+/* 			if (!has_args(cmd->command))
+			{ */
 				saved_stdin = dup(STDIN_FILENO);
 				close(STDIN_FILENO);
 				if (dup2(cmd->infile, STDIN_FILENO) == -1)
 					ft_printf("ERROR");
-			}
+			//}
 				//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
 			//close(cmd->infile);
 			//free_matrix(cmd->command);
@@ -94,7 +94,7 @@ int	check_loop(t_prompt *prompt, char *input)
 		{
 			ft_printf("It's builtin time\n");
 			if (execute_builtins(&out, prompt, cmd))
-				return (1);
+				return (1);	
 		}
 		else
 		{
@@ -103,6 +103,8 @@ int	check_loop(t_prompt *prompt, char *input)
 			ft_printf("It's execve time\n");
 			saved_stdout = dup(STDOUT_FILENO);
 			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
+			if (!ft_strncmp(cmd->command[0], "clear", 5))
+				cmd->nl = 0;
 		}
 		if (cmd->next)
 		{

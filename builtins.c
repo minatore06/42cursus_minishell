@@ -63,7 +63,7 @@ int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "unset", l) && l == 5)
 		g_status = unset_builtin(prompt);
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
-		g_status = cd_builtin(cmd);
+		g_status = cd_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)
 		g_status = exit_builtin(prompt, cmd);
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)

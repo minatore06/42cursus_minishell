@@ -87,7 +87,7 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 	return (cmd);
 }
 
-char	*epic_trim(char *cmd, char c)
+char	*epic_trim(char *cmd, char c, int k)
 {
 	int		i;
 	int		j;
@@ -100,7 +100,7 @@ char	*epic_trim(char *cmd, char c)
 	count = 0;
 	while (cmd[i])
 	{
-		if (cmd[i] == c)
+		if (cmd[i] == c && count < 2 && i >= k)
 		{
 			count++;
 			i++;
@@ -116,61 +116,60 @@ char	*epic_trim(char *cmd, char c)
 	return (new_cmd);
 }
 
-// char	*epic_trim(char *cmd, char c)
-// {
-// 	int		i;
-// 	int		j;
-// 	int		count;
-// 	char	*new_cmd;
+void	ft_trim_cmd_aux(char **cmd, int i, int *j, char a)
+{
+	int	k;
 
-// 	new_cmd = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
-// 	i = 0;
-// 	j = ft_strlen(cmd);
-// 	count = 0;
-// 	while (cmd[i])
-// 	{
-// 		while (cmd[i] != c && cmd[i])
-// 		{
-// 			new_cmd[i] = cmd[i];
-// 			i++;
-// 		}
-// 		if (cmd[i] == c)
-// 		{
-// 			count++;
-// 			while (cmd[j] && j > i)
-// 			{
-// 				if (cmd[j] == c)
-// 				{
-// 					count--;
-// 					break;
-// 				}
-// 				j--;
-// 			}
-// 		}
-// 		if (count != 0)
-// 			break ;
-// 		i++;
-// 	}
-// 	if (count % 2)
-// 		ft_printf(">\n");
-// 	//print_error(3, NULL, 1); deve aprire > e leggere finche' non trova la quote mancante
-// 	if (count % 2)
-// 		return (NULL);
-// 	new_cmd[j] = 0;
-// 	return (new_cmd);
-// }
+	k = *j;
+	(*j)++;
+	while (cmd[i][*j] && cmd[i][*j] != a)
+		(*j)++;
+	if (cmd[i][*j])
+		(*j)++;
+	cmd[i] = epic_trim(cmd[i], a, k);
+	if (cmd[i])
+		*j = *j - 2;
+}
 
 char	**ft_trim_cmd(char **cmd)
 {
 	int	i;
+	int	j;
+	//int k;
 
 	i = 0;
 	while (cmd[i])
 	{
-		if (cmd[i][0] == '\'') //non deve cancellare le prime due quote, ma la prima e l'ultima, la seconda e la penultima, ecc.
-			cmd[i] = epic_trim(cmd[i], '\'');
-		else if (cmd[i][0] == '\"')
-			cmd[i] = epic_trim(cmd[i], '\"');
+		j = 0;
+		while (cmd[i][j])
+		{
+			//k = j; 
+			if (cmd[i][j] == '\'')
+				ft_trim_cmd_aux(cmd, i, &j, '\'');
+				// j++;
+				// while (cmd[i][j] && cmd[i][j] != '\'')
+				// 	j++;
+				// if (cmd[i][j])
+				// 	j++;
+				// cmd[i] = epic_trim(cmd[i], '\'', k);
+				// if (cmd[i])
+				// 	j = j - 2;
+			else if (cmd[i][j] == '\"')
+				ft_trim_cmd_aux(cmd, i, &j, '\"');
+				// j++;
+				// while (cmd[i][j] && cmd[i][j] != '\"')
+				// 	j++;
+				// if (cmd[i][j])
+				// 	j++;
+				// cmd[i] = epic_trim(cmd[i], '\"', k);
+				// if (cmd[i])
+				// 	j = j - 2;
+			else
+				j++;
+			if(!cmd[i])
+				return(cmd);
+			//printf("%s j = %i\n", cmd[i], j);
+		}
 		i++;
 	}
 	return (cmd);

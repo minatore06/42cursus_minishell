@@ -52,32 +52,57 @@ int	env_size(char *val, char *name)
 char	*search_and_replace(char *cmd, char **envi, int i)
 {
 	int		len;
-	char	*env_name;
-	char	*env_val;
+	char	*enam;
+	char	*eval;
 
 	len = 0;
 	if (cmd[i] == '~')
-		env_name = ft_strdup("HOME=");
+		enam = ft_strdup("HOME=");
 	else
 	{
-		while (cmd[i + 1 + len] && (cmd[i + 1 + len] != ' '
-				&& cmd[i + 1 + len] != '"'))
-		// while (cmd[i + 1 + len] && ((cmd[i + 1 + len] >= 'A'
-		// 	&& cmd[i + 1 + len] <= 'Z') || cmd[i + 1 + len] == '_')) Nessuno dei due while va bene
+		while (cmd[i + 1 + len] && (ft_isalnum(cmd[i + 1 + len]) ||
+			cmd[i + 1 + len] == '_'))
 			len++;
-		env_name = ft_substr(cmd, i + 1, len);
-		env_name = ft_strjoin(env_name, "=");
+		enam = ft_substr(cmd, i + 1, len);
+		enam = ft_strjoin(enam, "=");
 	}
-	if (!ft_strncmp(env_name, "?=", ft_strlen(env_name)))
-		env_val = ft_itoa(g_status);
+	if (!ft_strncmp(enam, "?=", ft_strlen(enam)))
+		eval = ft_itoa(g_status);
 	else
 	{
-		env_val = get_env(envi, env_name, ft_strlen(env_name));
-		env_val = ft_substr(env_val, ft_strlen(env_name), ft_strlen(env_val));
+		eval = get_env(envi, enam, ft_strlen(enam));
+		if (eval)
+			eval = ft_substr(eval, ft_strlen(enam), ft_strlen(eval));
+		else
+			eval = ft_strdup("");
 	}
-	len = env_size(env_val, env_name);
-	free(env_name);
-	return (cmd_replace(cmd, env_val, i, len));
+	len = env_size(eval, enam);
+	free(enam);
+	return (cmd_replace(cmd, eval, i, len));
+}
+
+void	expander_aux(char **cmd, char **envi, int *i, int *j)
+{
+	if (cmd[*i][*j] == '\'')
+	{
+		(*j)++;
+		while (cmd[*i][*j] && cmd[*i][*j] != '\'')
+			(*j)++;
+		if (cmd[*i][*j])
+			(*j)++;
+	}
+	else if (cmd[*i][*j] == '\"')
+	{
+		(*j)++;
+		while (cmd[*i][*j] && cmd[*i][*j] != '\"')
+		{
+			if (cmd[*i][*j] == '$')
+				cmd[*i] = search_and_replace(cmd[*i], envi, *j);
+			(*j)++;
+		}
+		if (cmd[*i][*j])
+			(*j)++;
+	}
 }
 
 char	**expander(char **cmd, char **envi)
@@ -89,18 +114,40 @@ char	**expander(char **cmd, char **envi)
 	while (cmd[i])
 	{
 		j = 0;
-		if (cmd[i][j] == '\'')
-		{
-			i++;
-			continue ;
-		}
 		while (cmd[i][j])
 		{
-			if (cmd[i][j] == '$')
-				cmd[i] = search_and_replace(cmd[i], envi, j);
-			else if (cmd[i][j] == '~')
-				cmd[i] = search_and_replace(cmd[i], envi, j);
-			j++;
+			if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
+				expander_aux(cmd, envi, &i, &j);
+			// if (cmd[i][j] == '\'')
+			// {
+			// 	j++;
+			// 	while (cmd[i][j] && cmd[i][j] != '\'')
+			// 		j++;
+			// 	if (cmd[i][j])
+			// 		j++;
+			// }
+			// else if (cmd[i][j] == '\"')
+			// {
+			// 	j++;
+			// 	while (cmd[i][j] && cmd[i][j] != '\"')
+			// 	{
+			// 		if (cmd[i][j] == '$')
+			// 			cmd[i] = search_and_replace(cmd[i], envi, j);
+			// 		j++;
+			// 	}
+			// 	if (cmd[i][j])
+			// 		j++;
+			// }
+			else
+			{
+				if (cmd[i][j] == '$')
+					cmd[i] = search_and_replace(cmd[i], envi, j);
+				else if (cmd[i][j] == '~')
+					if ((!cmd[i][j - 1] || cmd[i][j - 1] == ' ') && 
+						(!cmd[i][j + 1] || cmd[i][j + 1] == ' '))
+							cmd[i] = search_and_replace(cmd[i], envi, j);
+				j++;
+			}
 		}
 		i++;
 	}
