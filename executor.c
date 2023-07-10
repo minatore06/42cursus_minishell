@@ -102,7 +102,7 @@ int	check_loop(t_prompt *prompt, char *input)
 			// signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
 			saved_stdout = dup(STDOUT_FILENO);
-			exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
+			g_status = exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
 			if (!ft_strncmp(cmd->command[0], "clear", 5))
 				cmd->nl = 0;
 		}

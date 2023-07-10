@@ -58,11 +58,15 @@ char	*search_and_replace(char *cmd, char **envi, int i)
 	len = 0;
 	if (cmd[i] == '~')
 		enam = ft_strdup("HOME=");
+	else if (cmd[i] == '$' && cmd[i + 1] == '?')
+		enam = ft_strjoin("?", "=");
 	else
 	{
 		while (cmd[i + 1 + len] && (ft_isalnum(cmd[i + 1 + len]) ||
 			cmd[i + 1 + len] == '_'))
 			len++;
+		if (!len)
+			return (cmd);
 		enam = ft_substr(cmd, i + 1, len);
 		enam = ft_strjoin(enam, "=");
 	}
@@ -144,7 +148,7 @@ char	**expander(char **cmd, char **envi)
 					cmd[i] = search_and_replace(cmd[i], envi, j);
 				else if (cmd[i][j] == '~')
 					if ((!cmd[i][j - 1] || cmd[i][j - 1] == ' ') && 
-						(!cmd[i][j + 1] || cmd[i][j + 1] == ' '))
+						(!cmd[i][j + 1] || cmd[i][j + 1] == ' ' || cmd[i][j + 1] == '/'))
 							cmd[i] = search_and_replace(cmd[i], envi, j);
 				j++;
 			}

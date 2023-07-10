@@ -82,7 +82,7 @@ char	*put_prompt(t_prompt prompt)
 	free(mat);
 	if (!out)
 		extend_matrix(out, "guest");
-	temp = ft_strjoin(*out, "@epicshell");
+	temp = ft_strjoin(*out, "@epicshell:");
 	free_matrix(out);
 	temp2 = getcwd(NULL, 0);
 	temp3 = get_env(prompt.envi, "HOME=", 5);
@@ -110,7 +110,7 @@ int	main(int argc, char **argv, char **env)
 		if (str)
 			out = readline(str);
 		else
-			out = readline("guest@epicshell$ ");
+			out = readline("guest@epicshell:$");
 		free(str);
 		add_history(out);
 		if (!check_loop(&prompt, out))

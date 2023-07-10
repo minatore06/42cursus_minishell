@@ -50,7 +50,7 @@ typedef struct s_prompt
 }	t_prompt;
 
 int			ft_is_builtin(char **c, int i);
-void		env_builtin(char ***out, t_prompt *prompt);
+int			env_builtin(char ***out, t_prompt *prompt);
 int			exit_builtin(t_prompt *p, t_cmd *cmd);
 int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 
@@ -64,7 +64,7 @@ int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
 char		*get_env(char **envi, char *name, int n);
 char		**set_env(char **envi, char *value, char *name, int n);
 
-void		exec_cmds(char ***out, char *cmd, char **args, char **envi);
+int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
 //executor
 int			check_loop(t_prompt *prompt, char *out);

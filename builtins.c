@@ -41,14 +41,27 @@ int	ft_is_builtin(char **c, int i)
 	return (0);
 }
 
-void	env_builtin(char ***out, t_prompt *prompt)
+int	env_builtin(char ***out, t_prompt *prompt)
 {
 	*out = dup_matrix(prompt->envi);
+	return(0);
 }
 
 int	exit_builtin(t_prompt *p, t_cmd *cmd)
 {
+	int	i;
+
+	i = 0;
 	printf("exit\n");
+	if(cmd->command[1])
+	{
+		while (cmd->command[1][i] && ft_isdigit(cmd->command[1][i]))
+			i++;
+		if (!cmd->command[1][i])
+			g_status = ft_atoi(cmd->command[1]);
+		else
+			print_error(12, cmd->command[1], 2);
+	}
 	ft_free_all(p, cmd);
 	exit(g_status);
 }
@@ -69,7 +82,7 @@ int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)
 		g_status = echo_builtin(out, cmd);
 	else if (!ft_strncmp(a[0], "env", l) && l == 3)
-		env_builtin(out, prompt);
+		g_status = env_builtin(out, prompt);
 	else if (!ft_strncmp(a[0], "pwd", l) && l == 3)
 		g_status = pwd_builtin(out);
 	else

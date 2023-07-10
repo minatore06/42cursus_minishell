@@ -112,7 +112,7 @@ char	*epic_trim(char *cmd, char c, int k)
 	if (count % 2)
 		print_error(3, NULL, 1);
 	if (count % 2)
-		return (NULL);
+		return ("");
 	return (new_cmd);
 }
 
@@ -127,7 +127,7 @@ void	ft_trim_cmd_aux(char **cmd, int i, int *j, char a)
 	if (cmd[i][*j])
 		(*j)++;
 	cmd[i] = epic_trim(cmd[i], a, k);
-	if (cmd[i])
+	if (ft_strlen(cmd[i]))
 		*j = *j - 2;
 }
 
@@ -166,7 +166,7 @@ char	**ft_trim_cmd(char **cmd)
 				// 	j = j - 2;
 			else
 				j++;
-			if(!cmd[i])
+			if(!ft_strlen(cmd[i]))
 				return(cmd);
 			//printf("%s j = %i\n", cmd[i], j);
 		}

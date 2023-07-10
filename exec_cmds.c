@@ -32,12 +32,14 @@ void	do_something_output(char ***out, int fd)
 	*out = mat;
 }
 
-void	exec_cmds(char ***out, char *cmd, char **args, char **envi)
+int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
 	pid_t	pid;
 	int		fd[2];
 	int		test;
+	int		status;
 
+	status = 0;
 	pipe(fd);
 	pid = fork();
 	if (!pid)
@@ -51,7 +53,10 @@ void	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 		exit(1);
 	}
 	close(fd[1]);
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		status = WEXITSTATUS(status);
 	do_something_output(out, fd[0]);
 	close(fd[0]);
+	return(status);
 }

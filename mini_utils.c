@@ -35,6 +35,8 @@ void	print_error2(int err)
 		ft_putstr_fd("epicshell: is a directory: ", 2);
 	else if (err == 11)
 		ft_putstr_fd("epicshell: not a directory: ", 2);
+	else if (err == 12)
+		ft_putstr_fd("epicshell: numeric argument required: ", 2);
 }
 
 void	print_error(int err, char *str, int g)

@@ -41,9 +41,18 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 	int		err;
 	char	*pwd;
 
-	err = chdir(cmd->command[1]);
+	if (!cmd->command[1])
+	{
+		pwd = get_env(p->envi, "HOME=", 5);
+		err = chdir(&pwd[5]);
+	}
+	else
+		err = chdir(cmd->command[1]);
 	if (err < 0)
+	{
 		print_error(7, cmd->command[1], err);
+		return (1);
+	}	
 	else
 	{
 		pwd = get_env(p->envi, "PWD=", 4);
