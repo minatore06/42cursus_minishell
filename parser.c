@@ -52,7 +52,6 @@ int	get_here_doc(char *delimiter)
 	char	*str;
 	char	*tmp;
 
-	ft_printf("sos\n");
 	tmp = ft_strdup("");
 	str = ft_strdup("");
 	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
@@ -65,7 +64,7 @@ int	get_here_doc(char *delimiter)
 	free(tmp);
 	if (pipe(fd) == -1)
 	{
-		print_error(4, NULL, 1);
+		print_error(4, NULL, NULL, 1);
 		return (-1);
 	}
 	write(fd[1], str, ft_strlen(str));
@@ -170,7 +169,6 @@ char	**remove_redirects(char **cmd_mat)
 	{
 		if (cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
 		{
-			//ft_printf("ciao\n");
 			cmd_mat = reduce_matrix(cmd_mat, i + 1);
 			cmd_mat = reduce_matrix(cmd_mat, i);
 			i = 0;
@@ -196,7 +194,7 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	}
 	if (cmd->infile == -1 || cmd->outfile == -1)
 	{
-		print_error(5, NULL, 1);
+		print_error(5, NULL, NULL, 1);
 		return (NULL);
 	}
 	cmd->command = get_full_cmd(cmd_mat);

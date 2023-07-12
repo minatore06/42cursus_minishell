@@ -110,7 +110,7 @@ char	*epic_trim(char *cmd, char c, int k)
 	}
 	new_cmd[j] = 0;
 	if (count % 2)
-		print_error(3, NULL, 1);
+		print_error(3, NULL, NULL, 1);
 	if (count % 2)
 		return ("");
 	return (new_cmd);

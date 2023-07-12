@@ -83,7 +83,10 @@ int	check_loop(t_prompt *prompt, char *input)
 				saved_stdin = dup(STDIN_FILENO);
 				close(STDIN_FILENO);
 				if (dup2(cmd->infile, STDIN_FILENO) == -1)
-					ft_printf("ERROR");
+				{
+					print_error(2, NULL, NULL, 1);
+					return (-1);
+				}
 			//}
 				//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
 			//close(cmd->infile);
@@ -116,7 +119,7 @@ int	check_loop(t_prompt *prompt, char *input)
 			}
 			if (pipe(fd) == -1)
 			{
-				print_error(4, NULL, 1);
+				print_error(4, NULL, NULL, 1);
 				return (-1);
 			}
 			i = 0;
@@ -133,13 +136,21 @@ int	check_loop(t_prompt *prompt, char *input)
 		if (cmd->infile)
 		{
 			close(cmd->infile);
-			dup2(saved_stdin, STDIN_FILENO);
+			if (dup2(saved_stdin, STDIN_FILENO) < 0)
+			{
+				print_error(2, NULL, NULL, 1);
+				return (-1);
+			}
 			close(saved_stdin);
 		}
 		if (cmd->outfile != 1)
 		{
 			close(cmd->outfile);
-			dup2(saved_stdout, STDOUT_FILENO);
+			if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+			{
+				print_error(2, NULL, NULL, 1);
+				return (-1);
+			}
 			close(saved_stdout);
 		}
 		free_matrix(out);

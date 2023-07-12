@@ -70,7 +70,7 @@ int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 int			check_loop(t_prompt *prompt, char *out);
 
 char		*cmd_replace(char *cmd, char *env_value, int n, int env_len);
-char		*search_and_replace(char *cmd, char **envi, int i);
+char		*search_and_replace(char *cmd, char **envi, int i, int *j);
 char		**expander(char **cmd, char **envi);
 
 char		**ft_cmdsplit(char const *s, char c);
@@ -81,7 +81,10 @@ char		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);
 
-void		print_error(int err, char *str, int g);
+void		print_error(int err, char *cmd, char *arg, int g);
+void		print_error2(int err);
+int			count_args(char **cmd);
+
 void		manage_signal(int s);
 int			get_position(char *str, char c, int bypass);
 int			has_args(char **cmd);

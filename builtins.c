@@ -55,12 +55,17 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd)
 	printf("exit\n");
 	if(cmd->command[1])
 	{
+		if (count_args(cmd->command) > 1)
+		{
+			print_error(0, cmd->command[0], NULL, 1);
+			return (1);
+		}
 		while (cmd->command[1][i] && ft_isdigit(cmd->command[1][i]))
 			i++;
 		if (!cmd->command[1][i])
 			g_status = ft_atoi(cmd->command[1]);
 		else
-			print_error(12, cmd->command[1], 2);
+			print_error(12, cmd->command[0], cmd->command[1], 2);
 	}
 	ft_free_all(p, cmd);
 	exit(g_status);

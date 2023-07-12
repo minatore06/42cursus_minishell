@@ -36,21 +36,32 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
 	pid_t	pid;
 	int		fd[2];
-	int		test;
 	int		status;
 
 	status = 0;
-	pipe(fd);
+	if (pipe(fd) == -1)
+	{
+		print_error(4, NULL, NULL, 1);
+		return (-1);
+	}
 	pid = fork();
+	if (pid < 0)
+	{
+		print_error(1, NULL, NULL, 1);
+		exit(1);
+	}
 	if (!pid)
 	{
 		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
+		if (dup2(fd[1], STDOUT_FILENO) < 0)
+		{
+			print_error(2, NULL, NULL, 1);
+			return (-1);
+		}
 		close(fd[1]);
-		test = execve(cmd, args, envi);
-		ft_printf("Test=%i\n", test);
-		print_error(9, out[0][0], 127); //out[0][0] e' vuoto
-		exit(1);
+		execve(cmd, args, envi);
+		print_error(9, cmd, NULL, 127);
+		exit(127);
 	}
 	close(fd[1]);
 	waitpid(pid, &status, 0);

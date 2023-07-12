@@ -17,6 +17,7 @@ OUT = minishell
 SRCS = builtins.c \
 		builtins_2.c \
 		enviroment.c \
+		error.c \
 		exec_cmds.c \
 		executor.c \
 		expander.c \
@@ -27,6 +28,7 @@ SRCS = builtins.c \
 		mini_utils2.c \
 		minishell.c \
 		parser.c \
+		parser2.c \
 		split_and_trim.c \
 
 OBJS = ${SRCS:.c=.o}

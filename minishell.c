@@ -22,7 +22,7 @@ pid_t	mini_getpid(void)
 	pid = fork();
 	if (pid < 0)
 	{
-		print_error(1, NULL, 1);
+		print_error(1, NULL, NULL, 1);
 		exit(1);
 	}
 	if (!pid)
