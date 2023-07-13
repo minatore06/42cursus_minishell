@@ -69,5 +69,5 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 		status = WEXITSTATUS(status);
 	do_something_output(out, fd[0]);
 	close(fd[0]);
-	return(status);
+	return (status);
 }

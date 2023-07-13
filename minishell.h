@@ -49,6 +49,16 @@ typedef struct s_prompt
 	pid_t	pid;
 }	t_prompt;
 
+typedef struct s_loop
+{
+	int		fd[2];
+	int		i;
+	int		saved_stdin;
+	int		saved_stdout;
+	char	**cmd_mat;
+	char	**out;
+}	t_loop;
+
 int			ft_is_builtin(char **c, int i);
 int			env_builtin(char ***out, t_prompt *prompt);
 int			exit_builtin(t_prompt *p, t_cmd *cmd);
@@ -103,11 +113,16 @@ int			main(int argc, char **argv, char **env);
 
 int			count_cmds(char **cmd);
 void		init_cmd_node(t_cmd *cmd);
-int			get_outfile(char *file, char append);
-int			get_here_doc(char *delimiter);
-int			get_infile(char *file, char append);
 t_cmd		*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
+
+int			get_here_doc(char *delimiter);
+int			get_infile(char *file, char append);
+int			get_outfile(char *file, char append);
+char		**get_full_cmd(char **cmd_mat);
+char		**remove_redirects(char **cmd_mat);
+
+char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);
 char		**cmd_split_redir_and_pipes(char **cmd);

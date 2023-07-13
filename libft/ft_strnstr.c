@@ -20,7 +20,7 @@ char	*ft_strnstr(const char *big, const char *little, unsigned int len)
 	if (!lenl)
 		return ((char *)big);
 	i = 0;
-	while (i + lenl < len && big[i])
+	while (i + lenl <= len && big[i])
 	{
 		if (!ft_strncmp(&big[i], little, lenl))
 			return (&((char *)big)[i]);

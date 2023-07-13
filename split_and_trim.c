@@ -135,7 +135,6 @@ char	**ft_trim_cmd(char **cmd)
 {
 	int	i;
 	int	j;
-	//int k;
 
 	i = 0;
 	while (cmd[i])
@@ -143,32 +142,14 @@ char	**ft_trim_cmd(char **cmd)
 		j = 0;
 		while (cmd[i][j])
 		{
-			//k = j; 
 			if (cmd[i][j] == '\'')
 				ft_trim_cmd_aux(cmd, i, &j, '\'');
-				// j++;
-				// while (cmd[i][j] && cmd[i][j] != '\'')
-				// 	j++;
-				// if (cmd[i][j])
-				// 	j++;
-				// cmd[i] = epic_trim(cmd[i], '\'', k);
-				// if (cmd[i])
-				// 	j = j - 2;
 			else if (cmd[i][j] == '\"')
 				ft_trim_cmd_aux(cmd, i, &j, '\"');
-				// j++;
-				// while (cmd[i][j] && cmd[i][j] != '\"')
-				// 	j++;
-				// if (cmd[i][j])
-				// 	j++;
-				// cmd[i] = epic_trim(cmd[i], '\"', k);
-				// if (cmd[i])
-				// 	j = j - 2;
 			else
 				j++;
-			if(!ft_strlen(cmd[i]))
-				return(cmd);
-			//printf("%s j = %i\n", cmd[i], j);
+			if (!ft_strlen(cmd[i]))
+				return (cmd);
 		}
 		i++;
 	}

@@ -44,7 +44,7 @@ int	ft_is_builtin(char **c, int i)
 int	env_builtin(char ***out, t_prompt *prompt)
 {
 	*out = dup_matrix(prompt->envi);
-	return(0);
+	return (0);
 }
 
 int	exit_builtin(t_prompt *p, t_cmd *cmd)
@@ -53,19 +53,16 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd)
 
 	i = 0;
 	printf("exit\n");
-	if(cmd->command[1])
+	if (cmd->command[1])
 	{
-		if (count_args(cmd->command) > 1)
-		{
-			print_error(0, cmd->command[0], NULL, 1);
-			return (1);
-		}
 		while (cmd->command[1][i] && ft_isdigit(cmd->command[1][i]))
 			i++;
 		if (!cmd->command[1][i])
 			g_status = ft_atoi(cmd->command[1]);
 		else
 			print_error(12, cmd->command[0], cmd->command[1], 2);
+		if (!cmd->command[1][i] && count_args(cmd->command))
+			return (1);
 	}
 	ft_free_all(p, cmd);
 	exit(g_status);
@@ -103,15 +100,11 @@ int	execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd)
 {
 	char	**a;
 
-/* 	while (cmd)
-	{ */
-		a = dup_matrix(cmd->command);
-		if (a)
-		{
-			g_status = choose_builtin(out, prompt, cmd, a);
-			free(a);
-		}
-/* 		cmd = cmd->next;
-	} */
+	a = dup_matrix(cmd->command);
+	if (a)
+	{
+		g_status = choose_builtin(out, prompt, cmd, a);
+		free(a);
+	}
 	return (g_status);
 }

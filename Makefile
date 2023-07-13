@@ -29,6 +29,7 @@ SRCS = builtins.c \
 		minishell.c \
 		parser.c \
 		parser2.c \
+		parser3.c \
 		split_and_trim.c \
 
 OBJS = ${SRCS:.c=.o}
