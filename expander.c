@@ -62,7 +62,7 @@ char	*search_and_replace(char *cmd, char **envi, int i, int *j)
 		enam = ft_strjoin("?", "=");
 	else
 	{
-		while (cmd[i + 1 + len] && (ft_isalnum(cmd[i + 1 + len]) 
+		while (cmd[i + 1 + len] && (ft_isalnum(cmd[i + 1 + len])
 				|| cmd[i + 1 + len] == '_'))
 			len++;
 		if (!len)
@@ -130,35 +130,15 @@ char	**expander(char **cmd, char **envi)
 		{
 			if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
 				expander_aux(cmd, envi, &i, &j);
-			// if (cmd[i][j] == '\'')
-			// {
-			// 	j++;
-			// 	while (cmd[i][j] && cmd[i][j] != '\'')
-			// 		j++;
-			// 	if (cmd[i][j])
-			// 		j++;
-			// }
-			// else if (cmd[i][j] == '\"')
-			// {
-			// 	j++;
-			// 	while (cmd[i][j] && cmd[i][j] != '\"')
-			// 	{
-			// 		if (cmd[i][j] == '$')
-			// 			cmd[i] = search_and_replace(cmd[i], envi, j);
-			// 		j++;
-			// 	}
-			// 	if (cmd[i][j])
-			// 		j++;
-			// }
 			else
 			{
 				k = 0;
 				if (cmd[i][j] == '$')
 					cmd[i] = search_and_replace(cmd[i], envi, j, &k);
 				else if (cmd[i][j] == '~')
-					if ((!cmd[i][j - 1] || cmd[i][j - 1] == ' ') && 
-						(!cmd[i][j + 1] || cmd[i][j + 1] == ' ' || 
-						cmd[i][j + 1] == '/'))
+					if ((!cmd[i][j - 1] || cmd[i][j - 1] == ' ')
+						&& (!cmd[i][j + 1] || cmd[i][j + 1] == ' '
+						|| cmd[i][j + 1] == '/'))
 						cmd[i] = search_and_replace(cmd[i], envi, j, &k);
 				if (k == 0)
 					j++;

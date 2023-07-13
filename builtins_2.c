@@ -50,6 +50,7 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 	}
 	else
 		err = chdir(cmd->command[1]);
+	//printf("err = %i\n", err);
 	if (err < 0)
 	{
 		print_error(7, cmd->command[0], cmd->command[1], err);
@@ -71,12 +72,22 @@ int	pwd_builtin(char ***out)
 	return (0);
 }
 
-char	**unset_builtin2(t_prompt *p, int i, int j)
+int	find_stop(char *c)
+{
+	int	i;
+
+	i = 0;
+	while (c[i] && c[i] != '=')
+		i++;
+	return (i);
+}
+
+char	**unset_builtin2(t_prompt *p, char *cmd, int i)
 {
 	char	**temp;
-	char	*cmd;
+	int		j;
 
-	cmd = p->cmds->command[1];
+	j = 0;
 	while (p->envi[j])
 		j++;
 	temp = malloc(j * sizeof(char *));
@@ -84,7 +95,7 @@ char	**unset_builtin2(t_prompt *p, int i, int j)
 	i = 0;
 	while (p->envi[i])
 	{
-		if (!ft_strncmp(p->envi[i], cmd, ft_strlen(cmd)))
+		if (!ft_strncmp(p->envi[i], cmd, find_stop(p->envi[i])))
 			i++;
 		else
 		{
@@ -93,30 +104,32 @@ char	**unset_builtin2(t_prompt *p, int i, int j)
 			j++;
 		}
 	}
-	temp[j] = 0;
+	temp[j] = NULL;
 	return (temp);
 }
 
-int	unset_builtin(t_prompt *p)
+int	unset_builtin(t_cmd *c, t_prompt *p)
 {
 	int		i;
-	int		j;
+	int 	k;
 	char	**temp;
-	char	*cmd;
 
-	cmd = p->cmds->command[1];
-	i = 0;
-	j = 0;
-	while (p->envi[i])
+	k = 1;
+	while(c->command[k])
 	{
-		if (!ft_strncmp(p->envi[i], cmd, ft_strlen(cmd)))
+		i = 0;
+		while (p->envi[i])
 		{
-			temp = unset_builtin2(p, i, j);
-			free_matrix(p->envi);
-			p->envi = temp;
-			return (0);
+			if (!ft_strncmp(p->envi[i], c->command[k], find_stop(p->envi[i])))
+			{
+				temp = unset_builtin2(p, c->command[k], i);
+				free_matrix(p->envi);
+				p->envi = temp;
+				break;
+			}
+			i++;
 		}
-		i++;
+		k++;
 	}
 	return (0);
 }

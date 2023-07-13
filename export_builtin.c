@@ -73,6 +73,8 @@ int	already_present(char **envi, char *cmd)
 	int	j;
 
 	i = 0;
+	if (cmd[0] == '=')
+		return (-1);
 	while (cmd[i] && cmd[i] != '=')
 		i++;
 	j = 0;
@@ -109,21 +111,32 @@ char	**export_update(char **envi, char *cmd)
 
 int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 {
+	int		i;
+	char	*temp;
+
+	i = 1;
 	p->expo = sort_alpha(p->expo, p->envi);
 	if (!cmd->command[1])
+	{
 		*out = dup_matrix(p->expo);
+		return (0);
+	}
 	else
 	{
-		if (already_present(p->envi, cmd->command[1]) > 0)
-			p->envi = export_update(p->envi, cmd->command[1]);
-		else if (already_present(p->envi, cmd->command[1]) < 0)
+		while (cmd->command[i])
 		{
-			ft_printf("epicshell: export: `=': not a valid identifier\n");
-            //corregere il messaggio di errore
-			return (1);
+			if (already_present(p->envi, cmd->command[i]) > 0)
+				p->envi = export_update(p->envi, cmd->command[i]);
+			else if (already_present(p->envi, cmd->command[i]) < 0)
+			{
+				temp = ft_strjoin(ft_strjoin("`", cmd->command[i]), "'");
+				print_error(14, cmd->command[0], temp, 1);
+				free(temp);
+			}
+			else
+				p->envi = extend_matrix(p->envi, cmd->command[i]);
+			i++;
 		}
-		else
-			p->envi = extend_matrix(p->envi, cmd->command[1]);
 	}
-	return (0);
+	return (g_status);
 }

@@ -76,10 +76,10 @@ char	*put_prompt(t_prompt prompt)
 	char	*temp3;
 
 	mat = malloc(sizeof(char *) * 2);
-	mat[0] = "whoami";
+	mat[0] = ft_strdup("whoami");
 	mat[1] = NULL;
 	exec_cmds(&out, "/usr/bin/whoami", mat, prompt.envi);
-	free(mat);
+	free_matrix(mat);
 	if (!out)
 		extend_matrix(out, "guest");
 	temp = ft_strjoin(*out, "@epicshell:");
@@ -116,6 +116,6 @@ int	main(int argc, char **argv, char **env)
 		if (!check_loop(&prompt, out))
 			break ;
 	}
-	ft_free_all(&prompt, prompt.cmds);
+	ft_free_all(&prompt);
 	exit(g_status);
 }

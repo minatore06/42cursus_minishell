@@ -36,6 +36,7 @@ char	**cmd_split_aux(char **cmd, int x, int y, char *s)
 	free(cmd[x]);
 	cmd[i] = ft_substr(tmp, y, ft_strlen(&tmp[y]));
 	cmd[x] = ft_substr(tmp, 0, y);
+	free(tmp);
 	return (cmd);
 }
 
@@ -113,6 +114,7 @@ char	*epic_trim(char *cmd, char c, int k)
 		print_error(3, NULL, NULL, 1);
 	if (count % 2)
 		return ("");
+	free(cmd);
 	return (new_cmd);
 }
 

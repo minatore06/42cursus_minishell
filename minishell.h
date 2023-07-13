@@ -67,7 +67,7 @@ int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 int			echo_builtin(char ***out, t_cmd *cmd);
 int			cd_builtin(t_cmd *cmd, t_prompt *p);
 int			pwd_builtin(char ***out);
-int			unset_builtin(t_prompt *p);
+int			unset_builtin(t_cmd *cmd, t_prompt *p);
 
 int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
 
@@ -103,7 +103,8 @@ int			ft_strcmp(char *s1, char *s2);
 void		free_matrix(char **mat);
 char		*find_low_aux(char **envi, char *new, int i, int n);
 char		*sort_alpha_aux(char **expo, char *low, int i);
-void		ft_free_all(t_prompt *p, t_cmd *cmd);
+void		ft_free_cmds(t_cmd *cmds);
+void		ft_free_all(t_prompt *p);
 
 pid_t		mini_getpid(void);
 t_prompt	init_vars(t_prompt prompt, char **argv);

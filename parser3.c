@@ -32,7 +32,7 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 	struct dirent	*entry;
 
 	if (ft_is_builtin(a, 0))
-		return (cmd);
+		return (ft_strdup(cmd));
 	ret = NULL;
 	dirs = get_paths(prompt->envi);
 	if (!dirs)

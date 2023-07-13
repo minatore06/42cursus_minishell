@@ -40,6 +40,14 @@ void	print_error2(int err)
 		ft_putstr_fd("numeric argument required", 2);
 }
 
+void	print_error3(int err)
+{
+	if (err == 13 || err == -13)
+		ft_putstr_fd("too many arguments", 2);
+	else if (err == 14 || err == -14)
+		ft_putstr_fd("not a valid identifier", 2);
+}
+
 void	print_error(int err, char *cmd, char *arg, int g)
 {
 	g_status = g;
@@ -49,10 +57,10 @@ void	print_error(int err, char *cmd, char *arg, int g)
 		ft_putstr_fd(ft_strjoin(cmd, ": "), 2);
 	if (arg)
 		ft_putstr_fd(ft_strjoin(arg, ": "), 2);
-	if (err)
+	if (err < 13 && err > -13)
 		print_error2(err);
 	else
-		ft_putstr_fd("too many arguments", 2);
+		print_error3(err);
 	ft_putchar_fd('\n', 2);
 }
 
@@ -65,7 +73,7 @@ int	count_args(char **cmd)
 		i++;
 	if (i > 2)
 	{
-		print_error(0, cmd[0], NULL, 1);
+		print_error(13, cmd[0], NULL, 1);
 		return (1);
 	}
 	return (0);

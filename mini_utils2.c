@@ -72,41 +72,49 @@ char	*sort_alpha_aux(char **expo, char *low, int i)
 {
 	int		j;
 	int		k;
-	int		c;
 
 	expo[i] = malloc((ft_strlen(low) + 2) * sizeof(char));
 	j = 0;
 	k = 0;
-	c = 0;
 	while (low[k])
 	{
-		if (k > 0 && low[k - 1] == '=' && c == 0)
-		{
-			c = 1;
+		if (k > 0 && low[k - 1] == '=' && k == j)
 			expo[i][j++] = '\"';
-		}
 		expo[i][j] = low[k];
+		if (!low[k + 1] && low[k] == '=' && k == j)
+			expo[i][++j] = '\"';
 		j++;
 		k++;
 	}
 	expo[i][j] = 0;
-	expo[i] = ft_strjoin(expo[i], "\"");
+	if (k != j)
+		expo[i] = ft_strjoin(expo[i], "\"");
 	expo[i] = ft_strjoin("declare -x ", expo[i]);
 	return (expo[i]);
 }
 
-void	ft_free_all(t_prompt *p, t_cmd *cmd)
+void	ft_free_cmds(t_cmd *cmds)
+{
+	t_cmd *tmp;
+
+	while (cmds)
+	{
+		if (cmds->command)
+			free_matrix(cmds->command);
+		if (cmds->path)
+			free(cmds->path);
+		tmp = cmds;
+		cmds = cmds->next;
+		free(tmp);
+	}
+}
+
+void	ft_free_all(t_prompt *p)
 {
 	if (p->envi)
 		free_matrix(p->envi);
 	if (p->expo)
 		free_matrix(p->expo);
-	while (cmd)
-	{
-		if (cmd->command)
-			free_matrix(cmd->command);
-		if (cmd->path)
-			free(cmd->path);
-		cmd = cmd->next;
-	}
+	ft_free_cmds(p->cmds);
+	rl_clear_history();
 }

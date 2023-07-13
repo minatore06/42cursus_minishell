@@ -17,8 +17,8 @@ int	ft_is_builtin(char **c, int i)
 	if (!c[0])
 		return (0);
 	i = ft_strlen(c[0]);
-	if (!ft_strncmp(c[0], "echo", i) && i == 4 && (!c[1] || (c[1] && 
-				((!ft_strncmp(c[1], "-n", 2) && ft_strlen(c[1]) == 2) 
+	if (!ft_strncmp(c[0], "echo", i) && i == 4 && (!c[1] || (c[1]
+				&& ((!ft_strncmp(c[1], "-n", 2) && ft_strlen(c[1]) == 2)
 					|| ft_strncmp(c[1], "-", 1)))))
 		return (1);
 	if (!ft_strncmp(c[0], "cd", i) && i == 2)
@@ -64,7 +64,8 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd)
 		if (!cmd->command[1][i] && count_args(cmd->command))
 			return (1);
 	}
-	ft_free_all(p, cmd);
+	ft_free_all(p);
+	rl_clear_history();
 	exit(g_status);
 }
 
@@ -76,7 +77,7 @@ int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 	if (!ft_strncmp(a[0], "export", l) && l == 6)
 		g_status = export_builtin(out, prompt, cmd);
 	else if (!ft_strncmp(a[0], "unset", l) && l == 5)
-		g_status = unset_builtin(prompt);
+		g_status = unset_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
 		g_status = cd_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)

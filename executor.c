@@ -156,6 +156,7 @@ int	check_loop(t_prompt *prompt, char *input)
 		free_matrix(out);
 		cmd = cmd->next;//no looping
 	}
+	ft_free_cmds(cmd);
 	//prompt->envi = set_env(prompt->envi, ,);
 	return (1);
 }
