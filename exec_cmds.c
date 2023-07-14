@@ -32,6 +32,25 @@ void	do_something_output(char ***out, int fd)
 	*out = mat;
 }
 
+int	exec_cmds_error(int i, char *cmd)
+{
+	if (i == 4)
+		print_error(4, NULL, NULL, 1);
+	else if (i == 1)
+	{
+		print_error(1, NULL, NULL, 1);
+		return(1);
+	}
+	else if (i == 2)
+		print_error(2, NULL, NULL, 1);
+	else
+	{
+		print_error(-9, cmd, NULL, 127);
+		return (127);
+	}
+	return (-1);
+}
+
 int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
 	pid_t	pid;
