@@ -53,3 +53,33 @@ int	has_args(char **cmd)
 	}
 	return (0);
 }
+
+char	*epic_trim(char *cmd, char c, int k)
+{
+	int		i;
+	int		j;
+	int		count;
+	char	*new_cmd;
+
+	new_cmd = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
+	i = 0;
+	j = 0;
+	count = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == c && count < 2 && i >= k)
+		{
+			count++;
+			i++;
+			continue ;
+		}
+		new_cmd[j++] = cmd[i++];
+	}
+	new_cmd[j] = 0;
+	if (count % 2)
+		print_error(3, NULL, NULL, 1);
+	if (count % 2)
+		return ("");
+	free(cmd);
+	return (new_cmd);
+}

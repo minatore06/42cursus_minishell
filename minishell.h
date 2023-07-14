@@ -62,27 +62,48 @@ typedef struct s_loop
 int			ft_is_builtin(char **c, int i);
 int			env_builtin(char ***out, t_prompt *prompt);
 int			exit_builtin(t_prompt *p, t_cmd *cmd);
+int			choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a);
 int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 
 int			echo_builtin(char ***out, t_cmd *cmd);
 int			cd_builtin(t_cmd *cmd, t_prompt *p);
 int			pwd_builtin(char ***out);
-int			unset_builtin(t_cmd *cmd, t_prompt *p);
+char		**unset_builtin2(t_prompt *p, char *cmd, int i);
+int			unset_builtin(t_cmd *c, t_prompt *p);
 
-int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
+int			find_stop(char *c);
+char		*find_low_aux(char **envi, char *new, int i, int n);
+char		*sort_alpha_aux(char **expo, char *low, int i);
 
 char		*get_env(char **envi, char *name, int n);
 char		**set_env(char **envi, char *value, char *name, int n);
 
+void		print_error2(int err);
+void		print_error3(int err);
+void		print_error(int err, char *cmd, char *arg, int g);
+int			count_args(char **cmd);
+
+void		do_something_output(char ***out, int fd);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
-//executor
+void		get_args(char ***out, int fd);
 int			check_loop(t_prompt *prompt, char *out);
 
-char		*cmd_replace(char *cmd, char *env_value, int n, int env_len);
+char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
+int			env_size(char *val, char *name);
 char		*search_and_replace(char *cmd, char **envi, int i, int *j);
+void		expander_aux(char **cmd, char **envi, int *i, int *j);
 char		**expander(char **cmd, char **envi);
 
+char		*find_low(char *old, char **envi);
+char		**sort_alpha(char **expo, char **envi);
+int			already_present(char **envi, char *cmd);
+char		**export_update(char **envi, char *cmd);
+int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
+
+int			check_quote(int quote, char const s);
+int			count_words_lexer(char const *s, char c);
+int			count_chr_lexer(const char *s, char c);
 char		**ft_cmdsplit(char const *s, char c);
 
 void		print_matrix(char **mat);
@@ -91,18 +112,13 @@ char		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);
 
-void		print_error(int err, char *cmd, char *arg, int g);
-void		print_error2(int err);
-int			count_args(char **cmd);
-
 void		manage_signal(int s);
 int			get_position(char *str, char c, int bypass);
 int			has_args(char **cmd);
+char		*epic_trim(char *cmd, char c, int k);
 
 int			ft_strcmp(char *s1, char *s2);
 void		free_matrix(char **mat);
-char		*find_low_aux(char **envi, char *new, int i, int n);
-char		*sort_alpha_aux(char **expo, char *low, int i);
 void		ft_free_cmds(t_cmd *cmds);
 void		ft_free_all(t_prompt *p);
 
@@ -115,6 +131,7 @@ int			main(int argc, char **argv, char **env);
 int			count_cmds(char **cmd);
 void		init_cmd_node(t_cmd *cmd);
 t_cmd		*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat);
+char		**reduce_cmd(char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
 
 int			get_here_doc(char *delimiter);
@@ -123,10 +140,13 @@ int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);
 char		**remove_redirects(char **cmd_mat);
 
+char		**get_paths(char **envi);
 char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);
+char		**cmd_split_redir_and_pipes2(char **cmd, int i, int j, int *brek);
 char		**cmd_split_redir_and_pipes(char **cmd);
+void		ft_trim_cmd_aux(char **cmd, int i, int *j, char a);
 char		**ft_trim_cmd(char **cmd);
 
 #endif

@@ -16,6 +16,7 @@ OUT = minishell
 
 SRCS = builtins.c \
 		builtins_2.c \
+		builtins_utils.c \
 		enviroment.c \
 		error.c \
 		exec_cmds.c \

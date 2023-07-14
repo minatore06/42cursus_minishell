@@ -63,6 +63,7 @@ char	**sort_alpha(char **expo, char **envi)
 			i++;
 		}
 	}
+	expo[i] = NULL;
 	free(low);
 	return (expo);
 }
@@ -72,9 +73,16 @@ int	already_present(char **envi, char *cmd)
 	int	i;
 	int	j;
 
-	i = 0;
 	if (cmd[0] == '=')
 		return (-1);
+	i = 0;
+	while (cmd[i] && cmd[i] != '=')
+	{
+		if (!ft_isalnum(cmd[i]))
+			return (-1);
+		i++;
+	}
+	i = 0;
 	while (cmd[i] && cmd[i] != '=')
 		i++;
 	j = 0;

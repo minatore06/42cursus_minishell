@@ -60,7 +60,7 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 		}
 		close(fd[1]);
 		execve(cmd, args, envi);
-		print_error(9, cmd, NULL, 127);
+		print_error(-9, cmd, NULL, 127);
 		exit(127);
 	}
 	close(fd[1]);

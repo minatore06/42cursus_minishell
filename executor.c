@@ -80,13 +80,13 @@ int	check_loop(t_prompt *prompt, char *input)
 		{
 /* 			if (!has_args(cmd->command))
 			{ */
-				saved_stdin = dup(STDIN_FILENO);
-				close(STDIN_FILENO);
-				if (dup2(cmd->infile, STDIN_FILENO) == -1)
-				{
-					print_error(2, NULL, NULL, 1);
-					return (-1);
-				}
+			saved_stdin = dup(STDIN_FILENO);
+			close(STDIN_FILENO);
+			if (dup2(cmd->infile, STDIN_FILENO) == -1)
+			{
+				print_error(2, NULL, NULL, 1);
+				return (-1);
+			}
 			//}
 				//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
 			//close(cmd->infile);
@@ -97,7 +97,7 @@ int	check_loop(t_prompt *prompt, char *input)
 		{
 			ft_printf("It's builtin time\n");
 			if (execute_builtins(&out, prompt, cmd))
-				return (1);	
+				return (1);
 		}
 		else
 		{

@@ -50,7 +50,6 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 	}
 	else
 		err = chdir(cmd->command[1]);
-	//printf("err = %i\n", err);
 	if (err < 0)
 	{
 		print_error(7, cmd->command[0], cmd->command[1], err);
@@ -72,16 +71,6 @@ int	pwd_builtin(char ***out)
 	return (0);
 }
 
-int	find_stop(char *c)
-{
-	int	i;
-
-	i = 0;
-	while (c[i] && c[i] != '=')
-		i++;
-	return (i);
-}
-
 char	**unset_builtin2(t_prompt *p, char *cmd, int i)
 {
 	char	**temp;
@@ -95,7 +84,8 @@ char	**unset_builtin2(t_prompt *p, char *cmd, int i)
 	i = 0;
 	while (p->envi[i])
 	{
-		if (!ft_strncmp(p->envi[i], cmd, find_stop(p->envi[i])))
+		if (!ft_strncmp(p->envi[i], cmd, find_stop(p->envi[i]))
+			&& find_stop(p->envi[i]) == ft_strlen(cmd))
 			i++;
 		else
 		{
@@ -111,21 +101,22 @@ char	**unset_builtin2(t_prompt *p, char *cmd, int i)
 int	unset_builtin(t_cmd *c, t_prompt *p)
 {
 	int		i;
-	int 	k;
+	int		k;
 	char	**temp;
 
 	k = 1;
-	while(c->command[k])
+	while (c->command[k])
 	{
 		i = 0;
 		while (p->envi[i])
 		{
-			if (!ft_strncmp(p->envi[i], c->command[k], find_stop(p->envi[i])))
+			if (!ft_strncmp(p->envi[i], c->command[k], find_stop(p->envi[i])) 
+				&& find_stop(p->envi[i]) == ft_strlen(c->command[k]))
 			{
 				temp = unset_builtin2(p, c->command[k], i);
 				free_matrix(p->envi);
 				p->envi = temp;
-				break;
+				break ;
 			}
 			i++;
 		}

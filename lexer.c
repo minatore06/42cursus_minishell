@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	check_quote(int quote, char const s)
+int	check_quote(int quote, char const s)
 {
 	int	q;
 
@@ -30,7 +30,7 @@ static int	check_quote(int quote, char const s)
 	return (q);
 }
 
-static int	count_words(char const *s, char c)
+int	count_words_lexer(char const *s, char c)
 {
 	int		i;
 	int		count;
@@ -56,7 +56,7 @@ static int	count_words(char const *s, char c)
 	return (count);
 }
 
-static int	count_chr(const char *s, char c)
+int	count_chr_lexer(const char *s, char c)
 {
 	int		i;
 	int		count;
@@ -82,7 +82,7 @@ char	**ft_cmdsplit(char const *s, char c)
 	int		count2;
 	char	**pnt;
 
-	count = count_words(s, c);
+	count = count_words_lexer(s, c);
 	pnt = malloc(sizeof(char *) * (count + 1));
 	if (!pnt)
 		return (NULL);
@@ -91,7 +91,7 @@ char	**ft_cmdsplit(char const *s, char c)
 	j = 0;
 	while (i < count)
 	{
-		count2 = count_chr(&s[j], c);
+		count2 = count_chr_lexer(&s[j], c);
 		j += count2 + 1;
 		if (!count2)
 			continue ;

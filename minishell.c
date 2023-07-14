@@ -13,7 +13,6 @@
 #include "minishell.h"
 
 int	g_status;
-//&?
 
 pid_t	mini_getpid(void)
 {
