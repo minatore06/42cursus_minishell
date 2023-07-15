@@ -23,6 +23,42 @@ char	**get_paths(char **envi)
 	return (ft_split(paths, ':'));
 }
 
+int	get_cmd_path3(char **ret, char **dirs, int i)
+{
+	ret[0] = ft_strdup(dirs[i]);
+	dirs = NULL;
+	return (1);
+}
+
+void	get_cmd_path2(char *cmd, char *ret, char **dirs, int i)
+{
+	DIR				*dp;
+	struct dirent	*entry;
+
+	while (dirs && dirs[i])
+	{
+		dp = opendir(dirs[i]);
+		if (!dp)
+		{
+			i++;
+			continue ;
+		}
+		entry = readdir(dp);
+		while (entry)
+		{
+			if (ft_strlen(cmd) == ft_strlen(entry->d_name))
+			{
+				if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
+					if (get_cmd_path3(&ret, dirs, i))
+						break ;
+			}
+			entry = readdir(dp);
+		}
+		closedir(dp);
+		i++;
+	}
+}
+
 char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 {
 	int				i;

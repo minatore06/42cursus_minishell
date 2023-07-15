@@ -46,6 +46,8 @@ void	print_error3(int err)
 		ft_putstr_fd("too many arguments", 2);
 	else if (err == 14 || err == -14)
 		ft_putstr_fd("not a valid identifier", 2);
+	else if (err == 15 || err == -15)
+		ft_putstr_fd("syntax error near unexpected token `newline'", 2);
 }
 
 void	print_error(int err, char *cmd, char *arg, int g)
@@ -62,6 +64,18 @@ void	print_error(int err, char *cmd, char *arg, int g)
 	else
 		print_error3(err);
 	ft_putchar_fd('\n', 2);
+}
+
+int	get_error(int e)
+{
+	if (e == 15)
+	{
+		print_error(15, NULL, NULL, 2);
+		return (-2);
+	}
+	else if (e == 4)
+		print_error(4, NULL, NULL, 1);
+	return (-1);
 }
 
 int	count_args(char **cmd)

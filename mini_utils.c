@@ -54,6 +54,13 @@ int	has_args(char **cmd)
 	return (0);
 }
 
+char	*epic_trim_aux(char	*new_cmd)
+{
+	free(new_cmd);
+	print_error(3, NULL, NULL, 2);
+	return (ft_strdup(""));
+}
+
 char	*epic_trim(char *cmd, char c, int k)
 {
 	int		i;
@@ -77,9 +84,7 @@ char	*epic_trim(char *cmd, char c, int k)
 	}
 	new_cmd[j] = 0;
 	if (count % 2)
-		print_error(3, NULL, NULL, 1);
-	if (count % 2)
-		return ("");
+		return (epic_trim_aux(new_cmd));
 	free(cmd);
 	return (new_cmd);
 }

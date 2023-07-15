@@ -81,9 +81,11 @@ char		**set_env(char **envi, char *value, char *name, int n);
 void		print_error2(int err);
 void		print_error3(int err);
 void		print_error(int err, char *cmd, char *arg, int g);
+int			get_error(int e);
 int			count_args(char **cmd);
 
 void		do_something_output(char ***out, int fd);
+//int			exec_cmds_error(int i, char *cmd);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
 void		get_args(char ***out, int fd);
@@ -115,6 +117,7 @@ char		**reduce_matrix(char **og_mat, int x);
 void		manage_signal(int s);
 int			get_position(char *str, char c, int bypass);
 int			has_args(char **cmd);
+char		*epic_trim_aux(char *new_cmd);
 char		*epic_trim(char *cmd, char c, int k);
 
 int			ft_strcmp(char *s1, char *s2);
@@ -141,6 +144,8 @@ char		**get_full_cmd(char **cmd_mat);
 char		**remove_redirects(char **cmd_mat);
 
 char		**get_paths(char **envi);
+//int			get_cmd_path3(char **ret, char **dirs, int i);
+//void		get_cmd_path2(char *cmd, char *ret, char **dirs, int i);
 char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);

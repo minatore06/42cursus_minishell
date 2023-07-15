@@ -18,6 +18,8 @@ int	get_here_doc(char *delimiter)
 	char	*str;
 	char	*tmp;
 
+	if (!ft_strlen(delimiter))
+		return (get_error(15));
 	tmp = ft_strdup("");
 	str = ft_strdup("");
 	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
@@ -29,10 +31,7 @@ int	get_here_doc(char *delimiter)
 	}
 	free(tmp);
 	if (pipe(fd) == -1)
-	{
-		print_error(4, NULL, NULL, 1);
-		return (-1);
-	}
+		return (get_error(4));
 	write(fd[1], str, ft_strlen(str));
 	close(fd[1]);
 	free(str);
@@ -41,10 +40,10 @@ int	get_here_doc(char *delimiter)
 
 int	get_infile(char *file, char append)
 {
-	if (!file)
-		return (-1);
 	if (append)
 		return (get_here_doc(file));
+	if (!file)
+		return (-1);
 	return (open(file, O_RDONLY, 0666));
 }
 

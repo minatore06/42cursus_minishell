@@ -52,7 +52,7 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 		err = chdir(cmd->command[1]);
 	if (err < 0)
 	{
-		print_error(7, cmd->command[0], cmd->command[1], err);
+		print_error(11, cmd->command[0], cmd->command[1], err);
 		return (1);
 	}
 	else

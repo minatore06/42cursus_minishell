@@ -39,7 +39,7 @@ int	exec_cmds_error(int i, char *cmd)
 	else if (i == 1)
 	{
 		print_error(1, NULL, NULL, 1);
-		return(1);
+		return (1);
 	}
 	else if (i == 2)
 		print_error(2, NULL, NULL, 1);

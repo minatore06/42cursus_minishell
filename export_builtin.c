@@ -122,16 +122,14 @@ int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 	int		i;
 	char	*temp;
 
-	i = 1;
+	i = 0;
 	p->expo = sort_alpha(p->expo, p->envi);
+	g_status = 0;
 	if (!cmd->command[1])
-	{
 		*out = dup_matrix(p->expo);
-		return (0);
-	}
 	else
 	{
-		while (cmd->command[i])
+		while (cmd->command[++i])
 		{
 			if (already_present(p->envi, cmd->command[i]) > 0)
 				p->envi = export_update(p->envi, cmd->command[i]);
@@ -143,7 +141,6 @@ int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 			}
 			else
 				p->envi = extend_matrix(p->envi, cmd->command[i]);
-			i++;
 		}
 	}
 	return (g_status);

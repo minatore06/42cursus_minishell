@@ -59,6 +59,7 @@ int	check_loop(t_prompt *prompt, char *input)
 	ft_printf("expa\n");
 	cmd_mat = expander(cmd_mat, prompt->envi);
 	print_matrix(cmd_mat);
+	g_status = 0;
 	ft_printf("==================================\n");
 	ft_printf("csrp\n");
 	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
@@ -68,18 +69,26 @@ int	check_loop(t_prompt *prompt, char *input)
 	cmd_mat = ft_trim_cmd(cmd_mat);
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
+	if (g_status)
+	{
+		free_matrix(cmd_mat);
+		return (1);
+	}
 	prompt->cmds = parser(prompt, cmd_mat);
 	cmd = prompt->cmds;
+	if (g_status)
+	{
+		ft_free_cmds(cmd);
+		return (1);
+	}
 	while (cmd)
 	{
 		print_matrix(cmd->command);
 		ft_printf("path=%s\n", (cmd->path));
 		ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
 		ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-		if (/*!cmd->command[1] &&*/ cmd->infile)
+		if (cmd->infile)
 		{
-/* 			if (!has_args(cmd->command))
-			{ */
 			saved_stdin = dup(STDIN_FILENO);
 			close(STDIN_FILENO);
 			if (dup2(cmd->infile, STDIN_FILENO) == -1)
@@ -87,17 +96,12 @@ int	check_loop(t_prompt *prompt, char *input)
 				print_error(2, NULL, NULL, 1);
 				return (-1);
 			}
-			//}
-				//cmd->command = extend_matrix(cmd->command, cmd->infile_name);
-			//close(cmd->infile);
-			//free_matrix(cmd->command);
-			//get_args(&cmd->command, cmd->infile);
 		}
 		if (ft_is_builtin(cmd->command, 0))
 		{
 			ft_printf("It's builtin time\n");
 			if (execute_builtins(&out, prompt, cmd))
-				return (1);
+				break ;
 		}
 		else
 		{
@@ -108,6 +112,8 @@ int	check_loop(t_prompt *prompt, char *input)
 			g_status = exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
 			if (!ft_strncmp(cmd->command[0], "clear", 5))
 				cmd->nl = 0;
+			if (g_status)
+				break ;
 		}
 		if (cmd->next)
 		{
@@ -154,9 +160,8 @@ int	check_loop(t_prompt *prompt, char *input)
 			close(saved_stdout);
 		}
 		free_matrix(out);
-		cmd = cmd->next;//no looping
+		cmd = cmd->next;
 	}
 	ft_free_cmds(cmd);
-	//prompt->envi = set_env(prompt->envi, ,);
 	return (1);
 }

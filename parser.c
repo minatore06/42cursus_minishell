@@ -47,12 +47,12 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 			cmd->infile = get_infile(cmd_mat[i + 1], cmd_mat[i][1]);
 		else if (cmd_mat[i][0] == '>')
 			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
+		if (cmd->infile == -1 || cmd->outfile == -1)
+		{
+			print_error(7, NULL, cmd_mat[i + 1], 1);
+			return (NULL);
+		}
 		i++;
-	}
-	if (cmd->infile == -1 || cmd->outfile == -1)
-	{
-		print_error(5, NULL, NULL, 1);
-		return (NULL);
 	}
 	cmd->command = get_full_cmd(cmd_mat);
 	cmd->command = remove_redirects(cmd->command);
@@ -93,6 +93,8 @@ t_cmd	*parser(t_prompt *prompt, char **cmd)
 	{
 		init_cmd_node(cmds);
 		cmds = fill_cmds(prompt, cmds, cmd);
+		if (!cmds)
+			break ;
 		cmd = reduce_cmd(cmd);
 		i++;
 		if (i < cmd_count)
