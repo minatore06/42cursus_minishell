@@ -61,7 +61,10 @@ char	**cmd_split_redir_and_pipes2(char **cmd, int i, int j, int *brek)
 		*brek = 1;
 	}
 	else if (cmd[i][j] == '|')
+	{
 		cmd = cmd_split_aux(cmd, i, j, "|");
+		*brek = 1;
+	}
 	return (cmd);
 }
 
@@ -79,7 +82,7 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 		while (cmd[i][j])
 		{
 			cmd = cmd_split_redir_and_pipes2(cmd, i, j, &brek);
-			if (brek)
+			if (brek > 0)
 				break ;
 			j++;
 		}

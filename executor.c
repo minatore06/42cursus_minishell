@@ -32,6 +32,21 @@ void	get_args(char ***out, int fd)
 	*out = mat;
 }
 
+int	reset_input(t_cmd *cmd, int saved_stdin)
+{
+	if (cmd->infile)
+	{
+		close(cmd->infile);
+		if (dup2(saved_stdin, STDIN_FILENO) < 0)
+		{
+			print_error(2, NULL, NULL, 1);
+			return (-1);
+		}
+		close(saved_stdin);
+	}
+	return (0);
+}
+
 int	check_loop(t_prompt *prompt, char *input)
 {
 	int		fd[2];
@@ -104,7 +119,11 @@ int	check_loop(t_prompt *prompt, char *input)
 		{
 			ft_printf("It's builtin time\n");
 			if (execute_builtins(&out, prompt, cmd))
+			{
+				if (reset_input(cmd, saved_stdin))
+					return (-1);
 				break ;
+			}
 		}
 		else
 		{
@@ -116,7 +135,11 @@ int	check_loop(t_prompt *prompt, char *input)
 			if (!ft_strncmp(cmd->command[0], "clear", 5))
 				cmd->nl = 0;
 			if (g_status)
+			{
+				if (reset_input(cmd, saved_stdin))
+					return (-1);
 				break ;
+			}
 		}
 		if (cmd->next)
 		{
@@ -142,16 +165,8 @@ int	check_loop(t_prompt *prompt, char *input)
 		}
 		else
 			print_matrix_fd(out, cmd->outfile, cmd->nl);
-		if (cmd->infile)
-		{
-			close(cmd->infile);
-			if (dup2(saved_stdin, STDIN_FILENO) < 0)
-			{
-				print_error(2, NULL, NULL, 1);
-				return (-1);
-			}
-			close(saved_stdin);
-		}
+		if (reset_input(cmd, saved_stdin))
+			return (-1);
 		if (cmd->outfile != 1)
 		{
 			close(cmd->outfile);
@@ -166,5 +181,6 @@ int	check_loop(t_prompt *prompt, char *input)
 		cmd = cmd->next;
 	}
 	ft_free_cmds(prompt->cmds);
+	prompt->cmds = NULL;
 	return (1);
 }

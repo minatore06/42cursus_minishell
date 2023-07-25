@@ -89,6 +89,7 @@ int			exec_cmds_error(int i, char *cmd);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
 void		get_args(char ***out, int fd);
+int			reset_input(t_cmd *cmd, int saved_stdin);
 int			check_loop(t_prompt *prompt, char *out);
 
 char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
