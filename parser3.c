@@ -15,12 +15,15 @@
 char	**get_paths(char **envi)
 {
 	char	*paths;
+	char	**tmp;
 
 	paths = get_env(envi, "PATH=", 5);
 	if (!paths)
 		return (NULL);
 	paths = ft_substr(paths, 5, strlen(paths));
-	return (ft_split(paths, ':'));
+	tmp = ft_split(paths, ':');
+	free(paths);
+	return (tmp);
 }
 
 int	get_cmd_path3(char **ret, char **dirs, int i)
@@ -100,7 +103,7 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 		i++;
 	}
 	if (!ret)
-		return (cmd);
+		return (ft_strdup(cmd));
 	ret = ft_strjoin(ret, "/");
 	return (ft_strjoin(ret, cmd));
 }

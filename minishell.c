@@ -34,8 +34,11 @@ t_prompt	init_vars(t_prompt prompt, char **argv)
 {
 	char	*str;
 	char	*str2;
+	char	*tmp;
 
-	prompt.envi = set_env(prompt.envi, getcwd(NULL, 0), "PWD=", 4);
+	tmp = getcwd(NULL, 0);
+	prompt.envi = set_env(prompt.envi, tmp, "PWD=", 4);
+	free(tmp);
 	str = get_env(prompt.envi, "SHLVL=", 6);
 	if (!str)
 		str2 = ft_strdup("1");
@@ -112,7 +115,6 @@ int	main(int argc, char **argv, char **env)
 		else
 			out = readline("guest@epicshell:$");
 		free(str);
-		add_history(out);
 		if (!check_loop(&prompt, out))
 			break ;
 	}

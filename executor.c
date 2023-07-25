@@ -164,6 +164,6 @@ int	check_loop(t_prompt *prompt, char *input)
 		free_matrix(out);
 		cmd = cmd->next;
 	}
-	ft_free_cmds(cmd);
+	ft_free_cmds(prompt->cmds);
 	return (1);
 }

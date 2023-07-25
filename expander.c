@@ -34,6 +34,7 @@ char	*cmd_replace(char *cmd, char *env_val, int n, int env_len)
 		new_cmd[i++] = cmd[n++];
 	new_cmd[i] = 0;
 	free(cmd);
+	free(env_val);
 	return (new_cmd);
 }
 
@@ -71,7 +72,7 @@ char	*search_and_replace(char *cmd, char **envi, int i, int *j)
 		if (enam)
 			free(enam);
 		enam = ft_substr(cmd, i + 1, len);
-		enam = ft_strjoin(enam, "=");
+		enam = ft_better_strjoin(enam, "=", 1);
 	}
 	if (!ft_strncmp(enam, "?=", ft_strlen(enam)))
 		eval = ft_itoa(g_status);
