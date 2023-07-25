@@ -75,6 +75,7 @@ char	**reduce_cmd(char **cmd)
 		free_matrix(cmd);
 		return (epic_cmd);
 	}
+	free_matrix(cmd);
 	return (NULL);
 }
 

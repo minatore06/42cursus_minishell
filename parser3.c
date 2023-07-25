@@ -28,6 +28,8 @@ char	**get_paths(char **envi)
 
 int	get_cmd_path3(char **ret, char **dirs, int i)
 {
+	if (ret[0])
+		free(ret[0]);
 	ret[0] = ft_strdup(dirs[i]);
 	dirs = NULL;
 	return (1);
@@ -52,8 +54,17 @@ void	get_cmd_path2(char *cmd, char *ret, char **dirs, int i)
 			if (ft_strlen(cmd) == ft_strlen(entry->d_name))
 			{
 				if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
-					if (get_cmd_path3(&ret, dirs, i))
-						break ;
+				{
+					// if (get_cmd_path3(&ret, dirs, i))
+					// 	break ;
+					if (ret)
+						free(ret);
+					ret = ft_strdup(dirs[i]);
+					if (dirs)
+						free_matrix(dirs);
+					dirs = NULL;
+					break ;
+				}
 			}
 			entry = readdir(dp);
 		}
@@ -76,6 +87,7 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 	dirs = get_paths(prompt->envi);
 	if (!dirs)
 		return (NULL);
+	//get_cmd_path2(cmd, ret, dirs, 0);
 	i = 0;
 	while (dirs && dirs[i])
 	{
@@ -92,7 +104,11 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 			{
 				if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
 				{
+					if (ret)
+						free(ret);
 					ret = ft_strdup(dirs[i]);
+					if (dirs)
+						free_matrix(dirs);
 					dirs = NULL;
 					break ;
 				}
@@ -102,8 +118,11 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 		closedir(dp);
 		i++;
 	}
+	if (dirs)
+		free_matrix(dirs);
+	dirs = NULL;
 	if (!ret)
 		return (ft_strdup(cmd));
-	ret = ft_strjoin(ret, "/");
-	return (ft_strjoin(ret, cmd));
+	ret = ft_better_strjoin(ret, "/", 1);
+	return (ft_better_strjoin(ret, cmd, 1));
 }

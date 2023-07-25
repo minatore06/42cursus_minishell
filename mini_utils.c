@@ -83,8 +83,8 @@ char	*epic_trim(char *cmd, char c, int k)
 		new_cmd[j++] = cmd[i++];
 	}
 	new_cmd[j] = 0;
+	free(cmd);
 	if (count % 2)
 		return (epic_trim_aux(new_cmd));
-	free(cmd);
 	return (new_cmd);
 }

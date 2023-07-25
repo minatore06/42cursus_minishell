@@ -140,8 +140,7 @@ char	**expander(char **cmd, char **envi)
 				if (cmd[i][j] == '$')
 					cmd[i] = search_and_replace(cmd[i], envi, j, &k);
 				else if (cmd[i][j] == '~')
-					if ((!cmd[i][j - 1] || cmd[i][j - 1] == ' ')
-						&& (!cmd[i][j + 1] || cmd[i][j + 1] == ' '
+					if (j == 0 && (!cmd[i][j + 1] || cmd[i][j + 1] == ' '
 						|| cmd[i][j + 1] == '/'))
 						cmd[i] = search_and_replace(cmd[i], envi, j, &k);
 				if (k == 0)

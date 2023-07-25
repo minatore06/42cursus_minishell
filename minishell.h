@@ -85,7 +85,7 @@ int			get_error(int e);
 int			count_args(char **cmd);
 
 void		do_something_output(char ***out, int fd);
-//int			exec_cmds_error(int i, char *cmd);
+int			exec_cmds_error(int i, char *cmd);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
 void		get_args(char ***out, int fd);

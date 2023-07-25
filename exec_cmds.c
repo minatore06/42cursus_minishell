@@ -62,12 +62,14 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 	{
 		print_error(4, NULL, NULL, 1);
 		return (-1);
+		// return (exec_cmds_error(4, NULL));
 	}
 	pid = fork();
 	if (pid < 0)
 	{
 		print_error(1, NULL, NULL, 1);
 		exit(1);
+		// exit(exec_cmds_error(1, NULL));
 	}
 	if (!pid)
 	{
@@ -76,11 +78,13 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 		{
 			print_error(2, NULL, NULL, 1);
 			return (-1);
+			// return (exec_cmds_error(2, NULL));
 		}
 		close(fd[1]);
 		execve(cmd, args, envi);
 		print_error(-9, cmd, NULL, 127);
 		exit(127);
+		// exit(exec_cmds_error(-9, NULL));
 	}
 	close(fd[1]);
 	waitpid(pid, &status, 0);
