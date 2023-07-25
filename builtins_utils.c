@@ -69,7 +69,7 @@ char	*sort_alpha_aux(char **expo, char *low, int i)
 	}
 	expo[i][j] = 0;
 	if (k != j)
-		expo[i] = ft_strjoin(expo[i], "\"");
-	expo[i] = ft_strjoin("declare -x ", expo[i]);
+		expo[i] = ft_better_strjoin(expo[i], "\"", 1);
+	expo[i] = ft_better_strjoin("declare -x ", expo[i], 2);
 	return (expo[i]);
 }

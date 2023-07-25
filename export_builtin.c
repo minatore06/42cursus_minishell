@@ -120,7 +120,7 @@ char	**export_update(char **envi, char *cmd)
 int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 {
 	int		i;
-	char	*temp;
+	char	*t;
 
 	i = 0;
 	p->expo = sort_alpha(p->expo, p->envi);
@@ -135,9 +135,9 @@ int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 				p->envi = export_update(p->envi, cmd->command[i]);
 			else if (already_present(p->envi, cmd->command[i]) < 0)
 			{
-				temp = ft_strjoin(ft_strjoin("`", cmd->command[i]), "'");
-				print_error(14, cmd->command[0], temp, 1);
-				free(temp);
+				t = ft_better_strjoin(ft_strjoin("`", cmd->command[i]), "'", 1);
+				print_error(14, cmd->command[0], t, 1);
+				free(t);
 			}
 			else
 				p->envi = extend_matrix(p->envi, cmd->command[i]);

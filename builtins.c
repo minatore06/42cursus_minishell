@@ -65,7 +65,6 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd)
 			return (1);
 	}
 	ft_free_all(p);
-	rl_clear_history();
 	exit(g_status);
 }
 
@@ -105,7 +104,7 @@ int	execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd)
 	if (a)
 	{
 		g_status = choose_builtin(out, prompt, cmd, a);
-		free(a);
+		free_matrix(a);
 	}
 	return (g_status);
 }

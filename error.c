@@ -52,13 +52,23 @@ void	print_error3(int err)
 
 void	print_error(int err, char *cmd, char *arg, int g)
 {
+	char	*tmp;
+
 	g_status = g;
 	if (err >= 0)
 		ft_putstr_fd("epicshell: ", 2);
 	if (cmd)
-		ft_putstr_fd(ft_strjoin(cmd, ": "), 2);
+	{
+		tmp = ft_strjoin(cmd, ": ");
+		ft_putstr_fd(tmp, 2);
+		free(tmp);
+	}
 	if (arg)
-		ft_putstr_fd(ft_strjoin(arg, ": "), 2);
+	{
+		tmp = ft_strjoin(arg, ": ");
+		ft_putstr_fd(tmp, 2);
+		free(tmp);
+	}
 	if (err < 13 && err > -13)
 		print_error2(err);
 	else

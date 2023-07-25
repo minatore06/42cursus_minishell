@@ -76,6 +76,8 @@ int	check_loop(t_prompt *prompt, char *input)
 	}
 	prompt->cmds = parser(prompt, cmd_mat);
 	cmd = prompt->cmds;
+	if (cmd_mat)
+		free_matrix(cmd_mat);
 	if (g_status)
 	{
 		ft_free_cmds(cmd);

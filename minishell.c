@@ -86,11 +86,12 @@ char	*put_prompt(t_prompt prompt)
 	temp2 = getcwd(NULL, 0);
 	temp3 = get_env(prompt.envi, "HOME=", 5);
 	if (temp3 && ft_strnstr(temp2, temp3 + 5, ft_strlen(temp3 + 5)))
-		temp = ft_strjoin(temp, ft_strjoin("~", temp2 + ft_strlen(temp3 + 5)));
+		temp = ft_better_strjoin(temp, 
+				ft_strjoin("~", temp2 + ft_strlen(temp3 + 5)), 3);
 	else
-		temp = ft_strjoin(temp, temp2);
+		temp = ft_better_strjoin(temp, temp2, 1);
 	free(temp2);
-	temp = ft_strjoin(temp, "$ ");
+	temp = ft_better_strjoin(temp, "$ ", 1);
 	return (temp);
 }
 

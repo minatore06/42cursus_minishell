@@ -56,6 +56,7 @@ char	*search_and_replace(char *cmd, char **envi, int i, int *j)
 	char	*eval;
 
 	len = 0;
+	enam = NULL;
 	if (cmd[i] == '~')
 		enam = ft_strdup("HOME=");
 	else if (cmd[i] == '$' && cmd[i + 1] == '?')
@@ -67,6 +68,8 @@ char	*search_and_replace(char *cmd, char **envi, int i, int *j)
 			len++;
 		if (!len)
 			return (cmd);
+		if (enam)
+			free(enam);
 		enam = ft_substr(cmd, i + 1, len);
 		enam = ft_strjoin(enam, "=");
 	}

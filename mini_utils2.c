@@ -26,6 +26,23 @@ int	ft_strcmp(char *s1, char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
+char	*ft_better_strjoin(char *str1, char *str2, int i)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(str1, str2);
+	if (i == 1)
+		free(str1);
+	else if (i == 2)
+		free(str2);
+	else if (i == 3)
+	{
+		free(str1);
+		free(str2);
+	}
+	return (tmp);
+}
+
 void	free_matrix(char **mat)
 {
 	int	i;

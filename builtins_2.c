@@ -26,9 +26,9 @@ int	echo_builtin(char ***out, t_cmd *cmd)
 		i = 1;
 	while (cmd->command[i])
 	{
-		(*out)[0] = ft_strjoin(**out, cmd->command[i]);
+		(*out)[0] = ft_better_strjoin(**out, cmd->command[i], 1);
 		if (cmd->command[i + 1] && ft_strlen(cmd->command[i]))
-			(*out)[0] = ft_strjoin(**out, " ");
+			(*out)[0] = ft_better_strjoin(**out, " ", 1);
 		i++;
 	}
 	if (!ft_strncmp(cmd->command[1], "-n", 2))
@@ -40,6 +40,7 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 {
 	int		err;
 	char	*pwd;
+	char	*tmp;
 
 	if (count_args(cmd->command))
 		return (1);
@@ -58,16 +59,24 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 	else
 	{
 		pwd = get_env(p->envi, "PWD=", 4);
-		set_env(p->envi, ft_substr(pwd, 4, ft_strlen(pwd)), "OLDPWD=", 7);
-		set_env(p->envi, getcwd(NULL, 0), "PWD=", 4);
+		tmp = ft_substr(pwd, 4, ft_strlen(pwd));
+		set_env(p->envi, tmp, "OLDPWD=", 7);
+		free(tmp);
+		tmp = getcwd(NULL, 0);
+		set_env(p->envi, tmp, "PWD=", 4);
+		free(tmp);
 	}
 	return (err);
 }
 
 int	pwd_builtin(char ***out)
 {
+	char	*tmp;
+
 	*out = calloc(2, sizeof(char *));
-	(*out)[0] = ft_strdup(getcwd(NULL, 0));
+	tmp = getcwd(NULL, 0);
+	(*out)[0] = ft_strdup(tmp);
+	free(tmp);
 	return (0);
 }
 

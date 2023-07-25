@@ -121,6 +121,7 @@ char		*epic_trim_aux(char *new_cmd);
 char		*epic_trim(char *cmd, char c, int k);
 
 int			ft_strcmp(char *s1, char *s2);
+char		*ft_better_strjoin(char *str1, char *str2, int i);
 void		free_matrix(char **mat);
 void		ft_free_cmds(t_cmd *cmds);
 void		ft_free_all(t_prompt *p);
