@@ -78,9 +78,12 @@ void	print_error(int err, char *cmd, char *arg, int g)
 
 int	get_error(int e)
 {
-	if (e == 15)
+	if (e == 15 || e == 5)
 	{
-		print_error(15, NULL, NULL, 2);
+		if (e == 15)
+			print_error(15, NULL, NULL, 2);
+		else if (e == 5)
+			print_error(5, NULL, NULL, 2);
 		return (-2);
 	}
 	else if (e == 4)

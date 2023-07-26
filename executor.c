@@ -92,8 +92,6 @@ int	check_loop(t_prompt *prompt, char *input)
 	}
 	prompt->cmds = parser(prompt, cmd_mat);
 	cmd = prompt->cmds;
-/* 	if (cmd_mat)
-		free_matrix(cmd_mat); */
 	if (g_status)
 	{
 		ft_free_cmds(cmd);
@@ -127,8 +125,8 @@ int	check_loop(t_prompt *prompt, char *input)
 		}
 		else
 		{
-			// signal(SIGINT, manage_signal);
-			// signal(SIGQUIT, SIG_IGN);
+			signal(SIGINT, manage_signal);
+			signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
 			saved_stdout = dup(STDOUT_FILENO);
 			g_status = exec_cmds(&out, cmd->path, cmd->command, prompt->envi);

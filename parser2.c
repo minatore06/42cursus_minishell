@@ -20,14 +20,15 @@ int	get_here_doc(char *delimiter)
 
 	if (!ft_strlen(delimiter))
 		return (get_error(15));
+	if (delimiter[0] == '|')
+		return (get_error(5));
 	tmp = ft_strdup("");
 	str = ft_strdup("");
 	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
 	{
-		str = ft_strjoin(str, tmp);
-		free(tmp);
+		str = ft_better_strjoin(str, tmp, 3);
 		tmp = readline("heredoc> ");
-		tmp = ft_strjoin(tmp, "\n");
+		tmp = ft_better_strjoin(tmp, "\n", 1);
 	}
 	free(tmp);
 	if (pipe(fd) == -1)
@@ -78,21 +79,27 @@ char	**get_full_cmd(char **cmd_mat)
 	return (cmd);
 }
 
-char	**remove_redirects(char **cmd_mat)
+t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 {
 	int	i;
 
 	i = 0;
-	while (cmd_mat[i])
+	while (cmd_mat[i] && cmd_mat[i][0] != '|')
 	{
-		if (cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
+		if (cmd_mat[i][0] == '<')
+			cmd->infile = get_infile(cmd_mat[i + 1], cmd_mat[i][1]);
+		else if (cmd_mat[i][0] == '>')
+			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
+		if (cmd->infile == -1 || cmd->outfile == -1 || cmd->infile == -2)
 		{
-			cmd_mat = reduce_matrix(cmd_mat, i + 1);
-			cmd_mat = reduce_matrix(cmd_mat, i);
-			i = 0;
-			continue ;
+			if (cmd->infile != -2)
+				print_error(7, NULL, cmd_mat[i + 1], 1);
+			return (cmd);
 		}
 		i++;
 	}
-	return (cmd_mat);
+	cmd->command = get_full_cmd(cmd_mat);
+	cmd->command = remove_redirects(cmd->command);
+	cmd->path = get_cmd_path(prompt, cmd->command[0], cmd->command);
+	return (cmd);
 }

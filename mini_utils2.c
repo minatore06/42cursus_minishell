@@ -66,7 +66,6 @@ void	ft_free_cmds(t_cmd *cmds)
 	{
 		if (cmds->command)
 			free_matrix(cmds->command);
-		//ft_printf("%s\n", cmds->path);
 		if (cmds->path)
 			free(cmds->path);
 		tmp = cmds;

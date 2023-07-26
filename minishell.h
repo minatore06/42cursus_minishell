@@ -71,6 +71,7 @@ int			pwd_builtin(char ***out);
 char		**unset_builtin2(t_prompt *p, char *cmd, int i);
 int			unset_builtin(t_cmd *c, t_prompt *p);
 
+void		cd_builtin_aux(t_prompt *p, char *pwd);
 int			find_stop(char *c);
 char		*find_low_aux(char **envi, char *new, int i, int n);
 char		*sort_alpha_aux(char **expo, char *low, int i);
@@ -86,17 +87,22 @@ int			count_args(char **cmd);
 
 void		do_something_output(char ***out, int fd);
 int			exec_cmds_error(int i, char *cmd);
+void		exec_cmds_aux(pid_t pid, int *status);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
 void		get_args(char ***out, int fd);
 int			reset_input(t_cmd *cmd, int saved_stdin);
 int			check_loop(t_prompt *prompt, char *out);
 
-char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
-int			env_size(char *val, char *name);
-char		*search_and_replace(char *cmd, char **envi, int i, int *j);
 void		expander_aux(char **cmd, char **envi, int *i, int *j);
 char		**expander(char **cmd, char **envi);
+
+char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
+int			env_size(char *val, char *name);
+char		*set_enam(char *cmd, int i);
+void		search_and_replace_aux(char *enam, char **eval, 
+				char **envi, int *j);
+char		*search_and_replace(char *cmd, char **envi, int i, int *j);
 
 char		*find_low(char *old, char **envi);
 char		**sort_alpha(char **expo, char **envi);
@@ -135,7 +141,6 @@ int			main(int argc, char **argv, char **env);
 
 int			count_cmds(char **cmd);
 void		init_cmd_node(t_cmd *cmd);
-t_cmd		*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat);
 char		**reduce_cmd(char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
 
@@ -143,11 +148,12 @@ int			get_here_doc(char *delimiter);
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);
-char		**remove_redirects(char **cmd_mat);
+t_cmd		*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat);
 
+char		**remove_redirects(char **cmd_mat);
 char		**get_paths(char **envi);
-//int			get_cmd_path3(char **ret, char **dirs, int i);
-//void		get_cmd_path2(char *cmd, char *ret, char **dirs, int i);
+int			get_cmd_path3(char **ret, char ***dirs, int i);
+void		get_cmd_path2(char *cmd, char **ret, char ***dirs, int i);
 char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);

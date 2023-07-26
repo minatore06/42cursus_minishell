@@ -12,6 +12,25 @@
 
 #include "minishell.h"
 
+char	**remove_redirects(char **cmd_mat)
+{
+	int	i;
+
+	i = 0;
+	while (cmd_mat[i])
+	{
+		if (cmd_mat[i][0] == '<' || cmd_mat[i][0] == '>')
+		{
+			cmd_mat = reduce_matrix(cmd_mat, i + 1);
+			cmd_mat = reduce_matrix(cmd_mat, i);
+			i = 0;
+			continue ;
+		}
+		i++;
+	}
+	return (cmd_mat);
+}
+
 char	**get_paths(char **envi)
 {
 	char	*paths;
@@ -26,23 +45,25 @@ char	**get_paths(char **envi)
 	return (tmp);
 }
 
-int	get_cmd_path3(char **ret, char **dirs, int i)
+int	get_cmd_path3(char **ret, char ***dirs, int i)
 {
 	if (ret[0])
 		free(ret[0]);
-	ret[0] = ft_strdup(dirs[i]);
-	dirs = NULL;
+	ret[0] = ft_strdup(dirs[0][i]);
+	if (dirs[0])
+		free_matrix(dirs[0]);
+	dirs[0] = NULL;
 	return (1);
 }
 
-void	get_cmd_path2(char *cmd, char *ret, char **dirs, int i)
+void	get_cmd_path2(char *cmd, char **ret, char ***dirs, int i)
 {
 	DIR				*dp;
 	struct dirent	*entry;
 
-	while (dirs && dirs[i])
+	while (dirs[0] && dirs[0][i])
 	{
-		dp = opendir(dirs[i]);
+		dp = opendir(dirs[0][i]);
 		if (!dp)
 		{
 			i++;
@@ -54,17 +75,8 @@ void	get_cmd_path2(char *cmd, char *ret, char **dirs, int i)
 			if (ft_strlen(cmd) == ft_strlen(entry->d_name))
 			{
 				if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
-				{
-					// if (get_cmd_path3(&ret, dirs, i))
-					// 	break ;
-					if (ret)
-						free(ret);
-					ret = ft_strdup(dirs[i]);
-					if (dirs)
-						free_matrix(dirs);
-					dirs = NULL;
-					break ;
-				}
+					if (get_cmd_path3(ret, dirs, i))
+						break ;
 			}
 			entry = readdir(dp);
 		}
@@ -75,11 +87,8 @@ void	get_cmd_path2(char *cmd, char *ret, char **dirs, int i)
 
 char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 {
-	int				i;
 	char			**dirs;
 	char			*ret;
-	DIR				*dp;
-	struct dirent	*entry;
 
 	if (ft_is_builtin(a, 0))
 		return (ft_strdup(cmd));
@@ -87,37 +96,7 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 	dirs = get_paths(prompt->envi);
 	if (!dirs)
 		return (NULL);
-	//get_cmd_path2(cmd, ret, dirs, 0);
-	i = 0;
-	while (dirs && dirs[i])
-	{
-		dp = opendir(dirs[i]);
-		if (!dp)
-		{
-			i++;
-			continue ;
-		}
-		entry = readdir(dp);
-		while (entry)
-		{
-			if (ft_strlen(cmd) == ft_strlen(entry->d_name))
-			{
-				if (!ft_strncmp(entry->d_name, cmd, ft_strlen(cmd)))
-				{
-					if (ret)
-						free(ret);
-					ret = ft_strdup(dirs[i]);
-					if (dirs)
-						free_matrix(dirs);
-					dirs = NULL;
-					break ;
-				}
-			}
-			entry = readdir(dp);
-		}
-		closedir(dp);
-		i++;
-	}
+	get_cmd_path2(cmd, &ret, &dirs, 0);
 	if (dirs)
 		free_matrix(dirs);
 	dirs = NULL;

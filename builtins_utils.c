@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+void	cd_builtin_aux(t_prompt *p, char *pwd)
+{
+	char	*tmp;
+
+	pwd = get_env(p->envi, "PWD=", 4);
+	tmp = ft_substr(pwd, 4, ft_strlen(pwd));
+	set_env(p->envi, tmp, "OLDPWD=", 7);
+	free(tmp);
+	tmp = getcwd(NULL, 0);
+	set_env(p->envi, tmp, "PWD=", 4);
+	free(tmp);
+}
+
 int	find_stop(char *c)
 {
 	int	i;

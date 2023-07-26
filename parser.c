@@ -36,32 +36,6 @@ void	init_cmd_node(t_cmd *cmd)
 	cmd->outfile = 1;
 }
 
-t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
-{
-	int	i;
-
-	i = 0;
-	while (cmd_mat[i] && cmd_mat[i][0] != '|')
-	{
-		if (cmd_mat[i][0] == '<')
-			cmd->infile = get_infile(cmd_mat[i + 1], cmd_mat[i][1]);
-		else if (cmd_mat[i][0] == '>')
-			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
-		if (cmd->infile == -1 || cmd->outfile == -1 || cmd->infile == -2)
-		{
-			if (cmd->infile != -2)
-				print_error(7, NULL, cmd_mat[i + 1], 1);
-			free(cmd);
-			return (NULL);
-		}
-		i++;
-	}
-	cmd->command = get_full_cmd(cmd_mat);
-	cmd->command = remove_redirects(cmd->command);
-	cmd->path = get_cmd_path(prompt, cmd->command[0], cmd->command);
-	return (cmd);
-}
-
 char	**reduce_cmd(char **cmd)
 {
 	int		i;
@@ -96,12 +70,12 @@ t_cmd	*parser(t_prompt *prompt, char **cmd)
 	{
 		init_cmd_node(cmds);
 		cmds = fill_cmds(prompt, cmds, cmd);
-		if (!cmds)
+		if (g_status)
 		{
-			if (cmd_count == 1)
-				ret = NULL;
-			free_matrix(cmd);
+			cmds->next = NULL;
 			ft_free_cmds(ret);
+			ret = NULL;
+			free_matrix(cmd);
 			return (NULL);
 		}
 		cmd = reduce_cmd(cmd);

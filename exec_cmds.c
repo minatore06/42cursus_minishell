@@ -51,6 +51,13 @@ int	exec_cmds_error(int i, char *cmd)
 	return (-1);
 }
 
+void	exec_cmds_aux(pid_t pid, int *status)
+{
+	waitpid(pid, status, 0);
+	if (WIFEXITED(*status))
+		*status = WEXITSTATUS(*status);
+}
+
 int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
 	pid_t	pid;
@@ -59,37 +66,21 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 
 	status = 0;
 	if (pipe(fd) == -1)
-	{
-		print_error(4, NULL, NULL, 1);
-		return (-1);
-		// return (exec_cmds_error(4, NULL));
-	}
+		return (exec_cmds_error(4, NULL));
 	pid = fork();
 	if (pid < 0)
-	{
-		print_error(1, NULL, NULL, 1);
-		exit(1);
-		// exit(exec_cmds_error(1, NULL));
-	}
+		exit(exec_cmds_error(1, NULL));
 	if (!pid)
 	{
 		close(fd[0]);
 		if (dup2(fd[1], STDOUT_FILENO) < 0)
-		{
-			print_error(2, NULL, NULL, 1);
-			return (-1);
-			// return (exec_cmds_error(2, NULL));
-		}
+			return (exec_cmds_error(2, NULL));
 		close(fd[1]);
 		execve(cmd, args, envi);
-		print_error(-9, cmd, NULL, 127);
-		exit(127);
-		// exit(exec_cmds_error(-9, NULL));
+		exit(exec_cmds_error(-9, NULL));
 	}
 	close(fd[1]);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		status = WEXITSTATUS(status);
+	exec_cmds_aux(pid, &status);
 	do_something_output(out, fd[0]);
 	close(fd[0]);
 	return (status);

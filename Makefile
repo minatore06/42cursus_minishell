@@ -22,6 +22,7 @@ SRCS = builtins.c \
 		exec_cmds.c \
 		executor.c \
 		expander.c \
+		expander2.c \
 		export_builtin.c \
 		lexer.c \
 		matrix.c \

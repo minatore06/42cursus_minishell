@@ -40,7 +40,6 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 {
 	int		err;
 	char	*pwd;
-	char	*tmp;
 
 	if (count_args(cmd->command))
 		return (1);
@@ -57,15 +56,7 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 		return (1);
 	}
 	else
-	{
-		pwd = get_env(p->envi, "PWD=", 4);
-		tmp = ft_substr(pwd, 4, ft_strlen(pwd));
-		set_env(p->envi, tmp, "OLDPWD=", 7);
-		free(tmp);
-		tmp = getcwd(NULL, 0);
-		set_env(p->envi, tmp, "PWD=", 4);
-		free(tmp);
-	}
+		cd_builtin_aux(p, pwd);
 	return (err);
 }
 
