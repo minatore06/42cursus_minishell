@@ -55,6 +55,15 @@ char	**reduce_cmd(char **cmd)
 	return (NULL);
 }
 
+void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd)
+{
+	cmds->next = NULL;
+	ft_free_cmds(ret);
+	ret = NULL;
+	free_matrix(cmd);
+	return (NULL);
+}
+
 t_cmd	*parser(t_prompt *prompt, char **cmd)
 {
 	t_cmd		*ret;
@@ -71,13 +80,7 @@ t_cmd	*parser(t_prompt *prompt, char **cmd)
 		init_cmd_node(cmds);
 		cmds = fill_cmds(prompt, cmds, cmd);
 		if (g_status)
-		{
-			cmds->next = NULL;
-			ft_free_cmds(ret);
-			ret = NULL;
-			free_matrix(cmd);
-			return (NULL);
-		}
+			return (error_parse(ret, cmds, cmd));
 		cmd = reduce_cmd(cmd);
 		i++;
 		if (i < cmd_count)

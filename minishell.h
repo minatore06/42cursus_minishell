@@ -100,7 +100,7 @@ char		**expander(char **cmd, char **envi);
 char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
 int			env_size(char *val, char *name);
 char		*set_enam(char *cmd, int i);
-void		search_and_replace_aux(char *enam, char **eval, 
+void		search_and_replace_aux(char *enam, char **eval,
 				char **envi, int *j);
 char		*search_and_replace(char *cmd, char **envi, int i, int *j);
 

@@ -110,7 +110,7 @@ int	unset_builtin(t_cmd *c, t_prompt *p)
 		i = 0;
 		while (p->envi[i])
 		{
-			if (!ft_strncmp(p->envi[i], c->command[k], find_stop(p->envi[i])) 
+			if (!ft_strncmp(p->envi[i], c->command[k], find_stop(p->envi[i]))
 				&& find_stop(p->envi[i]) == ft_strlen(c->command[k]))
 			{
 				temp = unset_builtin2(p, c->command[k], i);

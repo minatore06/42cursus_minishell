@@ -56,6 +56,8 @@ void	exec_cmds_aux(pid_t pid, int *status)
 	waitpid(pid, status, 0);
 	if (WIFEXITED(*status))
 		*status = WEXITSTATUS(*status);
+	if (g_status == 130)
+		*status = 130;
 }
 
 int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
