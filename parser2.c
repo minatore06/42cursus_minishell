@@ -19,9 +19,9 @@ int	get_here_doc(char *delimiter)
 	char	*tmp;
 
 	if (!ft_strlen(delimiter))
-		return (get_error(15));
+		return (get_error(15, NULL, NULL));
 	if (delimiter[0] == '|')
-		return (get_error(5));
+		return (get_error(5, NULL, NULL));
 	tmp = ft_strdup("");
 	str = ft_strdup("");
 	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
@@ -29,10 +29,12 @@ int	get_here_doc(char *delimiter)
 		str = ft_better_strjoin(str, tmp, 3);
 		tmp = readline("heredoc> ");
 		tmp = ft_better_strjoin(tmp, "\n", 1);
+		if (g_status == 130)
+			return (get_error(0, str, tmp));
 	}
 	free(tmp);
 	if (pipe(fd) == -1)
-		return (get_error(4));
+		return (get_error(4, NULL, NULL));
 	write(fd[1], str, ft_strlen(str));
 	close(fd[1]);
 	free(str);

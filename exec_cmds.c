@@ -60,6 +60,18 @@ void	exec_cmds_aux(pid_t pid, int *status)
 		*status = 130;
 }
 
+int	exec_cmds_child(int fd[2], char *cmd, char **args, char **envi)
+{
+	signal(SIGINT, manage_signal);
+	signal(SIGQUIT, SIG_IGN);
+	close(fd[0]);
+	if (dup2(fd[1], STDOUT_FILENO) < 0)
+		return (exec_cmds_error(2, NULL));
+	close(fd[1]);
+	execve(cmd, args, envi);
+	exit(exec_cmds_error(-9, cmd));
+}
+
 int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 {
 	pid_t	pid;
@@ -69,20 +81,20 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 	status = 0;
 	if (pipe(fd) == -1)
 		return (exec_cmds_error(4, NULL));
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
 	if (pid < 0)
 		exit(exec_cmds_error(1, NULL));
 	if (!pid)
 	{
-		close(fd[0]);
-		if (dup2(fd[1], STDOUT_FILENO) < 0)
-			return (exec_cmds_error(2, NULL));
-		close(fd[1]);
-		execve(cmd, args, envi);
-		exit(exec_cmds_error(-9, NULL));
+		if (exec_cmds_child(fd, cmd, args, envi))
+			return (-1);
 	}
 	close(fd[1]);
 	exec_cmds_aux(pid, &status);
+	signal(SIGINT, manage_signal);
+	signal(SIGQUIT, SIG_IGN);
 	do_something_output(out, fd[0]);
 	close(fd[0]);
 	return (status);

@@ -49,16 +49,6 @@ typedef struct s_prompt
 	pid_t	pid;
 }	t_prompt;
 
-typedef struct s_loop
-{
-	int		fd[2];
-	int		i;
-	int		saved_stdin;
-	int		saved_stdout;
-	char	**cmd_mat;
-	char	**out;
-}	t_loop;
-
 int			ft_is_builtin(char **c, int i);
 int			env_builtin(char ***out, t_prompt *prompt);
 int			exit_builtin(t_prompt *p, t_cmd *cmd);
@@ -82,7 +72,7 @@ char		**set_env(char **envi, char *value, char *name, int n);
 void		print_error2(int err);
 void		print_error3(int err);
 void		print_error(int err, char *cmd, char *arg, int g);
-int			get_error(int e);
+int			get_error(int e, char *str1, char *str2);
 int			count_args(char **cmd);
 
 void		do_something_output(char ***out, int fd);

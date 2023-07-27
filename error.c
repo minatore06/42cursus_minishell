@@ -76,9 +76,14 @@ void	print_error(int err, char *cmd, char *arg, int g)
 	ft_putchar_fd('\n', 2);
 }
 
-int	get_error(int e)
+int	get_error(int e, char *str1, char *str2)
 {
-	if (e == 15 || e == 5)
+	if (e == 0)
+	{
+		free(str1);
+		free(str2);
+	}
+	if (e == 15 || e == 5 || e == 0)
 	{
 		if (e == 15)
 			print_error(15, NULL, NULL, 2);
@@ -88,6 +93,8 @@ int	get_error(int e)
 	}
 	else if (e == 4)
 		print_error(4, NULL, NULL, 1);
+	else if (e == 2)
+		print_error(2, NULL, NULL, 1);
 	return (-1);
 }
 

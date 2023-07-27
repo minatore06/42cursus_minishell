@@ -32,28 +32,103 @@ void	get_args(char ***out, int fd)
 	*out = mat;
 }
 
+int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
+{
+	char	**cmd_mat;
+
+	cmd_mat = ft_cmdsplit(input, ' ');
+	free(input);
+	cmd_mat = expander(cmd_mat, prompt->envi);
+	g_status = 0;
+	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
+	cmd_mat = ft_trim_cmd(cmd_mat);
+	if (g_status)
+	{
+		free_matrix(cmd_mat);
+		return (1);
+	}
+	prompt->cmds = parser(prompt, cmd_mat);
+	*cmd = prompt->cmds;
+	if (g_status)
+	{
+		ft_free_cmds(*cmd);
+		return (1);
+	}
+	return (0);
+}
+
+int	set_infile(t_cmd *cmd, int *saved_stdin)
+{
+	if (cmd->infile)
+	{
+		*saved_stdin = dup(STDIN_FILENO);
+		close(STDIN_FILENO);
+		if (dup2(cmd->infile, STDIN_FILENO) == -1)
+			return (get_error(2, NULL, NULL));
+	}
+	return (0);
+}
+
+int print_output(t_cmd *cmd, char ***out)
+{
+	int		fd[2];
+	int		i;
+
+	if (cmd->next)
+	{
+		if (cmd->outfile != 1)
+		{
+			print_matrix_fd(*out, cmd->outfile, cmd->nl);
+			free_matrix(*out);
+			*out = malloc(0);
+		}
+		if (pipe(fd) == -1)
+			return (get_error(4, NULL, NULL));
+		i = 0;
+		while (*out && *out[i])
+		{
+			ft_putendl_fd(*out[i], fd[1]);
+			i++;
+		}
+		close(fd[1]);
+		((t_cmd *)cmd->next)->infile = fd[0];
+	}
+	else
+		print_matrix_fd(*out, cmd->outfile, cmd->nl);
+	return (0);
+}
+
 int	reset_input(t_cmd *cmd, int saved_stdin)
 {
 	if (cmd->infile)
 	{
 		close(cmd->infile);
 		if (dup2(saved_stdin, STDIN_FILENO) < 0)
-		{
-			print_error(2, NULL, NULL, 1);
-			return (-1);
-		}
+			return (get_error(2, NULL, NULL));
 		close(saved_stdin);
+	}
+	return (0);
+}
+
+int	reset_output(t_cmd *cmd, int saved_stdout)
+{
+	if (cmd->outfile != 1)
+	{
+		close(cmd->outfile);
+		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
+			return (get_error(2, NULL, NULL));
+		close(saved_stdout);
 	}
 	return (0);
 }
 
 int	check_loop(t_prompt *prompt, char *input)
 {
-	int		fd[2];
-	int		i;
+	// int		fd[2];
+	// int		i;
 	int		saved_stdin;
 	int		saved_stdout;
-	char	**cmd_mat;
+	// char	**cmd_mat;
 	char	**out;
 	t_cmd	*cmd;
 
@@ -67,52 +142,16 @@ int	check_loop(t_prompt *prompt, char *input)
 	if (!strlen(input))
 		return (1);
 	add_history(input);
-	ft_printf("split\n");
-	cmd_mat = ft_cmdsplit(input, ' ');
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	free(input);
-	ft_printf("expa\n");
-	cmd_mat = expander(cmd_mat, prompt->envi);
-	print_matrix(cmd_mat);
-	g_status = 0;
-	ft_printf("==================================\n");
-	ft_printf("csrp\n");
-	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	ft_printf("trim\n");
-	cmd_mat = ft_trim_cmd(cmd_mat);
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	if (g_status)
-	{
-		free_matrix(cmd_mat);
+	if (get_cmd_cmds(prompt, &cmd, input))
 		return (1);
-	}
-	prompt->cmds = parser(prompt, cmd_mat);
-	cmd = prompt->cmds;
-	if (g_status)
-	{
-		ft_free_cmds(cmd);
-		return (1);
-	}
 	while (cmd)
 	{
 		print_matrix(cmd->command);
 		ft_printf("path=%s\n", (cmd->path));
 		ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
 		ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-		if (cmd->infile)
-		{
-			saved_stdin = dup(STDIN_FILENO);
-			close(STDIN_FILENO);
-			if (dup2(cmd->infile, STDIN_FILENO) == -1)
-			{
-				print_error(2, NULL, NULL, 1);
-				return (-1);
-			}
-		}
+		if (set_infile(cmd, &saved_stdin))
+			return (-1);
 		if (ft_is_builtin(cmd->command, 0))
 		{
 			ft_printf("It's builtin time\n");
@@ -125,8 +164,6 @@ int	check_loop(t_prompt *prompt, char *input)
 		}
 		else
 		{
-			signal(SIGINT, manage_signal);
-			signal(SIGQUIT, SIG_IGN);
 			ft_printf("It's execve time\n");
 			saved_stdout = dup(STDOUT_FILENO);
 			g_status = exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
@@ -139,42 +176,12 @@ int	check_loop(t_prompt *prompt, char *input)
 				break ;
 			}
 		}
-		if (cmd->next)
-		{
-			if (cmd->outfile != 1)
-			{
-				print_matrix_fd(out, cmd->outfile, cmd->nl);
-				free_matrix(out);
-				out = malloc(0);
-			}
-			if (pipe(fd) == -1)
-			{
-				print_error(4, NULL, NULL, 1);
-				return (-1);
-			}
-			i = 0;
-			while (out[i])
-			{
-				ft_putendl_fd(out[i], fd[1]);
-				i++;
-			}
-			close(fd[1]);
-			((t_cmd *)cmd->next)->infile = fd[0];
-		}
-		else
-			print_matrix_fd(out, cmd->outfile, cmd->nl);
+		if (print_output(cmd, &out))
+			return (-1);
 		if (reset_input(cmd, saved_stdin))
 			return (-1);
-		if (cmd->outfile != 1)
-		{
-			close(cmd->outfile);
-			if (dup2(saved_stdout, STDOUT_FILENO) < 0)
-			{
-				print_error(2, NULL, NULL, 1);
-				return (-1);
-			}
-			close(saved_stdout);
-		}
+		if (reset_output(cmd, saved_stdout))
+			return (-1);
 		free_matrix(out);
 		cmd = cmd->next;
 	}
