@@ -78,11 +78,21 @@ int			count_args(char **cmd);
 void		do_something_output(char ***out, int fd);
 int			exec_cmds_error(int i, char *cmd);
 void		exec_cmds_aux(pid_t pid, int *status);
+int			exec_cmds_child(int fd[2], char *cmd, char **args, char **envi);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
-void		get_args(char ***out, int fd);
+int			get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input);
+int			set_infile(t_cmd *cmd, int *saved_stdin);
+int			builtin_execve(int saved_stdin, char ***out, 
+				t_cmd *cmd, t_prompt *p);
+int			executor(t_cmd *cmd, t_prompt *p, char ***out);
+int			check_loop(t_prompt *prompt, char *input);
+
+int			builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p);
+int			execve_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p);
+int			print_output(t_cmd *cmd, char ***out);
 int			reset_input(t_cmd *cmd, int saved_stdin);
-int			check_loop(t_prompt *prompt, char *out);
+int			reset_output(t_cmd *cmd, int saved_stdout);
 
 void		expander_aux(char **cmd, char **envi, int *i, int *j);
 char		**expander(char **cmd, char **envi);
@@ -112,10 +122,10 @@ char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);
 
 void		manage_signal(int s);
-int			get_position(char *str, char c, int bypass);
-int			has_args(char **cmd);
 char		*epic_trim_aux(char *new_cmd);
 char		*epic_trim(char *cmd, char c, int k);
+int			check_here_doc(char *delimiter);
+int			check_input(char *input);
 
 int			ft_strcmp(char *s1, char *s2);
 char		*ft_better_strjoin(char *str1, char *str2, int i);

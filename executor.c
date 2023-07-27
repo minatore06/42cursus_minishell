@@ -12,26 +12,6 @@
 
 #include "minishell.h"
 
-void	get_args(char ***out, int fd)
-{
-	char	*line;
-	char	*temp;
-	char	**mat;
-
-	mat = NULL;
-	while (1)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break ;
-		temp = ft_strtrim(line, "\n");
-		free(line);
-		mat = extend_matrix(mat, temp);
-		free(temp);
-	}
-	*out = mat;
-}
-
 int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 {
 	char	**cmd_mat;
@@ -69,119 +49,56 @@ int	set_infile(t_cmd *cmd, int *saved_stdin)
 	return (0);
 }
 
-int print_output(t_cmd *cmd, char ***out)
+int	builtin_execve(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 {
-	int		fd[2];
-	int		i;
-
-	if (cmd->next)
-	{
-		if (cmd->outfile != 1)
-		{
-			print_matrix_fd(*out, cmd->outfile, cmd->nl);
-			free_matrix(*out);
-			*out = malloc(0);
-		}
-		if (pipe(fd) == -1)
-			return (get_error(4, NULL, NULL));
-		i = 0;
-		while (*out && *out[i])
-		{
-			ft_putendl_fd(*out[i], fd[1]);
-			i++;
-		}
-		close(fd[1]);
-		((t_cmd *)cmd->next)->infile = fd[0];
-	}
+	if (ft_is_builtin(cmd->command, 0))
+		return (builtin_time(saved_stdin, out, cmd, p));
 	else
-		print_matrix_fd(*out, cmd->outfile, cmd->nl);
+		return (execve_time(saved_stdin, out, cmd, p));
 	return (0);
 }
 
-int	reset_input(t_cmd *cmd, int saved_stdin)
+int	executor(t_cmd *cmd, t_prompt *p, char ***out)
 {
-	if (cmd->infile)
-	{
-		close(cmd->infile);
-		if (dup2(saved_stdin, STDIN_FILENO) < 0)
-			return (get_error(2, NULL, NULL));
-		close(saved_stdin);
-	}
-	return (0);
-}
+	int		saved_stdin;
+	int		saved_stdout;
+	int		err;
 
-int	reset_output(t_cmd *cmd, int saved_stdout)
-{
-	if (cmd->outfile != 1)
-	{
-		close(cmd->outfile);
-		if (dup2(saved_stdout, STDOUT_FILENO) < 0)
-			return (get_error(2, NULL, NULL));
-		close(saved_stdout);
-	}
+	if (set_infile(cmd, &saved_stdin))
+		return (-1);
+	saved_stdout = dup(STDOUT_FILENO);
+	err = builtin_execve(saved_stdin, out, cmd, p);
+	if (err)
+		return (err);
+	if (print_output(cmd, out))
+		return (-1);
+	if (reset_input(cmd, saved_stdin))
+		return (-1);
+	if (reset_output(cmd, saved_stdout))
+		return (-1);
 	return (0);
 }
 
 int	check_loop(t_prompt *prompt, char *input)
 {
-	// int		fd[2];
-	// int		i;
-	int		saved_stdin;
-	int		saved_stdout;
-	// char	**cmd_mat;
-	char	**out;
 	t_cmd	*cmd;
+	char	**out;
+	int		i;
 
-	out = NULL;
-	if (!input)
-	{
-		ft_printf("exit\n");
-		free(input);
-		return (0);
-	}
-	if (!strlen(input))
-		return (1);
+	i = check_input(input);
+	if (i < 2)
+		return (i);
 	add_history(input);
 	if (get_cmd_cmds(prompt, &cmd, input))
 		return (1);
 	while (cmd)
 	{
-		print_matrix(cmd->command);
-		ft_printf("path=%s\n", (cmd->path));
-		ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
-		ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-		if (set_infile(cmd, &saved_stdin))
-			return (-1);
-		if (ft_is_builtin(cmd->command, 0))
+		out = NULL;
+		if (executor(cmd, prompt, &out))
 		{
-			ft_printf("It's builtin time\n");
-			if (execute_builtins(&out, prompt, cmd))
-			{
-				if (reset_input(cmd, saved_stdin))
-					return (-1);
-				break ;
-			}
+			free_matrix(out);
+			break ;
 		}
-		else
-		{
-			ft_printf("It's execve time\n");
-			saved_stdout = dup(STDOUT_FILENO);
-			g_status = exec_cmds(&out, cmd->path, cmd->command, prompt->envi);
-			if (!ft_strncmp(cmd->command[0], "clear", 5))
-				cmd->nl = 0;
-			if (g_status)
-			{
-				if (reset_input(cmd, saved_stdin))
-					return (-1);
-				break ;
-			}
-		}
-		if (print_output(cmd, &out))
-			return (-1);
-		if (reset_input(cmd, saved_stdin))
-			return (-1);
-		if (reset_output(cmd, saved_stdout))
-			return (-1);
 		free_matrix(out);
 		cmd = cmd->next;
 	}

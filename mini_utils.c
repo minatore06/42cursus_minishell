@@ -22,38 +22,6 @@ void	manage_signal(int s)
 	}
 }
 
-int	get_position(char *str, char c, int bypass)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-		{
-			if (!bypass)
-				break ;
-			bypass--;
-		}
-		i++;
-	}
-	return (i);
-}
-
-int	has_args(char **cmd)
-{
-	int	i;
-
-	i = 1;
-	while (cmd[i])
-	{
-		if (cmd[i][0] != '-')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 char	*epic_trim_aux(char	*new_cmd)
 {
 	free(new_cmd);
@@ -87,4 +55,26 @@ char	*epic_trim(char *cmd, char c, int k)
 	if (count % 2)
 		return (epic_trim_aux(new_cmd));
 	return (new_cmd);
+}
+
+int	check_here_doc(char *delimiter)
+{
+	if (!ft_strlen(delimiter))
+		return (get_error(15, NULL, NULL));
+	if (delimiter[0] == '|')
+		return (get_error(5, NULL, NULL));
+	return (0);
+}
+
+int	check_input(char *input)
+{
+	if (!input)
+	{
+		ft_printf("exit\n");
+		free(input);
+		return (0);
+	}
+	if (!strlen(input))
+		return (1);
+	return (2);
 }

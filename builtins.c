@@ -52,7 +52,7 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd)
 	int	i;
 
 	i = 0;
-	printf("exit\n");
+	ft_printf("exit\n");
 	if (cmd->command[1])
 	{
 		while (cmd->command[1][i] && ft_isdigit(cmd->command[1][i]))

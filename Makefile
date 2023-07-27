@@ -21,6 +21,7 @@ SRCS = builtins.c \
 		error.c \
 		exec_cmds.c \
 		executor.c \
+		executor2.c \
 		expander.c \
 		expander2.c \
 		export_builtin.c \
