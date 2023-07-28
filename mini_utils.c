@@ -22,6 +22,12 @@ void	manage_signal(int s)
 	}
 }
 
+void	manage_signal2(int s)
+{
+	if (s == SIGINT)
+		g_status = 130;
+}
+
 char	*epic_trim_aux(char	*new_cmd)
 {
 	free(new_cmd);
@@ -55,15 +61,6 @@ char	*epic_trim(char *cmd, char c, int k)
 	if (count % 2)
 		return (epic_trim_aux(new_cmd));
 	return (new_cmd);
-}
-
-int	check_here_doc(char *delimiter)
-{
-	if (!ft_strlen(delimiter))
-		return (get_error(15, NULL, NULL));
-	if (delimiter[0] == '|')
-		return (get_error(5, NULL, NULL));
-	return (0);
 }
 
 int	check_input(char *input)

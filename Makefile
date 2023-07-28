@@ -25,6 +25,7 @@ SRCS = builtins.c \
 		expander.c \
 		expander2.c \
 		export_builtin.c \
+		heredoc.c \
 		lexer.c \
 		matrix.c \
 		mini_utils.c \

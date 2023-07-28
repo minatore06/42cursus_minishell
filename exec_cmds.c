@@ -81,7 +81,7 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 	status = 0;
 	if (pipe(fd) == -1)
 		return (exec_cmds_error(4, NULL));
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, manage_signal2);
 	signal(SIGQUIT, SIG_IGN);
 	pid = fork();
 	if (pid < 0)

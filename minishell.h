@@ -95,6 +95,7 @@ int			reset_input(t_cmd *cmd, int saved_stdin);
 int			reset_output(t_cmd *cmd, int saved_stdout);
 
 void		expander_aux(char **cmd, char **envi, int *i, int *j);
+void		expander2(char **cmd, char **envi, int i, int *j);
 char		**expander(char **cmd, char **envi);
 
 char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
@@ -110,6 +111,11 @@ int			already_present(char **envi, char *cmd);
 char		**export_update(char **envi, char *cmd);
 int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
 
+int			check_here_doc(char *delimiter);
+int			here_doc_while(char *del, char *tmp);
+void		end_here_doc(char **tmp, char *del);
+int			get_here_doc(char *del);
+
 int			check_quote(int quote, char const s);
 int			count_words_lexer(char const *s, char c);
 int			count_chr_lexer(const char *s, char c);
@@ -122,9 +128,9 @@ char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);
 
 void		manage_signal(int s);
+void		manage_signal2(int s);
 char		*epic_trim_aux(char *new_cmd);
 char		*epic_trim(char *cmd, char c, int k);
-int			check_here_doc(char *delimiter);
 int			check_input(char *input);
 
 int			ft_strcmp(char *s1, char *s2);
@@ -144,7 +150,6 @@ void		init_cmd_node(t_cmd *cmd);
 char		**reduce_cmd(char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
 
-int			get_here_doc(char *delimiter);
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);

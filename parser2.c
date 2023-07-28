@@ -12,35 +12,6 @@
 
 #include "minishell.h"
 
-int	get_here_doc(char *delimiter)
-{
-	int		fd[2];
-	char	*str;
-	char	*tmp;
-
-	if (check_here_doc(delimiter))
-		return (-2);
-	tmp = ft_strdup("");
-	str = ft_strdup("");
-	while (ft_strncmp(tmp, delimiter, ft_strlen(delimiter)))
-	{
-		str = ft_better_strjoin(str, tmp, 3);
-		tmp = readline("heredoc> ");
-		if (!tmp)
-			tmp = ft_strdup(delimiter);
-		tmp = ft_better_strjoin(tmp, "\n", 1);
-		if (g_status == 130)
-			return (get_error(0, str, tmp));
-	}
-	free(tmp);
-	if (pipe(fd) == -1)
-		return (get_error(4, NULL, NULL));
-	write(fd[1], str, ft_strlen(str));
-	close(fd[1]);
-	free(str);
-	return (fd[0]);
-}
-
 int	get_infile(char *file, char append)
 {
 	if (append)
