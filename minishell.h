@@ -111,7 +111,6 @@ int			already_present(char **envi, char *cmd);
 char		**export_update(char **envi, char *cmd);
 int			export_builtin(char ***out, t_prompt *p, t_cmd *cmd);
 
-int			check_here_doc(char *delimiter);
 int			here_doc_while(char *del, char *tmp);
 void		end_here_doc(char **tmp, char *del);
 int			get_here_doc(char *del);
@@ -150,6 +149,7 @@ void		init_cmd_node(t_cmd *cmd);
 char		**reduce_cmd(char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
 
+int			check_file(char *file);
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);

@@ -12,15 +12,6 @@
 
 #include "minishell.h"
 
-int	check_here_doc(char *delimiter)
-{
-	if (!ft_strlen(delimiter))
-		return (get_error(15, NULL, NULL));
-	if (delimiter[0] == '|')
-		return (get_error(5, NULL, NULL));
-	return (0);
-}
-
 int	here_doc_while(char *del, char *tmp)
 {
 	int	i;
@@ -48,8 +39,6 @@ int	get_here_doc(char *del)
 	char	*str;
 	char	*tmp;
 
-	if (check_here_doc(del))
-		return (-2);
 	tmp = ft_strdup("");
 	str = ft_strdup("");
 	while (here_doc_while(del, tmp))

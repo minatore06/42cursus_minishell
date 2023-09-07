@@ -65,6 +65,9 @@ char	*epic_trim(char *cmd, char c, int k)
 
 int	check_input(char *input)
 {
+	int	i;
+
+	i = 0;
 	if (!input)
 	{
 		ft_printf("exit\n");
@@ -72,6 +75,10 @@ int	check_input(char *input)
 		return (0);
 	}
 	if (!strlen(input))
+		return (1);
+	while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
+		i++;
+	if (!input[i])
 		return (1);
 	return (2);
 }

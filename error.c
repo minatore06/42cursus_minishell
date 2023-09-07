@@ -48,6 +48,14 @@ void	print_error3(int err)
 		ft_putstr_fd("not a valid identifier", 2);
 	else if (err == 15 || err == -15)
 		ft_putstr_fd("syntax error near unexpected token `newline'", 2);
+	else if (err == 16 || err == -16)
+		ft_putstr_fd("syntax error near unexpected token `>'", 2);
+	else if (err == 17 || err == -17)
+		ft_putstr_fd("syntax error near unexpected token `>>'", 2);
+	else if (err == 18 || err == -18)
+		ft_putstr_fd("syntax error near unexpected token `<'", 2);
+	else if (err == 19 || err == -19)
+		ft_putstr_fd("syntax error near unexpected token `<<'", 2);
 }
 
 void	print_error(int err, char *cmd, char *arg, int g)
@@ -83,10 +91,18 @@ int	get_error(int e, char *str1, char *str2)
 		free(str1);
 		free(str2);
 	}
-	if (e == 15 || e == 5 || e == 0)
+	if (e >= 15 || e == 5 || e == 0)
 	{
 		if (e == 15)
 			print_error(15, NULL, NULL, 2);
+		if (e == 16)
+			print_error(16, NULL, NULL, 2);
+		if (e == 17)
+			print_error(17, NULL, NULL, 2);
+		if (e == 18)
+			print_error(18, NULL, NULL, 2);
+		if (e == 19)
+			print_error(19, NULL, NULL, 2);
 		else if (e == 5)
 			print_error(5, NULL, NULL, 2);
 		return (-2);

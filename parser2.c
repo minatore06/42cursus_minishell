@@ -12,18 +12,41 @@
 
 #include "minishell.h"
 
+int	check_file(char *file)
+{
+	if (!ft_strlen(file))
+		return (get_error(15, NULL, NULL));
+	if (file[0] == '|')
+		return (get_error(5, NULL, NULL));
+	if (file[0] == '>' && !file[1])
+		return (get_error(16, NULL, NULL));
+	if (file[0] == '>' && file[1] == '>')
+		return (get_error(17, NULL, NULL));
+	if (file[0] == '<' && !file[1])
+		return (get_error(18, NULL, NULL));
+	if (file[0] == '<' && file[1] == '<')
+		return (get_error(19, NULL, NULL));
+	return (0);
+}
+
 int	get_infile(char *file, char append)
 {
+	if (check_file(file))
+		return (-2);
+	//trimmare la stringa
+	if (!ft_strlen(file))
+		return (-1);
 	if (append)
 		return (get_here_doc(file));
-	if (!file)
-		return (-1);
 	return (open(file, O_RDONLY, 0666));
 }
 
 int	get_outfile(char *file, char append)
 {
-	if (!file)
+	if (check_file(file))
+		return (-2);
+	//trimmare la stringa
+	if (!ft_strlen(file))
 		return (-1);
 	if (append)
 		return (open(file, O_WRONLY | O_CREAT | O_APPEND, 0666));
@@ -63,9 +86,9 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 			cmd->infile = get_infile(cmd_mat[i + 1], cmd_mat[i][1]);
 		else if (cmd_mat[i][0] == '>')
 			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
-		if (cmd->infile == -1 || cmd->outfile == -1 || cmd->infile == -2)
+		if (cmd->infile <= -1 || cmd->outfile <= -1)
 		{
-			if (cmd->infile != -2)
+			if (cmd->infile == -1 || cmd->outfile == -1)
 				print_error(7, NULL, cmd_mat[i + 1], 1);
 			return (cmd);
 		}
