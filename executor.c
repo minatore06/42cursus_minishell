@@ -15,13 +15,39 @@
 int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 {
 	char	**cmd_mat;
+	int		saved_g;
 
-	cmd_mat = ft_cmdsplit(input, ' ');
-	free(input);
-	cmd_mat = expander(cmd_mat, prompt->envi);
+	saved_g = g_status;
 	g_status = 0;
+	// cmd_mat = ft_cmdsplit(input, ' ');
+	// free(input);
+	// cmd_mat = expander(cmd_mat, prompt->envi);
+	// g_status = 0;
+	// cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
+	// cmd_mat = ft_trim_cmd(cmd_mat);
+	ft_printf("split\n");
+	cmd_mat = ft_cmdsplit(input, ' ');
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
+	free(input);
+	ft_printf("expa\n");
+	cmd_mat = expander(cmd_mat, prompt->envi, saved_g);
+	g_status = 0;
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
+	ft_printf("csrp\n");
 	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
+	if (g_status)
+	{
+		free_matrix(cmd_mat);
+		return (1);
+	}
+	ft_printf("trim\n");
 	cmd_mat = ft_trim_cmd(cmd_mat);
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
 	if (g_status)
 	{
 		free_matrix(cmd_mat);

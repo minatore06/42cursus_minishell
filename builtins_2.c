@@ -27,7 +27,7 @@ int	echo_builtin(char ***out, t_cmd *cmd)
 	while (cmd->command[i])
 	{
 		(*out)[0] = ft_better_strjoin(**out, cmd->command[i], 1);
-		if (cmd->command[i + 1] && ft_strlen(cmd->command[i]))
+		if (cmd->command[i + 1])
 			(*out)[0] = ft_better_strjoin(**out, " ", 1);
 		i++;
 	}

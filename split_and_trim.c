@@ -40,11 +40,35 @@ char	**cmd_split_aux(char **cmd, int x, int y, char *s)
 	return (cmd);
 }
 
-char	**cmd_split_redir_and_pipes2(char **cmd, int i, int j, int *brek)
+void	cmd_split_redir_and_pipes2(char **cmd, int i, int *j)
 {
-	if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
-		*brek = 1;
-	else if (cmd[i][j] == '<')
+	if (cmd[i][*j] == '\'')
+	{
+		(*j)++;
+		while (cmd[i][*j] && cmd[i][*j] != '\'')
+			(*j)++;
+		if (!cmd[i][*j])
+		{
+			print_error(3, NULL, NULL, 2);
+			return ;
+		}
+	}
+	else if (cmd[i][*j] == '\"')
+	{
+		(*j)++;
+		while (cmd[i][*j] && cmd[i][*j] != '\"')
+			(*j)++;
+		if (!cmd[i][*j])
+		{
+			print_error(20, NULL, NULL, 2);
+			return ;
+		}
+	}
+}
+
+char	**cmd_split_redir_and_pipes3(char **cmd, int i, int j, int *brek)
+{
+	if (cmd[i][j] == '<')
 	{
 		if (cmd[i][j + 1] == '<')
 			cmd = cmd_split_aux(cmd, i, j, "<<");
@@ -81,7 +105,12 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 		brek = 0;
 		while (cmd[i][j])
 		{
-			cmd = cmd_split_redir_and_pipes2(cmd, i, j, &brek);
+			if (cmd[i][j] == '\'' || cmd[i][j] == '\"')
+				cmd_split_redir_and_pipes2(cmd, i, &j);
+			else
+				cmd = cmd_split_redir_and_pipes3(cmd, i, j, &brek);
+			if (g_status != 0)
+				return (cmd);
 			if (brek > 0)
 				break ;
 			j++;
@@ -91,15 +120,25 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 	return (cmd);
 }
 
-void	ft_trim_cmd_aux(char **cmd, int i, int *j, char a)
+void	ft_trim_cmd_aux(char **cmd, int i, int *j)
 {
-	int	k;
+	int		k;
+	char	a;
 
 	k = *j;
+	a = cmd[i][*j];
 	(*j)++;
 	while (cmd[i][*j] && cmd[i][*j] != a)
 		(*j)++;
-	if (cmd[i][*j])
+	if (!cmd[i][*j])
+	{
+		if (a == '\'')
+			print_error(3, NULL, NULL, 2);
+		else if (a == '\"')
+			print_error(20, NULL, NULL, 2);
+		return ;
+	}
+	else if (cmd[i][*j])
 		(*j)++;
 	cmd[i] = epic_trim(cmd[i], a, k);
 	if (ft_strlen(cmd[i]))
@@ -118,12 +157,12 @@ char	**ft_trim_cmd(char **cmd)
 		while (cmd[i][j])
 		{
 			if (cmd[i][j] == '\'')
-				ft_trim_cmd_aux(cmd, i, &j, '\'');
+				ft_trim_cmd_aux(cmd, i, &j);
 			else if (cmd[i][j] == '\"')
-				ft_trim_cmd_aux(cmd, i, &j, '\"');
+				ft_trim_cmd_aux(cmd, i, &j);
 			else
 				j++;
-			if (!ft_strlen(cmd[i]))
+			if (g_status != 0)
 				return (cmd);
 		}
 		i++;

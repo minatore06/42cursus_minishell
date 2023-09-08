@@ -33,6 +33,8 @@ int	get_infile(char *file, char append)
 {
 	if (check_file(file))
 		return (-2);
+	//if(!append)
+	//	espandere le env
 	//trimmare la stringa
 	if (!ft_strlen(file))
 		return (-1);
@@ -45,6 +47,7 @@ int	get_outfile(char *file, char append)
 {
 	if (check_file(file))
 		return (-2);
+	//espandere le env
 	//trimmare la stringa
 	if (!ft_strlen(file))
 		return (-1);

@@ -55,12 +55,13 @@ void	expander2(char **cmd, char **envi, int i, int *j)
 		(*j)++;
 }
 
-char	**expander(char **cmd, char **envi)
+char	**expander(char **cmd, char **envi, int saved_g)
 {
 	int		i;
 	int		j;
 
 	i = 0;
+	g_status = saved_g;
 	while (cmd[i])
 	{
 		j = 0;

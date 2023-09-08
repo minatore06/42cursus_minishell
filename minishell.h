@@ -96,7 +96,7 @@ int			reset_output(t_cmd *cmd, int saved_stdout);
 
 void		expander_aux(char **cmd, char **envi, int *i, int *j);
 void		expander2(char **cmd, char **envi, int i, int *j);
-char		**expander(char **cmd, char **envi);
+char		**expander(char **cmd, char **envi, int saved_g);
 
 char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
 int			env_size(char *val, char *name);
@@ -128,7 +128,7 @@ char		**reduce_matrix(char **og_mat, int x);
 
 void		manage_signal(int s);
 void		manage_signal2(int s);
-char		*epic_trim_aux(char *new_cmd);
+//char		*epic_trim_aux(char *new_cmd);
 char		*epic_trim(char *cmd, char c, int k);
 int			check_input(char *input);
 
@@ -162,9 +162,10 @@ void		get_cmd_path2(char *cmd, char **ret, char ***dirs, int i);
 char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);
-char		**cmd_split_redir_and_pipes2(char **cmd, int i, int j, int *brek);
+void		cmd_split_redir_and_pipes2(char **cmd, int i, int *j);
+char		**cmd_split_redir_and_pipes3(char **cmd, int i, int j, int *brek);
 char		**cmd_split_redir_and_pipes(char **cmd);
-void		ft_trim_cmd_aux(char **cmd, int i, int *j, char a);
+void		ft_trim_cmd_aux(char **cmd, int i, int *j);
 char		**ft_trim_cmd(char **cmd);
 
 #endif

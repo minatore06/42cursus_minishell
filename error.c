@@ -19,7 +19,7 @@ void	print_error2(int err)
 	else if (err == 2 || err == -2)
 		ft_putstr_fd("dup2 failed", 2);
 	else if (err == 3 || err == -3)
-		ft_putstr_fd("error while looking for matching quote", 2);
+		ft_putstr_fd("unexpected EOL while looking for matching `\''", 2);
 	else if (err == 4 || err == -4)
 		ft_putstr_fd("error creating pipe", 2);
 	else if (err == 5 || err == -5)
@@ -56,6 +56,8 @@ void	print_error3(int err)
 		ft_putstr_fd("syntax error near unexpected token `<'", 2);
 	else if (err == 19 || err == -19)
 		ft_putstr_fd("syntax error near unexpected token `<<'", 2);
+	else if (err == 20 || err == -20)
+		ft_putstr_fd("unexpected EOL while looking for matching `\"'", 2);
 }
 
 void	print_error(int err, char *cmd, char *arg, int g)
