@@ -94,9 +94,9 @@ int			print_output(t_cmd *cmd, char ***out);
 int			reset_input(t_cmd *cmd, int saved_stdin);
 int			reset_output(t_cmd *cmd, int saved_stdout);
 
-void		expander_aux(char **cmd, char **envi, int *i, int *j);
+void		expander_aux(char **cmd, char **envi, int i, int *j);
 void		expander2(char **cmd, char **envi, int i, int *j);
-char		**expander(char **cmd, char **envi, int saved_g);
+char		**expander(char **cmd, char **envi);
 
 char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
 int			env_size(char *val, char *name);

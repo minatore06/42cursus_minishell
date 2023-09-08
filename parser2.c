@@ -29,12 +29,29 @@ int	check_file(char *file)
 	return (0);
 }
 
+char	*trim_file(char *file)
+{
+	int	j;
+
+	j = 0;
+	while (file[j])
+	{
+		if (file[j] == '\'')
+			ft_trim_cmd_aux(&file, 0, &j);
+		else if (file[j] == '\"')
+			ft_trim_cmd_aux(&file, 0, &j);
+		else
+			j++;
+		if (g_status != 0)
+			return (file);
+	}
+	return (file);
+}
+
 int	get_infile(char *file, char append)
 {
 	if (check_file(file))
 		return (-2);
-	//if(!append)
-	//	espandere le env
 	//trimmare la stringa
 	if (!ft_strlen(file))
 		return (-1);
@@ -47,7 +64,6 @@ int	get_outfile(char *file, char append)
 {
 	if (check_file(file))
 		return (-2);
-	//espandere le env
 	//trimmare la stringa
 	if (!ft_strlen(file))
 		return (-1);
@@ -99,6 +115,7 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	}
 	cmd->command = get_full_cmd(cmd_mat);
 	cmd->command = remove_redirects(cmd->command);
+	//trim
 	cmd->path = get_cmd_path(prompt, cmd->command[0], cmd->command);
 	return (cmd);
 }
