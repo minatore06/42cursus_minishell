@@ -45,15 +45,6 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	g_status = 0;
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
-	ft_printf("trim\n");
-	cmd_mat = ft_trim_cmd(cmd_mat);
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	if (g_status)
-	{
-		free_matrix(cmd_mat);
-		return (1);
-	}
 	prompt->cmds = parser(prompt, cmd_mat);
 	*cmd = prompt->cmds;
 	if (g_status)

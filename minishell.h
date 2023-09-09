@@ -128,7 +128,6 @@ char		**reduce_matrix(char **og_mat, int x);
 
 void		manage_signal(int s);
 void		manage_signal2(int s);
-//char		*epic_trim_aux(char *new_cmd);
 char		*epic_trim(char *cmd, char c, int k);
 int			check_input(char *input);
 
@@ -150,6 +149,8 @@ char		**reduce_cmd(char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
 
 int			check_file(char *file);
+char		*trim_file(char *file);
+int			free_file(int r, char *a);
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);

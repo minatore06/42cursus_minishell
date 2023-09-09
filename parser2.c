@@ -44,33 +44,66 @@ char	*trim_file(char *file)
 			j++;
 		if (g_status != 0)
 			return (file);
+		if (!ft_strlen(file))
+			return (file);
 	}
 	return (file);
 }
 
+int	free_file(int r, char *a)
+{
+	if (r == -1)
+		print_error(7, NULL, a, 1);
+	if (a)
+		free(a);
+	return (r);
+}
+
 int	get_infile(char *file, char append)
 {
+	char	*a;
+	int		i;
+
 	if (check_file(file))
 		return (-2);
-	//trimmare la stringa
-	if (!ft_strlen(file))
-		return (-1);
+	a = ft_strdup(file);
+	a = trim_file(a);
+	if (g_status)
+		return (free_file(-2, a));
+	if (!ft_strlen(a))
+		return (free_file(-3, a));
 	if (append)
-		return (get_here_doc(file));
-	return (open(file, O_RDONLY, 0666));
+	{
+		i = get_here_doc(a);
+		return (free_file(i, a));
+	}
+	i = open(a, O_RDONLY, 0666);
+	return (free_file(i, a));
 }
 
 int	get_outfile(char *file, char append)
 {
+	char	*a;
+	int		i;
+
 	if (check_file(file))
 		return (-2);
-	//trimmare la stringa
-	if (!ft_strlen(file))
-		return (-1);
+	a = ft_strdup(file);
+	a = trim_file(a);
+	if (g_status)
+		return (free_file(-2, a));
+	if (!ft_strlen(a))
+		return (free_file(-3, a));
 	if (append)
-		return (open(file, O_WRONLY | O_CREAT | O_APPEND, 0666));
+	{
+		i = open(a, O_WRONLY | O_CREAT | O_APPEND, 0666);
+		return (free_file(i, a));
+	}
 	else
-		return (open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666));
+	{
+		i = open(a, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		return (free_file(i, a));
+	}
 }
 
 char	**get_full_cmd(char **cmd_mat)
@@ -107,15 +140,22 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 			cmd->outfile = get_outfile(cmd_mat[i + 1], cmd_mat[i][1]);
 		if (cmd->infile <= -1 || cmd->outfile <= -1)
 		{
-			if (cmd->infile == -1 || cmd->outfile == -1)
-				print_error(7, NULL, cmd_mat[i + 1], 1);
+			if (cmd->infile == -3 || cmd->outfile == -3)
+				print_error(7, NULL, "", 1);
 			return (cmd);
 		}
 		i++;
 	}
 	cmd->command = get_full_cmd(cmd_mat);
 	cmd->command = remove_redirects(cmd->command);
-	//trim
+	cmd->command = ft_trim_cmd(cmd->command);
+	if (g_status)
+		return (cmd);
 	cmd->path = get_cmd_path(prompt, cmd->command[0], cmd->command);
+	ft_printf("parser\n");
+	print_matrix(cmd->command);
+	ft_printf("path=%s\n", (cmd->path));
+	ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
+	ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	return (cmd);
 }

@@ -164,6 +164,8 @@ char	**ft_trim_cmd(char **cmd)
 				j++;
 			if (g_status != 0)
 				return (cmd);
+			if (!ft_strlen(cmd[i]))
+				break ;
 		}
 		i++;
 	}
