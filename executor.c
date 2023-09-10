@@ -12,6 +12,43 @@
 
 #include "minishell.h"
 
+int	get_cmd_return(char	**cmd_mat)
+{
+	free_matrix(cmd_mat);
+	return (1);
+}
+
+char	**extend_pipe(char **cmd)
+{
+	print_error(15, NULL, NULL, 2);
+	return (cmd);
+}
+
+char	**cmd_check_pipes(char **cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i][0] == '|')
+		{
+			if (!cmd[i + 1])
+			{
+				cmd = extend_pipe(cmd);
+				return (cmd);
+			}
+			else if (cmd[i + 1][0] == '|')
+			{
+				print_error(5, NULL, NULL, 2);
+				return (cmd);
+			}
+		}
+		i++;
+	}
+	return (cmd);
+}
+
 int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 {
 	char	**cmd_mat;
@@ -35,10 +72,13 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	if (g_status)
-	{
-		free_matrix(cmd_mat);
-		return (1);
-	}
+		return (get_cmd_return(cmd_mat));
+	ft_printf("pipe\n");
+	cmd_mat = cmd_check_pipes(cmd_mat);
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
+	if (g_status)
+		return (get_cmd_return(cmd_mat));
 	ft_printf("expa\n");
 	g_status = saved_g;
 	cmd_mat = expander(cmd_mat, prompt->envi);

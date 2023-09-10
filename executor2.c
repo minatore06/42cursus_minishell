@@ -25,6 +25,15 @@ int	builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 
 int	execve_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 {
+	if (!ft_strlen(cmd->path))
+	{
+		// if (!cmd->command)
+		// 	return (0);
+		print_error(9, "", NULL, 127);
+		if (reset_input(cmd, saved_stdin))
+			return (-1);
+		return (1);
+	}
 	g_status = exec_cmds(out, cmd->path, cmd->command, p->envi);
 	if (!ft_strncmp(cmd->command[0], "clear", 5))
 		cmd->nl = 0;
