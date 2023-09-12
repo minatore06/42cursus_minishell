@@ -44,7 +44,7 @@ int	get_here_doc(char *del)
 	while (here_doc_while(del, tmp))
 	{
 		str = ft_better_strjoin(str, tmp, 3);
-		tmp = readline("heredoc> ");
+		tmp = readline("> ");
 		end_here_doc(&tmp, del);
 		tmp = ft_better_strjoin(tmp, "\n", 1);
 		if (g_status == 130)

@@ -81,6 +81,11 @@ void		exec_cmds_aux(pid_t pid, int *status);
 int			exec_cmds_child(int fd[2], char *cmd, char **args, char **envi);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
+int			get_cmd_return(char	**cmd_mat);
+int			cmd_check_pipes_in_pipe(char **cmd);
+char		**join_matrix(char **og_mat, char **og_mat2);
+char		**extend_pipe(char **cmd);
+char		**cmd_check_pipes(char **cmd);
 int			get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input);
 int			set_infile(t_cmd *cmd, int *saved_stdin);
 int			builtin_execve(int saved_stdin, char ***out, 

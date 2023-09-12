@@ -18,9 +18,101 @@ int	get_cmd_return(char	**cmd_mat)
 	return (1);
 }
 
+int	cmd_check_pipes_in_pipe(char **cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i][0] == '|')
+		{
+			if (!cmd[i + 1])
+				return (1);
+			else if (cmd[i + 1][0] == '|' || i == 0)
+			{
+				print_error(5, NULL, NULL, 2);
+				return (-1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
+char	**join_matrix(char **og_mat, char **og_mat2)
+{
+	int		i;
+	int		j;
+	char	**new_mat;
+
+	i = 0;
+	while (og_mat && og_mat[i])
+		i++;
+	j = 0;
+	while (og_mat2 && og_mat2[j])
+		j++;
+	new_mat = malloc((i + j + 1) * sizeof(char *));
+	i = 0;
+	while (og_mat && og_mat[i])
+	{
+		new_mat[i] = ft_strdup(og_mat[i]);
+		i++;
+	}
+	j = 0;
+	while (og_mat2 && og_mat2[j])
+	{
+		new_mat[i] = ft_strdup(og_mat2[j]);
+		i++;
+		j++;
+	}
+	new_mat[i] = 0;
+	free_matrix(og_mat);
+	free_matrix(og_mat2);
+	return (new_mat);
+}
+
 char	**extend_pipe(char **cmd)
 {
-	print_error(15, NULL, NULL, 2);
+	int		repeat;
+	char	*tmp;
+	char	**new_mat;
+
+	repeat = 1;
+	while (repeat == 1)
+	{
+		tmp = readline("> ");
+		if (g_status == 130)
+		{
+			free(tmp);
+			return (cmd);
+		}
+		if (!tmp)
+		{
+			// gestire bene ctrl + D
+			free(tmp);
+			free_matrix(cmd);
+			print_error(22, NULL, NULL, 2);
+			ft_printf("exit\n");
+			exit(2);
+		}
+		//aggiornare la history
+		new_mat = ft_cmdsplit(tmp, ' ');
+		free(tmp);
+		new_mat = cmd_split_redir_and_pipes(new_mat);
+		if (g_status)
+		{
+			free_matrix(new_mat);
+			return (cmd);
+		}
+		repeat = cmd_check_pipes_in_pipe(new_mat);
+		if (g_status)
+		{
+			free_matrix(new_mat);
+			return (cmd);
+		}
+		cmd = join_matrix(cmd, new_mat);
+	}
 	return (cmd);
 }
 
@@ -38,7 +130,7 @@ char	**cmd_check_pipes(char **cmd)
 				cmd = extend_pipe(cmd);
 				return (cmd);
 			}
-			else if (cmd[i + 1][0] == '|')
+			else if (cmd[i + 1][0] == '|' || i == 0)
 			{
 				print_error(5, NULL, NULL, 2);
 				return (cmd);
@@ -56,12 +148,6 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 
 	saved_g = g_status;
 	g_status = 0;
-	// cmd_mat = ft_cmdsplit(input, ' ');
-	// free(input);
-	// cmd_mat = expander(cmd_mat, prompt->envi);
-	// g_status = 0;
-	// cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
-	// cmd_mat = ft_trim_cmd(cmd_mat);
 	ft_printf("split\n");
 	cmd_mat = ft_cmdsplit(input, ' ');
 	print_matrix(cmd_mat);
@@ -73,7 +159,7 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	ft_printf("==================================\n");
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
-	ft_printf("pipe\n");
+	ft_printf("check\n");
 	cmd_mat = cmd_check_pipes(cmd_mat);
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");

@@ -58,6 +58,10 @@ void	print_error3(int err)
 		ft_putstr_fd("syntax error near unexpected token `<<'", 2);
 	else if (err == 20 || err == -20)
 		ft_putstr_fd("unexpected EOL while looking for matching `\"'", 2);
+	else if (err == 21 || err == -21)
+		ft_putstr_fd("HOME not set", 2);
+	else if (err == 22 || err == -22)
+		ft_putstr_fd("syntax error: unexpected end of file", 2);
 }
 
 void	print_error(int err, char *cmd, char *arg, int g)
