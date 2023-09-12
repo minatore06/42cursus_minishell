@@ -82,8 +82,10 @@ int			exec_cmds_child(int fd[2], char *cmd, char **args, char **envi);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
 int			get_cmd_return(char	**cmd_mat);
+int			exit_pipe(char *tmp, char **cmd);
 int			cmd_check_pipes_in_pipe(char **cmd);
 char		**join_matrix(char **og_mat, char **og_mat2);
+char		**return_pipe(char *tmp, char **new_mat, char **cmd);
 char		**extend_pipe(char **cmd);
 char		**cmd_check_pipes(char **cmd);
 int			get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input);
@@ -104,7 +106,7 @@ void		expander2(char **cmd, char **envi, int i, int *j);
 char		**expander(char **cmd, char **envi);
 
 char		*cmd_replace(char *cmd, char *env_val, int n, int env_len);
-int			env_size(char *val, char *name);
+int			env_size(char *val, char *name, int l);
 char		*set_enam(char *cmd, int i);
 void		search_and_replace_aux(char *enam, char **eval,
 				char **envi, int *j);

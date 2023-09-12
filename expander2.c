@@ -38,12 +38,12 @@ char	*cmd_replace(char *cmd, char *env_val, int n, int env_len)
 	return (new_cmd);
 }
 
-int	env_size(char *val, char *name)
+int	env_size(char *val, char *name, int l)
 {
 	int	len;
 
 	len = ft_strlen(name);
-	if (!ft_strncmp(name, "HOME=", 5))
+	if (!ft_strncmp(name, "HOME=", 5) && l == 0)
 		len = 1;
 	if (!val)
 		len = 0;
@@ -102,7 +102,7 @@ char	*search_and_replace(char *cmd, char **envi, int i, int *j)
 		enam = ft_better_strjoin(enam, "=", 1);
 	}
 	search_and_replace_aux(enam, &eval, envi, j);
-	len = env_size(eval, enam);
+	len = env_size(eval, enam, len);
 	free(enam);
 	return (cmd_replace(cmd, eval, i, len));
 }

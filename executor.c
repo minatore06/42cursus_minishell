@@ -18,6 +18,16 @@ int	get_cmd_return(char	**cmd_mat)
 	return (1);
 }
 
+int	exit_pipe(char *tmp, char **cmd)
+{
+	//funziona ?
+	free(tmp);
+	free_matrix(cmd);
+	print_error(22, NULL, NULL, 2);
+	ft_printf("exit\n");
+	exit(2);
+}
+
 int	cmd_check_pipes_in_pipe(char **cmd)
 {
 	int	i;
@@ -72,6 +82,15 @@ char	**join_matrix(char **og_mat, char **og_mat2)
 	return (new_mat);
 }
 
+char	**return_pipe(char *tmp, char **new_mat, char **cmd)
+{
+	if (tmp)
+		free(tmp);
+	if (new_mat)
+		free_matrix(new_mat);
+	return (cmd);
+}
+
 char	**extend_pipe(char **cmd)
 {
 	int		repeat;
@@ -83,34 +102,18 @@ char	**extend_pipe(char **cmd)
 	{
 		tmp = readline("> ");
 		if (g_status == 130)
-		{
-			free(tmp);
-			return (cmd);
-		}
+			return (return_pipe(tmp, NULL, cmd));
 		if (!tmp)
-		{
-			// gestire bene ctrl + D
-			free(tmp);
-			free_matrix(cmd);
-			print_error(22, NULL, NULL, 2);
-			ft_printf("exit\n");
-			exit(2);
-		}
+			exit_pipe(tmp, cmd);
 		//aggiornare la history
 		new_mat = ft_cmdsplit(tmp, ' ');
 		free(tmp);
 		new_mat = cmd_split_redir_and_pipes(new_mat);
 		if (g_status)
-		{
-			free_matrix(new_mat);
-			return (cmd);
-		}
+			return (return_pipe(NULL, new_mat, cmd));
 		repeat = cmd_check_pipes_in_pipe(new_mat);
 		if (g_status)
-		{
-			free_matrix(new_mat);
-			return (cmd);
-		}
+			return (return_pipe(NULL, new_mat, cmd));
 		cmd = join_matrix(cmd, new_mat);
 	}
 	return (cmd);
