@@ -53,13 +53,12 @@ int	cd_builtin(t_cmd *cmd, t_prompt *p)
 		}
 		err = chdir(&pwd[5]);
 	}
+	else if (!cmd->command[1][0])
+		return (0);
 	else
 		err = chdir(cmd->command[1]);
 	if (err < 0)
-	{
-		print_error(11, cmd->command[0], cmd->command[1], 1);
-		return (1);
-	}
+		return (cd_error(cmd));
 	else
 		cd_builtin_aux(p, pwd);
 	return (err);

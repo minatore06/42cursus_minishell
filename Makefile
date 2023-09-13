@@ -30,11 +30,14 @@ SRCS = builtins.c \
 		matrix.c \
 		mini_utils.c \
 		mini_utils2.c \
+		mini_utils3.c \
 		minishell.c \
 		parser.c \
 		parser2.c \
 		parser3.c \
+		pipe.c \
 		split_and_trim.c \
+		split_and_trim2.c \
 
 OBJS = ${SRCS:.c=.o}
 

@@ -12,53 +12,6 @@
 
 #include "minishell.h"
 
-int	check_file(char *file)
-{
-	if (!ft_strlen(file))
-		return (get_error(15, NULL, NULL));
-	if (file[0] == '|')
-		return (get_error(5, NULL, NULL));
-	if (file[0] == '>' && !file[1])
-		return (get_error(16, NULL, NULL));
-	if (file[0] == '>' && file[1] == '>')
-		return (get_error(17, NULL, NULL));
-	if (file[0] == '<' && !file[1])
-		return (get_error(18, NULL, NULL));
-	if (file[0] == '<' && file[1] == '<')
-		return (get_error(19, NULL, NULL));
-	return (0);
-}
-
-char	*trim_file(char *file)
-{
-	int	j;
-
-	j = 0;
-	while (file[j])
-	{
-		if (file[j] == '\'')
-			ft_trim_cmd_aux(&file, 0, &j);
-		else if (file[j] == '\"')
-			ft_trim_cmd_aux(&file, 0, &j);
-		else
-			j++;
-		if (g_status != 0)
-			return (file);
-		if (!ft_strlen(file))
-			return (file);
-	}
-	return (file);
-}
-
-int	free_file(int r, char *a)
-{
-	if (r == -1)
-		print_error(7, NULL, a, 1);
-	if (a)
-		free(a);
-	return (r);
-}
-
 int	get_infile(char *file, char append)
 {
 	char	*a;

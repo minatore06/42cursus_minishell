@@ -28,30 +28,30 @@ void	manage_signal2(int s)
 		g_status = 130;
 }
 
-char	*epic_trim(char *cmd, char c, int k)
+int	check_file(char *file)
 {
-	int		i;
-	int		j;
-	int		count;
-	char	*new_cmd;
+	if (!ft_strlen(file))
+		return (get_error(15, NULL, NULL));
+	if (file[0] == '|')
+		return (get_error(5, NULL, NULL));
+	if (file[0] == '>' && !file[1])
+		return (get_error(16, NULL, NULL));
+	if (file[0] == '>' && file[1] == '>')
+		return (get_error(17, NULL, NULL));
+	if (file[0] == '<' && !file[1])
+		return (get_error(18, NULL, NULL));
+	if (file[0] == '<' && file[1] == '<')
+		return (get_error(19, NULL, NULL));
+	return (0);
+}
 
-	new_cmd = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
-	i = 0;
-	j = 0;
-	count = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == c && count < 2 && i >= k)
-		{
-			count++;
-			i++;
-			continue ;
-		}
-		new_cmd[j++] = cmd[i++];
-	}
-	new_cmd[j] = 0;
-	free(cmd);
-	return (new_cmd);
+int	free_file(int r, char *a)
+{
+	if (r == -1)
+		print_error(7, NULL, a, 1);
+	if (a)
+		free(a);
+	return (r);
 }
 
 int	check_input(char *input)

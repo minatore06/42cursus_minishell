@@ -81,13 +81,6 @@ void		exec_cmds_aux(pid_t pid, int *status);
 int			exec_cmds_child(int fd[2], char *cmd, char **args, char **envi);
 int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
 
-int			get_cmd_return(char	**cmd_mat);
-int			exit_pipe(char *tmp, char **cmd);
-int			cmd_check_pipes_in_pipe(char **cmd);
-char		**join_matrix(char **og_mat, char **og_mat2);
-char		**return_pipe(char *tmp, char **new_mat, char **cmd);
-char		**extend_pipe(char **cmd);
-char		**cmd_check_pipes(char **cmd);
 int			get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input);
 int			set_infile(t_cmd *cmd, int *saved_stdin);
 int			builtin_execve(int saved_stdin, char ***out, 
@@ -135,7 +128,8 @@ char		**reduce_matrix(char **og_mat, int x);
 
 void		manage_signal(int s);
 void		manage_signal2(int s);
-char		*epic_trim(char *cmd, char c, int k);
+int			check_file(char *file);
+int			free_file(int r, char *a);
 int			check_input(char *input);
 
 int			ft_strcmp(char *s1, char *s2);
@@ -143,6 +137,10 @@ char		*ft_better_strjoin(char *str1, char *str2, int i);
 void		free_matrix(char **mat);
 void		ft_free_cmds(t_cmd *cmds);
 void		ft_free_all(t_prompt *p);
+
+int			get_cmd_return(char	**cmd_mat);
+char		**join_matrix(char **og_mat, char **og_mat2);
+int			cd_error(t_cmd *cmd);
 
 pid_t		mini_getpid(void);
 t_prompt	init_vars(t_prompt prompt, char **argv);
@@ -155,9 +153,6 @@ void		init_cmd_node(t_cmd *cmd);
 char		**reduce_cmd(char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd);
 
-int			check_file(char *file);
-char		*trim_file(char *file);
-int			free_file(int r, char *a);
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);
@@ -169,11 +164,20 @@ int			get_cmd_path3(char **ret, char ***dirs, int i);
 void		get_cmd_path2(char *cmd, char **ret, char ***dirs, int i);
 char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
+int			exit_pipe(char *tmp, char **cmd);
+int			cmd_check_pipes_in_pipe(char **cmd);
+char		**return_pipe(char *tmp, char **new_mat, char **cmd);
+char		**extend_pipe(char **cmd);
+char		**cmd_check_pipes(char **cmd);
+
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);
 void		cmd_split_redir_and_pipes2(char **cmd, int i, int *j);
 char		**cmd_split_redir_and_pipes3(char **cmd, int i, int j, int *brek);
 char		**cmd_split_redir_and_pipes(char **cmd);
+
+char		*epic_trim(char *cmd, char c, int k);
 void		ft_trim_cmd_aux(char **cmd, int i, int *j);
+char		*trim_file(char *file);
 char		**ft_trim_cmd(char **cmd);
 
 #endif
