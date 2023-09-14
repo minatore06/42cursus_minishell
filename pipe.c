@@ -54,7 +54,6 @@ char	**extend_pipe(char **cmd)
 			return (return_pipe(tmp, NULL, cmd));
 		if (!tmp)
 			exit_pipe(tmp, cmd);
-		//aggiornare la history
 		new_mat = ft_cmdsplit(tmp, ' ');
 		free(tmp);
 		new_mat = cmd_split_redir_and_pipes(new_mat);
@@ -68,21 +67,23 @@ char	**extend_pipe(char **cmd)
 	return (cmd);
 }
 
-char	**cmd_check_pipes(char **cmd)
+char	**cmd_check_pipes(char **cmd, int i)
 {
-	int	i;
-
-	i = 0;
 	while (cmd[i])
 	{
 		if (cmd[i][0] == '|')
 		{
-			if (!cmd[i + 1])
+			if (i == 0 || cmd[i - 1][0] == '<' || cmd[i - 1][0] == '>')
+			{
+				print_error(5, NULL, NULL, 2);
+				return (cmd);
+			}
+			else if (!cmd[i + 1])
 			{
 				cmd = extend_pipe(cmd);
 				return (cmd);
 			}
-			else if (cmd[i + 1][0] == '|' || i == 0)
+			else if (cmd[i + 1][0] == '|')
 			{
 				print_error(5, NULL, NULL, 2);
 				return (cmd);

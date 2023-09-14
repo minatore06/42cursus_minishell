@@ -170,7 +170,7 @@ int			exit_pipe(char *tmp, char **cmd);
 int			cmd_check_pipes_in_pipe(char **cmd);
 char		**return_pipe(char *tmp, char **new_mat, char **cmd);
 char		**extend_pipe(char **cmd);
-char		**cmd_check_pipes(char **cmd);
+char		**cmd_check_pipes(char **cmd, int i);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);
 void		cmd_split_redir_and_pipes2(char **cmd, int i, int *j);

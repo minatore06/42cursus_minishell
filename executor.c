@@ -31,7 +31,7 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	ft_printf("check\n");
-	cmd_mat = cmd_check_pipes(cmd_mat);
+	cmd_mat = cmd_check_pipes(cmd_mat, 0);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
 	print_matrix(cmd_mat);
