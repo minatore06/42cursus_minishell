@@ -140,6 +140,8 @@ void		ft_free_all(t_prompt *p);
 
 int			get_cmd_return(char	**cmd_mat);
 char		**join_matrix(char **og_mat, char **og_mat2);
+void		cd_error3(char **mat, int i, DIR **dp);
+DIR			*cd_error2(t_cmd *cmd, char **str);
 int			cd_error(t_cmd *cmd);
 
 pid_t		mini_getpid(void);

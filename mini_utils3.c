@@ -38,8 +38,79 @@ char	**join_matrix(char **og_mat, char **og_mat2)
 	return (new_mat);
 }
 
+void	cd_error3(char **mat, int i, DIR **dp)
+{
+	char	*tmp;
+	int		j;
+
+	tmp = ft_strdup("");
+	j = 0;
+	while (i > j)
+	{
+		tmp = ft_better_strjoin(tmp, mat[j], 1);
+		tmp = ft_better_strjoin(tmp, "/", 1);
+		j++;
+	}
+	if (!ft_strlen(tmp))
+	{
+		free(tmp);
+		tmp = getcwd(NULL, 0);
+	}
+	free_matrix(mat);
+	*dp = opendir(tmp);
+	free(tmp);
+}
+
+DIR	*cd_error2(t_cmd *cmd, char **str)
+{
+	DIR		*dp;
+	char	*tmp;
+	char	**mat;
+	int		i;
+
+	mat = ft_split(cmd->command[1], '/');
+	i = -1;
+	tmp = ft_strdup("");
+	while (mat[++i])
+	{
+		tmp = ft_better_strjoin(tmp, mat[i], 1);
+		dp = opendir(tmp);
+		if (!dp)
+		{
+			closedir(dp);
+			break;
+		}
+		closedir(dp);
+		tmp = ft_better_strjoin(tmp, "/", 1);
+	}
+	str[0] = ft_strdup(mat[i]);
+	free(tmp);
+	cd_error3(mat, i, &dp);
+	return (dp);
+}
+
 int	cd_error(t_cmd *cmd)
 {
-	print_error(11, cmd->command[0], cmd->command[1], 1);
+	DIR				*dp;
+	struct dirent	*entry;
+	char			*str;
+
+	str = NULL;
+	dp = cd_error2(cmd, &str);
+	entry = readdir(dp);
+	while (entry)
+	{
+		if (!ft_strcmp(str, entry->d_name))
+		{
+			closedir(dp);
+			free(str);
+			print_error(11, cmd->command[0], cmd->command[1], 1);
+			return (1);
+		}
+		entry = readdir(dp);
+	}
+	closedir(dp);
+	free(str);
+	print_error(7, cmd->command[0], cmd->command[1], 1);
 	return (1);
 }

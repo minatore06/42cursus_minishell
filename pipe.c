@@ -2,7 +2,6 @@
 
 int	exit_pipe(char *tmp, char **cmd)
 {
-	//funziona ?
 	free(tmp);
 	free_matrix(cmd);
 	print_error(22, NULL, NULL, 2);

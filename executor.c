@@ -21,27 +21,28 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	g_status = 0;
 	ft_printf("split\n");
 	cmd_mat = ft_cmdsplit(input, ' ');
+	free(input);
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
-	free(input);
 	ft_printf("csrp\n");
 	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
 	ft_printf("check\n");
 	cmd_mat = cmd_check_pipes(cmd_mat);
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
+	print_matrix(cmd_mat);
+	ft_printf("==================================\n");
 	ft_printf("expa\n");
 	g_status = saved_g;
 	cmd_mat = expander(cmd_mat, prompt->envi);
 	g_status = 0;
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
+	ft_printf("parser\n");
 	prompt->cmds = parser(prompt, cmd_mat);
 	*cmd = prompt->cmds;
 	if (g_status)

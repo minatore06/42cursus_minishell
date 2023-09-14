@@ -33,9 +33,9 @@ void	print_error2(int err)
 	else if (err == 9 || err == -9)
 		ft_putstr_fd("command not found", 2);
 	else if (err == 10 || err == -10)
-		ft_putstr_fd("is a directory", 2);
+		ft_putstr_fd("Is a directory", 2);
 	else if (err == 11 || err == -11)
-		ft_putstr_fd("not a directory", 2);
+		ft_putstr_fd("Not a directory", 2);
 	else if (err == 12 || err == -12)
 		ft_putstr_fd("numeric argument required", 2);
 }
