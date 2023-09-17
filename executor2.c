@@ -46,7 +46,7 @@ int	execve_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 	return (0);
 }
 
-int	print_output(t_cmd *cmd, char ***out)
+int	print_output(t_cmd *cmd, char ***out, int err)
 {
 	int		fd[2];
 	int		i;
@@ -72,12 +72,12 @@ int	print_output(t_cmd *cmd, char ***out)
 	}
 	else
 		print_matrix_fd(*out, cmd->outfile, cmd->nl);
-	return (0);
+	return (err);
 }
 
 int	reset_input(t_cmd *cmd, int saved_stdin)
 {
-	if (cmd->infile)
+	if (cmd->infile && saved_stdin != -1)
 	{
 		close(cmd->infile);
 		if (dup2(saved_stdin, STDIN_FILENO) < 0)
@@ -89,7 +89,7 @@ int	reset_input(t_cmd *cmd, int saved_stdin)
 
 int	reset_output(t_cmd *cmd, int saved_stdout)
 {
-	if (cmd->outfile != 1)
+	if (cmd->outfile != 1 && saved_stdout != -1)
 	{
 		close(cmd->outfile);
 		if (dup2(saved_stdout, STDOUT_FILENO) < 0)

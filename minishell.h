@@ -90,7 +90,7 @@ int			check_loop(t_prompt *prompt, char *input);
 
 int			builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p);
 int			execve_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p);
-int			print_output(t_cmd *cmd, char ***out);
+int			print_output(t_cmd *cmd, char ***out, int err);
 int			reset_input(t_cmd *cmd, int saved_stdin);
 int			reset_output(t_cmd *cmd, int saved_stdout);
 

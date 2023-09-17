@@ -45,11 +45,11 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	ft_printf("parser\n");
 	prompt->cmds = parser(prompt, cmd_mat);
 	*cmd = prompt->cmds;
-	if (g_status)
+/* 	if (g_status)
 	{
 		ft_free_cmds(*cmd);
 		return (1);
-	}
+	} */
 	return (0);
 }
 
@@ -80,19 +80,27 @@ int	executor(t_cmd *cmd, t_prompt *p, char ***out)
 	int		saved_stdout;
 	int		err;
 
-	if (set_infile(cmd, &saved_stdin))
-		return (-1);
-	saved_stdout = dup(STDOUT_FILENO);
-	err = builtin_execve(saved_stdin, out, cmd, p);
-	if (err)
-		return (err);
-	if (print_output(cmd, out))
+	err = 0;
+	saved_stdin = -1;
+	saved_stdout = -1;
+	if (!cmd->command)
+		err = 1;
+	else
+	{
+		if (set_infile(cmd, &saved_stdin))
+			return (-1);
+		saved_stdout = dup(STDOUT_FILENO);
+		err = builtin_execve(saved_stdin, out, cmd, p);
+	}
+ 	if (err)
+		*out = 0;
+	if (print_output(cmd, out, err))
 		return (-1);
 	if (reset_input(cmd, saved_stdin))
 		return (-1);
 	if (reset_output(cmd, saved_stdout))
 		return (-1);
-	return (0);
+	return (err);
 }
 
 int	check_loop(t_prompt *prompt, char *input)
@@ -105,16 +113,12 @@ int	check_loop(t_prompt *prompt, char *input)
 	if (i < 2)
 		return (i);
 	add_history(input);
-	if (get_cmd_cmds(prompt, &cmd, input))
-		return (1);
+	get_cmd_cmds(prompt, &cmd, input);
+		//return (1);
 	while (cmd)
 	{
 		out = NULL;
-		if (executor(cmd, prompt, &out))
-		{
-			free_matrix(out);
-			break ;
-		}
+		executor(cmd, prompt, &out);
 		free_matrix(out);
 		cmd = cmd->next;
 	}
