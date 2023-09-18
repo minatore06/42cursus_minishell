@@ -74,7 +74,7 @@ char	**expander(char **cmd, char **envi)
 					break ;
 				else
 					i++;
-				break;
+				break ;
 			}
 			else
 				expander2(cmd, envi, i, &j);

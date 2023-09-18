@@ -119,4 +119,3 @@ char	**cmd_split_redir_and_pipes(char **cmd)
 	}
 	return (cmd);
 }
-

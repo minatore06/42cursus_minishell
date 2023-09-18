@@ -55,12 +55,14 @@ char	**reduce_cmd(char **cmd)
 	return (NULL);
 }
 
-void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd)
+void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp)
 {
-	//cmds->next = NULL;
-	/* ft_free_cmds(ret);
-	ret = NULL; */
-	//free_matrix(cmd);
+	/*cmds->next = NULL;
+	ft_free_cmds(ret);
+	ret = NULL; 
+	free_matrix(cmd);*/
+	*tmp = g_status;
+	g_status = 0;
 	(void)cmd;
 	(void)ret;
 	if (cmds->command)
@@ -71,29 +73,21 @@ void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd)
 	return (cmds);
 }
 
-t_cmd	*parser(t_prompt *prompt, char **cmd)
+t_cmd	*parser(t_prompt *prompt, char **cmd, int tmp_status, int i)
 {
 	t_cmd		*ret;
 	t_cmd		*cmds;
 	int			cmd_count;
-	int			i;
-	int			tmp_status;
 
-	tmp_status = 0;
 	cmd_count = count_cmds(cmd);
-	i = 0;
 	cmds = malloc(sizeof(t_cmd));
 	ret = cmds;
 	while (i < cmd_count)
 	{
 		init_cmd_node(cmds);
 		cmds = fill_cmds(prompt, cmds, cmd);
- 		if (g_status)
-		{
-			tmp_status = g_status;
-			g_status = 0;
-			cmds = error_parse(ret, cmds, cmd);
-		}
+		if (g_status)
+			cmds = error_parse(ret, cmds, cmd, &tmp_status);
 		cmd = reduce_cmd(cmd);
 		i++;
 		if (i < cmd_count)

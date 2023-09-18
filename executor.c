@@ -43,7 +43,7 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	ft_printf("parser\n");
-	prompt->cmds = parser(prompt, cmd_mat);
+	prompt->cmds = parser(prompt, cmd_mat, 0, 0);
 	*cmd = prompt->cmds;
 /* 	if (g_status)
 	{
@@ -92,7 +92,7 @@ int	executor(t_cmd *cmd, t_prompt *p, char ***out)
 		saved_stdout = dup(STDOUT_FILENO);
 		err = builtin_execve(saved_stdin, out, cmd, p);
 	}
- 	if (err)
+	if (err)
 		*out = 0;
 	if (print_output(cmd, out, err))
 		return (-1);

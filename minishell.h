@@ -153,7 +153,8 @@ int			main(int argc, char **argv, char **env);
 int			count_cmds(char **cmd);
 void		init_cmd_node(t_cmd *cmd);
 char		**reduce_cmd(char **cmd);
-t_cmd		*parser(t_prompt *prompt, char **cmd);
+void		*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp);
+t_cmd		*parser(t_prompt *prompt, char **cmd, int tmp_status, int i);
 
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
