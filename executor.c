@@ -19,37 +19,40 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 
 	saved_g = g_status;
 	g_status = 0;
-	ft_printf("split\n");
 	cmd_mat = ft_cmdsplit(input, ' ');
 	free(input);
+	//da qui 
+	ft_printf("split\n");
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	ft_printf("csrp\n");
+	//
 	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
+	//da qui
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	ft_printf("check\n");
+	//
 	cmd_mat = cmd_check_pipes(cmd_mat, 0);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
+	//da qui
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	ft_printf("expa\n");
+	//
 	g_status = saved_g;
 	cmd_mat = expander(cmd_mat, prompt->envi);
 	g_status = 0;
+	//da qui
 	print_matrix(cmd_mat);
 	ft_printf("==================================\n");
 	ft_printf("parser\n");
+	//
 	prompt->cmds = parser(prompt, cmd_mat, 0, 0);
 	*cmd = prompt->cmds;
-/* 	if (g_status)
-	{
-		ft_free_cmds(*cmd);
-		return (1);
-	} */
 	return (0);
 }
 
@@ -114,7 +117,6 @@ int	check_loop(t_prompt *prompt, char *input)
 		return (i);
 	add_history(input);
 	get_cmd_cmds(prompt, &cmd, input);
-		//return (1);
 	while (cmd)
 	{
 		out = NULL;

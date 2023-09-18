@@ -57,16 +57,13 @@ int	print_output(t_cmd *cmd, char ***out, int err)
 		{
 			print_matrix_fd(*out, cmd->outfile, cmd->nl);
 			free_matrix(*out);
-			*out = malloc(0);
+			*out = 0;
 		}
 		if (pipe(fd) == -1)
 			return (get_error(4, NULL, NULL));
-		i = 0;
-		while (out && *out && (*out)[i])
-		{
+		i = -1;
+		while (out && *out && (*out)[++i])
 			ft_putendl_fd((*out)[i], fd[1]);
-			i++;
-		}
 		close(fd[1]);
 		((t_cmd *)cmd->next)->infile = fd[0];
 	}

@@ -57,10 +57,6 @@ char	**reduce_cmd(char **cmd)
 
 void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp)
 {
-	/*cmds->next = NULL;
-	ft_free_cmds(ret);
-	ret = NULL; 
-	free_matrix(cmd);*/
 	*tmp = g_status;
 	g_status = 0;
 	(void)cmd;
