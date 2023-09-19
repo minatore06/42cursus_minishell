@@ -85,7 +85,7 @@ int			get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input);
 int			set_infile(t_cmd *cmd, int *saved_stdin);
 int			builtin_execve(int saved_stdin, char ***out, 
 				t_cmd *cmd, t_prompt *p);
-int			executor(t_cmd *cmd, t_prompt *p, char ***out);
+int			executor(t_cmd *cmd, t_prompt *p, char ***out, int err);
 int			check_loop(t_prompt *prompt, char *input);
 
 int			builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p);

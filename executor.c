@@ -82,13 +82,11 @@ int	builtin_execve(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 	return (0);
 }
 
-int	executor(t_cmd *cmd, t_prompt *p, char ***out)
+int	executor(t_cmd *cmd, t_prompt *p, char ***out, int err)
 {
 	int		saved_stdin;
 	int		saved_stdout;
-	int		err;
 
-	err = 0;
 	saved_stdin = -1;
 	saved_stdout = -1;
 	if (!cmd->command)
@@ -99,11 +97,13 @@ int	executor(t_cmd *cmd, t_prompt *p, char ***out)
 			return (-1);
 		saved_stdout = dup(STDOUT_FILENO);
 		err = builtin_execve(saved_stdin, out, cmd, p);
+		if (err)
+			free_matrix(*out);
 	}
 	if (err)
 		*out = 0;
 	if (print_output(cmd, out, err))
-		return (-1);
+		return (1);
 	if (reset_input(cmd, saved_stdin))
 		return (-1);
 	if (reset_output(cmd, saved_stdout))
@@ -116,6 +116,7 @@ int	check_loop(t_prompt *prompt, char *input)
 	t_cmd	*cmd;
 	char	**out;
 	int		i;
+	int		j;
 
 	i = check_input(input);
 	if (i < 2)
@@ -126,8 +127,10 @@ int	check_loop(t_prompt *prompt, char *input)
 	while (cmd)
 	{
 		out = NULL;
-		executor(cmd, prompt, &out);
+		j = executor(cmd, prompt, &out, 0);
 		free_matrix(out);
+		if (g_status == 130 || j == -1)
+			break ;
 		cmd = cmd->next;
 	}
 	ft_free_cmds(prompt->cmds);

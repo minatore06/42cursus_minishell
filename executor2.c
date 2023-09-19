@@ -25,7 +25,7 @@ int	builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 
 int	execve_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 {
-	if (!ft_strlen(cmd->path))
+	if (!ft_strlen(cmd->path) && !ft_strlen(cmd->command[0]))
 	{
 		if (!cmd->command[0])
 			return (0);

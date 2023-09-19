@@ -34,20 +34,15 @@ void	do_something_output(char ***out, int fd)
 
 int	exec_cmds_error(int i, char *cmd)
 {
-	if (i == 4)
-		print_error(4, NULL, NULL, 1);
-	else if (i == 1)
-	{
-		print_error(1, NULL, NULL, 1);
-		return (1);
-	}
-	else if (i == 2)
-		print_error(2, NULL, NULL, 1);
+	if (i > 0)
+		print_error(i, NULL, NULL, 1);
 	else
 	{
 		print_error(-9, cmd, NULL, 127);
 		return (127);
 	}
+	if (i == 1)
+		return (1);
 	return (-1);
 }
 

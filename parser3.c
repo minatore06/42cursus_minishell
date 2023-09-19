@@ -95,7 +95,7 @@ char	*get_cmd_path(t_prompt *prompt, char *cmd, char **a)
 	ret = NULL;
 	dirs = get_paths(prompt->envi);
 	if (!dirs)
-		return (NULL);
+		return (ft_strdup(cmd));
 	get_cmd_path2(cmd, &ret, &dirs, 0);
 	if (dirs)
 		free_matrix(dirs);
