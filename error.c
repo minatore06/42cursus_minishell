@@ -96,20 +96,15 @@ int	get_error(int e, char *str1, char *str2)
 	{
 		free(str1);
 		free(str2);
-	}
-	if (e >= 15 || e == 5 || e == 0)
-	{
-		if (e == 15 || e == 16 || e == 17 || e == 18 || e == 19)
-			print_error(e, NULL, NULL, 2);
-		else if (e == 5)
-			print_error(5, NULL, NULL, 2);
 		return (-2);
 	}
-	else if (e == 4)
-		print_error(4, NULL, NULL, 1);
-	else if (e == 2)
-		print_error(2, NULL, NULL, 1);
-	return (-1);
+	else if (e >= 5)
+		print_error(e, NULL, NULL, 2);
+	else if (e <= 4 && e >= 2)
+		print_error(e, NULL, NULL, 1);
+	if (e <= 4 && e >= 2)
+		return (-1);
+	return (-2);
 }
 
 int	count_args(char **cmd)

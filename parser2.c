@@ -26,11 +26,9 @@ int	get_infile(char *file, char append)
 	if (!ft_strlen(a))
 		return (free_file(-3, a));
 	if (append)
-	{
 		i = get_here_doc(a);
-		return (free_file(i, a));
-	}
-	i = open(a, O_RDONLY, 0666);
+	else
+		i = open(a, O_RDONLY, 0666);
 	return (free_file(i, a));
 }
 
@@ -48,15 +46,10 @@ int	get_outfile(char *file, char append)
 	if (!ft_strlen(a))
 		return (free_file(-3, a));
 	if (append)
-	{
 		i = open(a, O_WRONLY | O_CREAT | O_APPEND, 0666);
-		return (free_file(i, a));
-	}
 	else
-	{
 		i = open(a, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		return (free_file(i, a));
-	}
+	return (free_file(i, a));
 }
 
 char	**get_full_cmd(char **cmd_mat)
@@ -112,4 +105,23 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	//
 	return (cmd);
+}
+
+char	**reduce_cmd(char **cmd)
+{
+	int		i;
+	char	**epic_cmd;
+
+	i = 0;
+	while (cmd[i] && cmd[i][0] != '|')
+		i++;
+	if (cmd[i] && cmd[i][0] == '|')
+	{
+		i++;
+		epic_cmd = dup_matrix(&cmd[i]);
+		free_matrix(cmd);
+		return (epic_cmd);
+	}
+	free_matrix(cmd);
+	return (NULL);
 }

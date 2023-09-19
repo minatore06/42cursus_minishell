@@ -36,25 +36,6 @@ void	init_cmd_node(t_cmd *cmd)
 	cmd->outfile = 1;
 }
 
-char	**reduce_cmd(char **cmd)
-{
-	int		i;
-	char	**epic_cmd;
-
-	i = 0;
-	while (cmd[i] && cmd[i][0] != '|')
-		i++;
-	if (cmd[i] && cmd[i][0] == '|')
-	{
-		i++;
-		epic_cmd = dup_matrix(&cmd[i]);
-		free_matrix(cmd);
-		return (epic_cmd);
-	}
-	free_matrix(cmd);
-	return (NULL);
-}
-
 void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp)
 {
 	*tmp = g_status;
@@ -67,6 +48,15 @@ void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp)
 	cmds->path = NULL;
 	cmds->nl = 0;
 	return (cmds);
+}
+
+void	*error_parse2(t_cmd *ret, t_cmd *cmds, char **cmd)
+{
+	cmds->next = NULL;
+	ft_free_cmds(ret);
+	ret = NULL;
+	free_matrix(cmd);
+	return (NULL);
 }
 
 t_cmd	*parser(t_prompt *prompt, char **cmd, int tmp_status, int i)
@@ -82,11 +72,12 @@ t_cmd	*parser(t_prompt *prompt, char **cmd, int tmp_status, int i)
 	{
 		init_cmd_node(cmds);
 		cmds = fill_cmds(prompt, cmds, cmd);
-		if (g_status)
+		if (g_status == 1)
 			cmds = error_parse(ret, cmds, cmd, &tmp_status);
+		else if (g_status > 1)
+			return (error_parse2(ret, cmds, cmd));
 		cmd = reduce_cmd(cmd);
-		i++;
-		if (i < cmd_count)
+		if ((++i) < cmd_count)
 			cmds->next = malloc(sizeof(t_cmd));
 		else
 			cmds->next = NULL;

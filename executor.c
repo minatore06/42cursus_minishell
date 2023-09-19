@@ -53,6 +53,11 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	//
 	prompt->cmds = parser(prompt, cmd_mat, 0, 0);
 	*cmd = prompt->cmds;
+	if (g_status > 1)
+	{
+		ft_free_cmds(*cmd);
+		return (1);
+	}
 	return (0);
 }
 
@@ -116,7 +121,8 @@ int	check_loop(t_prompt *prompt, char *input)
 	if (i < 2)
 		return (i);
 	add_history(input);
-	get_cmd_cmds(prompt, &cmd, input);
+	if (get_cmd_cmds(prompt, &cmd, input))
+		return (1);
 	while (cmd)
 	{
 		out = NULL;

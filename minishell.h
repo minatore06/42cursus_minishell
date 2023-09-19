@@ -152,14 +152,15 @@ int			main(int argc, char **argv, char **env);
 
 int			count_cmds(char **cmd);
 void		init_cmd_node(t_cmd *cmd);
-char		**reduce_cmd(char **cmd);
 void		*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp);
+void		*error_parse2(t_cmd *ret, t_cmd *cmds, char **cmd);
 t_cmd		*parser(t_prompt *prompt, char **cmd, int tmp_status, int i);
 
 int			get_infile(char *file, char append);
 int			get_outfile(char *file, char append);
 char		**get_full_cmd(char **cmd_mat);
 t_cmd		*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat);
+char		**reduce_cmd(char **cmd);
 
 char		**remove_redirects(char **cmd_mat);
 char		**get_paths(char **envi);
