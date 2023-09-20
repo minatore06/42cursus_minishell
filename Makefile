@@ -20,6 +20,7 @@ SRCS = builtins.c \
 		enviroment.c \
 		error.c \
 		exec_cmds.c \
+		exec_builtins.c \
 		executor.c \
 		executor2.c \
 		expander.c \

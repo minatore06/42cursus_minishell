@@ -14,11 +14,28 @@
 
 int	builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 {
-	if (execute_builtins(out, p, cmd))
+	if (!cmd->next && ft_strncmp(cmd->command[0], "exit", 4))
 	{
-		if (reset_input(cmd, saved_stdin))
-			return (-1);
-		return (1);
+		if (execute_builtins(out, p, cmd))
+		{
+			if (reset_input(cmd, saved_stdin))
+				return (-1);
+			return (1);
+		}
+	}
+	else if (!ft_strncmp(cmd->command[0], "exit", 4) && p->n_cmds == 1)
+	{
+		exit_builtin(p, cmd, 1);
+	}
+	else
+	{
+		g_status = exec_builtins(out, cmd, p);
+		if (g_status)
+		{
+			if (reset_input(cmd, saved_stdin))
+				return (-1);
+			return (1);
+		}
 	}
 	return (0);
 }

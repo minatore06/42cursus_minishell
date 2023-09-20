@@ -16,7 +16,6 @@ void	expander_aux(char **cmd, char **envi, int i, int *j)
 {
 	int	k;
 
-	k = 0;
 	if (cmd[i][*j] == '\'')
 	{
 		(*j)++;
@@ -30,6 +29,7 @@ void	expander_aux(char **cmd, char **envi, int i, int *j)
 		(*j)++;
 		while (cmd[i][*j] && cmd[i][*j] != '\"')
 		{
+			k = 0;
 			if (cmd[i][*j] == '$')
 				cmd[i] = search_and_replace(cmd[i], envi, *j, &k);
 			if (k == 0)

@@ -21,36 +21,15 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	g_status = 0;
 	cmd_mat = ft_cmdsplit(input, ' ');
 	free(input);
-	//da qui 
-	ft_printf("split\n");
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	ft_printf("csrp\n");
-	//
 	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
-	//da qui
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	ft_printf("check\n");
-	//
 	cmd_mat = cmd_check_pipes(cmd_mat, 0);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
-	//da qui
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	ft_printf("expa\n");
-	//
 	g_status = saved_g;
 	cmd_mat = expander(cmd_mat, prompt->envi);
 	g_status = 0;
-	//da qui
-	print_matrix(cmd_mat);
-	ft_printf("==================================\n");
-	ft_printf("parser\n");
-	//
 	prompt->cmds = parser(prompt, cmd_mat, 0, 0);
 	*cmd = prompt->cmds;
 	if (g_status > 1)
@@ -97,10 +76,8 @@ int	executor(t_cmd *cmd, t_prompt *p, char ***out, int err)
 			return (-1);
 		saved_stdout = dup(STDOUT_FILENO);
 		err = builtin_execve(saved_stdin, out, cmd, p);
-		if (err)
-			free_matrix(*out);
 	}
-	if (err)
+	if (err && !out)
 		*out = 0;
 	if (print_output(cmd, out, err))
 		return (1);
@@ -124,6 +101,7 @@ int	check_loop(t_prompt *prompt, char *input)
 	add_history(input);
 	if (get_cmd_cmds(prompt, &cmd, input))
 		return (1);
+	prompt->n_cmds = count_cmds_loop(cmd);
 	while (cmd)
 	{
 		out = NULL;

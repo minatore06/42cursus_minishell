@@ -46,12 +46,13 @@ typedef struct s_prompt
 	t_cmd	*cmds;
 	char	**envi;
 	char	**expo;
+	int		n_cmds;
 	pid_t	pid;
 }	t_prompt;
 
 int			ft_is_builtin(char **c, int i);
 int			env_builtin(char ***out, t_prompt *prompt);
-int			exit_builtin(t_prompt *p, t_cmd *cmd);
+int			exit_builtin(t_prompt *p, t_cmd *cmd, int e);
 int			choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a);
 int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 
@@ -74,6 +75,12 @@ void		print_error3(int err);
 void		print_error(int err, char *cmd, char *arg, int g);
 int			get_error(int e, char *str1, char *str2);
 int			count_args(char **cmd);
+
+int			count_cmds_loop(t_cmd *cmd);
+int			exec_builtins_error(int i, char *cmd);
+void		exec_builtins_aux(pid_t pid, int *status);
+int			exec_builtins_child(int fd[2], t_cmd *cmd, t_prompt *p);
+int			exec_builtins(char ***out, t_cmd *cmd, t_prompt *p);
 
 void		do_something_output(char ***out, int fd);
 int			exec_cmds_error(int i, char *cmd);

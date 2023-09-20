@@ -98,12 +98,6 @@ t_cmd	*fill_cmds(t_prompt *prompt, t_cmd *cmd, char **cmd_mat)
 	if (g_status)
 		return (cmd);
 	cmd->path = get_cmd_path(prompt, cmd->command[0], cmd->command);
-	//da qui 
-	print_matrix(cmd->command);
-	ft_printf("path=%s\n", (cmd->path));
-	ft_printf("inf %d outf %d\n", cmd->infile, cmd->outfile);
-	ft_printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	//
 	return (cmd);
 }
 

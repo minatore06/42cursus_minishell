@@ -47,12 +47,13 @@ int	env_builtin(char ***out, t_prompt *prompt)
 	return (0);
 }
 
-int	exit_builtin(t_prompt *p, t_cmd *cmd)
+int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 {
 	int	i;
 
 	i = 0;
-	ft_printf("exit\n");
+	if (e)
+		ft_printf("exit\n");
 	if (cmd->command[1])
 	{
 		while (cmd->command[1][i] && ft_isdigit(cmd->command[1][i]))
@@ -80,7 +81,7 @@ int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
 		g_status = cd_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)
-		g_status = exit_builtin(prompt, cmd);
+		g_status = exit_builtin(prompt, cmd, 0);
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)
 		g_status = echo_builtin(out, cmd);
 	else if (!ft_strncmp(a[0], "env", l) && l == 3)
