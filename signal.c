@@ -14,6 +14,11 @@
 
 void	send_signal(int s)
 {
+	if (s != 0 && s != 1 && s != 2 && s != 127 && s != 130)
+	{
+		g_status = s;
+		return ;
+	}
 	if (s == 0 || s == 2)
 		kill(0, SIGUSR1);
 	else if (s == 1 || s == 127 || s == 130)
