@@ -12,39 +12,25 @@
 
 #include "minishell.h"
 
-int	get_cmd_return(char	**cmd_mat)
+char	**env_builtin_aux(int k, t_prompt *p)
 {
-	free_matrix(cmd_mat);
-	return (1);
-}
-
-char	**join_matrix(char **og_mat, char **og_mat2)
-{
+	char	**tmp;
 	int		i;
 	int		j;
-	char	**new_mat;
 
-	i = 0;
-	while (og_mat && og_mat[i])
-		i++;
-	j = 0;
-	while (og_mat2 && og_mat2[j])
-		j++;
-	new_mat = malloc((i + j + 1) * sizeof(char *));
+	tmp = malloc((k + 1) * sizeof(char *));
 	i = -1;
-	while (og_mat && og_mat[++i])
-		new_mat[i] = ft_strdup(og_mat[i]);
-	j = 0;
-	while (og_mat2 && og_mat2[j])
+	k = 0;
+	while (p->envi[++i])
 	{
-		new_mat[i] = ft_strdup(og_mat2[j]);
-		i++;
-		j++;
+		j = 0;
+		while(p->envi[i][j] && p->envi[i][j] != '=')
+			j++;
+		if (p->envi[i][j])
+			tmp[k++] = ft_strdup(p->envi[i]);
 	}
-	new_mat[i] = 0;
-	free_matrix(og_mat);
-	free_matrix(og_mat2);
-	return (new_mat);
+	tmp[k++] = 0;
+	return (tmp);
 }
 
 void	cd_error3(char **mat, int i, DIR **dp)

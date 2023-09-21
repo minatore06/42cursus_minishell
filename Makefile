@@ -37,6 +37,7 @@ SRCS = builtins.c \
 		parser2.c \
 		parser3.c \
 		pipe.c \
+		signal.c \
 		split_and_trim.c \
 		split_and_trim2.c \
 

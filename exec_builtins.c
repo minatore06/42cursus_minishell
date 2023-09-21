@@ -39,13 +39,22 @@ int	exec_builtins_error(int i, char *cmd)
 	return (-1);
 }
 
-void	exec_builtins_aux(pid_t pid, int *status)
+void	exec_builtins_signal(int i)
 {
-	waitpid(pid, status, 0);
-	if (WIFEXITED(*status))
-		*status = WEXITSTATUS(*status);
-	if (g_status == 130)
-		*status = 130;
+	if (i)
+	{
+		signal(SIGUSR1, SIG_IGN);
+		signal(SIGUSR2, SIG_IGN);
+		signal(SIGINT, manage_signal2);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else
+	{
+		signal(SIGUSR1, receive_signal);
+		signal(SIGUSR2, receive_signal);
+		signal(SIGINT, manage_signal);
+		signal(SIGQUIT, SIG_IGN);
+	}
 }
 
 int	exec_builtins_child(int fd[2], t_cmd *cmd, t_prompt *p)
@@ -72,8 +81,7 @@ int	exec_builtins(char ***out, t_cmd *cmd, t_prompt *p)
 	status = 0;
 	if (pipe(fd) == -1)
 		return (exec_builtins_error(4, NULL));
-	signal(SIGINT, manage_signal2);
-	signal(SIGQUIT, SIG_IGN);
+	exec_builtins_signal(1);
 	pid = fork();
 	if (pid < 0)
 		exit(exec_builtins_error(1, NULL));
@@ -83,9 +91,8 @@ int	exec_builtins(char ***out, t_cmd *cmd, t_prompt *p)
 			return (-1);
 	}
 	close(fd[1]);
-	exec_builtins_aux(pid, &status);
-	signal(SIGINT, manage_signal);
-	signal(SIGQUIT, SIG_IGN);
+	exec_cmds_aux(pid, &status);
+	exec_builtins_signal(0);
 	do_something_output(out, fd[0]);
 	close(fd[0]);
 	return (status);

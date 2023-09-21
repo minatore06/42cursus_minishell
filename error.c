@@ -68,7 +68,7 @@ void	print_error(int err, char *cmd, char *arg, int g)
 {
 	char	*tmp;
 
-	g_status = g;
+	send_signal(g);
 	if (err >= 0)
 		ft_putstr_fd("epicshell: ", 2);
 	if (cmd)

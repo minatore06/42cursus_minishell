@@ -76,8 +76,7 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 	status = 0;
 	if (pipe(fd) == -1)
 		return (exec_cmds_error(4, NULL));
-	signal(SIGINT, manage_signal2);
-	signal(SIGQUIT, SIG_IGN);
+	exec_builtins_signal(1);
 	pid = fork();
 	if (pid < 0)
 		exit(exec_cmds_error(1, NULL));
@@ -88,8 +87,7 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 	}
 	close(fd[1]);
 	exec_cmds_aux(pid, &status);
-	signal(SIGINT, manage_signal);
-	signal(SIGQUIT, SIG_IGN);
+	exec_builtins_signal(0);
 	do_something_output(out, fd[0]);
 	close(fd[0]);
 	return (status);

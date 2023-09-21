@@ -124,7 +124,7 @@ int	export_builtin(char ***out, t_prompt *p, t_cmd *cmd)
 
 	i = 0;
 	p->expo = sort_alpha(p->expo, p->envi);
-	g_status = 0;
+	send_signal(0);
 	if (!cmd->command[1])
 		*out = dup_matrix(p->expo);
 	else

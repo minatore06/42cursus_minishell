@@ -64,9 +64,9 @@ t_prompt	init_cmds(char **argv, char **env)
 	prompt.cmds = NULL;
 	prompt.envi = dup_matrix(env);
 	prompt.n_cmds = 0;
-	g_status = 0;
 	prompt.saved_g = 0;
 	prompt.pid = mini_getpid();
+	send_signal(0);
 	prompt = init_vars(prompt, argv);
 	return (prompt);
 }
@@ -106,6 +106,8 @@ int	main(int argc, char **argv, char **env)
 	char		*str;
 	char		*out;
 
+	signal(SIGUSR1, receive_signal);
+	signal(SIGUSR2, receive_signal);
 	prompt = init_cmds(argv, env);
 	while (argc && argv)
 	{

@@ -41,9 +41,38 @@ int	ft_is_builtin(char **c, int i)
 	return (0);
 }
 
-int	env_builtin(char ***out, t_prompt *prompt)
+int	env_builtin(char ***out, t_prompt *p)
 {
-	*out = dup_matrix(prompt->envi);
+	int		i;
+	int 	j;
+	int 	k;
+	char	**tmp;
+
+	i = -1;
+	k = 0;
+	while (p->envi[++i])
+	{
+		j = 0;
+		while(p->envi[i][j] && p->envi[i][j] != '=')
+			j++;
+		if (p->envi[i][j])
+			k++;
+	}
+	tmp = env_builtin_aux(k, p);
+	// tmp = malloc((k + 1) * sizeof(char *));
+	// i = -1;
+	// k = 0;
+	// while (p->envi[++i])
+	// {
+	// 	j = 0;
+	// 	while(p->envi[i][j] && p->envi[i][j] != '=')
+	// 		j++;
+	// 	if (p->envi[i][j])
+	// 		tmp[k++] = ft_strdup(p->envi[i]);
+	// }
+	// tmp[k++] = 0;
+	*out = dup_matrix(tmp);
+	free_matrix(tmp);
 	return (0);
 }
 
@@ -51,7 +80,7 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 {
 	int	i;
 
-	g_status = p->saved_g;
+	send_signal(p->saved_g);
 	i = 0;
 	if (e)
 		ft_printf("exit\n");
@@ -60,7 +89,7 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 		while (cmd->command[1][i] && ft_isdigit(cmd->command[1][i]))
 			i++;
 		if (!cmd->command[1][i])
-			g_status = ft_atoi(cmd->command[1]);
+			send_signal(ft_atoi(cmd->command[1]));
 		else
 			print_error(12, cmd->command[0], cmd->command[1], 2);
 		if (!cmd->command[1][i] && count_args(cmd->command))
@@ -103,7 +132,7 @@ int	execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd)
 	a = dup_matrix(cmd->command);
 	if (a)
 	{
-		g_status = choose_builtin(out, prompt, cmd, a);
+		send_signal(choose_builtin(out, prompt, cmd, a));
 		free_matrix(a);
 	}
 	return (g_status);

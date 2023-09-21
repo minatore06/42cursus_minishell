@@ -52,7 +52,7 @@ typedef struct s_prompt
 }	t_prompt;
 
 int			ft_is_builtin(char **c, int i);
-int			env_builtin(char ***out, t_prompt *prompt);
+int			env_builtin(char ***out, t_prompt *p);
 int			exit_builtin(t_prompt *p, t_cmd *cmd, int e);
 int			choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a);
 int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
@@ -79,7 +79,7 @@ int			count_args(char **cmd);
 
 int			count_cmds_loop(t_cmd *cmd);
 int			exec_builtins_error(int i, char *cmd);
-void		exec_builtins_aux(pid_t pid, int *status);
+void		exec_builtins_signal(int i);
 int			exec_builtins_child(int fd[2], t_cmd *cmd, t_prompt *p);
 int			exec_builtins(char ***out, t_cmd *cmd, t_prompt *p);
 
@@ -134,8 +134,8 @@ char		**dup_matrix(char **matx);
 char		**extend_matrix(char **og_mat, char *var);
 char		**reduce_matrix(char **og_mat, int x);
 
-void		manage_signal(int s);
-void		manage_signal2(int s);
+int			get_cmd_return(char	**cmd_mat);
+char		**join_matrix(char **og_mat, char **og_mat2);
 int			check_file(char *file);
 int			free_file(int r, char *a);
 int			check_input(char *input);
@@ -146,8 +146,7 @@ void		free_matrix(char **mat);
 void		ft_free_cmds(t_cmd *cmds);
 void		ft_free_all(t_prompt *p);
 
-int			get_cmd_return(char	**cmd_mat);
-char		**join_matrix(char **og_mat, char **og_mat2);
+char		**env_builtin_aux(int k, t_prompt *p);
 void		cd_error3(char **mat, int i, DIR **dp);
 DIR			*cd_error2(t_cmd *cmd, char **str);
 int			cd_error(t_cmd *cmd);
@@ -181,6 +180,12 @@ int			cmd_check_pipes_in_pipe(char **cmd);
 char		**return_pipe(char *tmp, char **new_mat, char **cmd);
 char		**extend_pipe(char **cmd);
 char		**cmd_check_pipes(char **cmd, int i);
+
+void		send_signal(int s);
+void		assign_status(int i, int j);
+void		receive_signal(int s);
+void		manage_signal(int s);
+void		manage_signal2(int s);
 
 char		**cmd_split_aux(char **cmd, int x, int y, char *s);
 void		cmd_split_redir_and_pipes2(char **cmd, int i, int *j);

@@ -39,7 +39,7 @@ void	init_cmd_node(t_cmd *cmd)
 void	*error_parse(t_cmd *ret, t_cmd *cmds, char **cmd, int *tmp)
 {
 	*tmp = g_status;
-	g_status = 0;
+	send_signal(0);
 	(void)cmd;
 	(void)ret;
 	if (cmds->command)
@@ -84,6 +84,6 @@ t_cmd	*parser(t_prompt *prompt, char **cmd, int tmp_status, int i)
 		cmds = cmds->next;
 	}
 	if (tmp_status && !g_status)
-		g_status = tmp_status;
+		send_signal(tmp_status);
 	return (ret);
 }
