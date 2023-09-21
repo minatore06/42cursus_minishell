@@ -15,9 +15,8 @@
 int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 {
 	char	**cmd_mat;
-	int		saved_g;
 
-	saved_g = g_status;
+	prompt->saved_g = g_status;
 	g_status = 0;
 	cmd_mat = ft_cmdsplit(input, ' ');
 	free(input);
@@ -27,7 +26,7 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	cmd_mat = cmd_check_pipes(cmd_mat, 0);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
-	g_status = saved_g;
+	g_status = prompt->saved_g;
 	cmd_mat = expander(cmd_mat, prompt->envi);
 	g_status = 0;
 	prompt->cmds = parser(prompt, cmd_mat, 0, 0);

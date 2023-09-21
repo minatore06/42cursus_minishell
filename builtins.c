@@ -51,6 +51,7 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 {
 	int	i;
 
+	g_status = p->saved_g;
 	i = 0;
 	if (e)
 		ft_printf("exit\n");
@@ -72,29 +73,27 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 {
 	int	l;
+	int	g;
 
+	g = 0;
 	l = ft_strlen(a[0]);
 	if (!ft_strncmp(a[0], "export", l) && l == 6)
-		g_status = export_builtin(out, prompt, cmd);
+		g = export_builtin(out, prompt, cmd);
 	else if (!ft_strncmp(a[0], "unset", l) && l == 5)
-		g_status = unset_builtin(cmd, prompt);
+		g = unset_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
-		g_status = cd_builtin(cmd, prompt);
+		g = cd_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)
-		g_status = exit_builtin(prompt, cmd, 0);
+		g = exit_builtin(prompt, cmd, 0);
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)
-		g_status = echo_builtin(out, cmd);
+		g = echo_builtin(out, cmd);
 	else if (!ft_strncmp(a[0], "env", l) && l == 3)
-		g_status = env_builtin(out, prompt);
+		g = env_builtin(out, prompt);
 	else if (!ft_strncmp(a[0], "pwd", l) && l == 3)
-		g_status = pwd_builtin(out);
+		g = pwd_builtin(out);
 	else
-	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-		exec_cmds(&a, cmd->path, cmd->command, prompt->envi);
-	}
-	return (g_status);
+		g = exec_cmds(&a, cmd->path, cmd->command, prompt->envi);
+	return (g);
 }
 
 int	execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd)

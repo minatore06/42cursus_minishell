@@ -65,6 +65,7 @@ t_prompt	init_cmds(char **argv, char **env)
 	prompt.envi = dup_matrix(env);
 	prompt.n_cmds = 0;
 	g_status = 0;
+	prompt.saved_g = 0;
 	prompt.pid = mini_getpid();
 	prompt = init_vars(prompt, argv);
 	return (prompt);

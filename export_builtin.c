@@ -73,12 +73,12 @@ int	already_present(char **envi, char *cmd)
 	int	i;
 	int	j;
 
-	if (cmd[0] == '=')
+	if (cmd[0] == '=' || ft_isdigit(cmd[0]))
 		return (-1);
 	i = 0;
 	while (cmd[i] && cmd[i] != '=')
 	{
-		if (!ft_isalnum(cmd[i]))
+		if (!ft_isalnum(cmd[i]) && cmd[i] != '_')
 			return (-1);
 		i++;
 	}

@@ -47,6 +47,7 @@ typedef struct s_prompt
 	char	**envi;
 	char	**expo;
 	int		n_cmds;
+	int		saved_g;
 	pid_t	pid;
 }	t_prompt;
 
