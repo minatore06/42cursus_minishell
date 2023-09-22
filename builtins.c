@@ -43,8 +43,8 @@ int	ft_is_builtin(char **c, int i)
 int	env_builtin(char ***out, t_prompt *p)
 {
 	int		i;
-	int 	j;
-	int 	k;
+	int		j;
+	int		k;
 	char	**tmp;
 
 	i = -1;
@@ -52,7 +52,7 @@ int	env_builtin(char ***out, t_prompt *p)
 	while (p->envi[++i])
 	{
 		j = 0;
-		while(p->envi[i][j] && p->envi[i][j] != '=')
+		while (p->envi[i][j] && p->envi[i][j] != '=')
 			j++;
 		if (p->envi[i][j])
 			k++;
@@ -74,7 +74,8 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 		ft_printf("exit\n");
 	if (cmd->command[1])
 	{
-		while (cmd->command[1][i] && (ft_isdigit(cmd->command[1][i]) || (cmd->command[1][i] == '-' && i == 0)))
+		while (cmd->command[1][i] && (ft_isdigit(cmd->command[1][i]) 
+			|| (cmd->command[1][i] == '-' && i == 0)))
 			i++;
 		if (!cmd->command[1][i])
 		{

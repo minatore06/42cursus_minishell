@@ -24,7 +24,7 @@ char	**env_builtin_aux(int k, t_prompt *p)
 	while (p->envi[++i])
 	{
 		j = 0;
-		while(p->envi[i][j] && p->envi[i][j] != '=')
+		while (p->envi[i][j] && p->envi[i][j] != '=')
 			j++;
 		if (p->envi[i][j])
 			tmp[k++] = ft_strdup(p->envi[i]);
