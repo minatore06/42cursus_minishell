@@ -14,22 +14,6 @@
 
 int	g_status;
 
-pid_t	mini_getpid(void)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		print_error(1, NULL, NULL, 1);
-		exit(1);
-	}
-	if (!pid)
-		exit(1);
-	waitpid(pid, NULL, 0);
-	return (pid - 1);
-}
-
 t_prompt	init_vars(t_prompt prompt, char **argv)
 {
 	char	*str;
@@ -65,7 +49,6 @@ t_prompt	init_cmds(char **argv, char **env)
 	prompt.envi = dup_matrix(env);
 	prompt.n_cmds = 0;
 	prompt.saved_g = 0;
-	prompt.pid = mini_getpid();
 	send_signal(0);
 	prompt = init_vars(prompt, argv);
 	return (prompt);
@@ -82,7 +65,7 @@ char	*put_prompt(t_prompt prompt)
 	mat = malloc(sizeof(char *) * 2);
 	mat[0] = ft_strdup("whoami");
 	mat[1] = NULL;
-	exec_cmds(&out, "/usr/bin/whoami", mat, prompt.envi);
+	exec_cmds(&out, "/usr/bin/whoami", mat, &prompt);
 	free_matrix(mat);
 	if (!out)
 		extend_matrix(out, "guest");

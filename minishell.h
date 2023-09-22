@@ -53,7 +53,7 @@ typedef struct s_prompt
 
 int			ft_is_builtin(char **c, int i);
 int			env_builtin(char ***out, t_prompt *p);
-int			exit_builtin(t_prompt *p, t_cmd *cmd, int e);
+int			exit_builtin(t_prompt *p, t_cmd *cmd, int e, char **a);
 int			choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a);
 int			execute_builtins(char ***out, t_prompt *prompt, t_cmd *cmd);
 
@@ -86,8 +86,8 @@ int			exec_builtins(char ***out, t_cmd *cmd, t_prompt *p);
 void		do_something_output(char ***out, int fd);
 int			exec_cmds_error(int i, char *cmd);
 void		exec_cmds_aux(pid_t pid, int *status);
-int			exec_cmds_child(int fd[2], char *cmd, char **args, char **envi);
-int			exec_cmds(char ***out, char *cmd, char **args, char **envi);
+int			exec_cmds_child(int fd[2], char *cmd, char **args, t_prompt *p);
+int			exec_cmds(char ***out, char *cmd, char **args, t_prompt *p);
 
 int			get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input);
 int			set_infile(t_cmd *cmd, int *saved_stdin);
@@ -151,7 +151,6 @@ void		cd_error3(char **mat, int i, DIR **dp);
 DIR			*cd_error2(t_cmd *cmd, char **str);
 int			cd_error(t_cmd *cmd);
 
-pid_t		mini_getpid(void);
 t_prompt	init_vars(t_prompt prompt, char **argv);
 t_prompt	init_cmds(char **argv, char **env);
 char		*put_prompt(t_prompt prompt);
@@ -175,11 +174,11 @@ int			get_cmd_path3(char **ret, char ***dirs, int i);
 void		get_cmd_path2(char *cmd, char **ret, char ***dirs, int i);
 char		*get_cmd_path(t_prompt *prompt, char *cmd, char **a);
 
-int			exit_pipe(char *tmp, char **cmd);
+int			exit_pipe(char *tmp, char **cmd, t_prompt *p);
 int			cmd_check_pipes_in_pipe(char **cmd);
 char		**return_pipe(char *tmp, char **new_mat, char **cmd);
-char		**extend_pipe(char **cmd);
-char		**cmd_check_pipes(char **cmd, int i);
+char		**extend_pipe(char **cmd, t_prompt *p);
+char		**cmd_check_pipes(char **cmd, int i, t_prompt *p);
 
 void		send_signal(int s);
 void		assign_status(int i, int j);

@@ -63,11 +63,11 @@ int	env_builtin(char ***out, t_prompt *p)
 	return (0);
 }
 
-int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
+int	exit_builtin(t_prompt *p, t_cmd *cmd, int e, char **a)
 {
 	int	i;
-	int	x;
 
+	free_matrix(a);
 	send_signal(p->saved_g);
 	i = 0;
 	if (e)
@@ -79,8 +79,8 @@ int	exit_builtin(t_prompt *p, t_cmd *cmd, int e)
 			i++;
 		if (!cmd->command[1][i])
 		{
-			x = ((unsigned int)ft_atoi(cmd->command[1])) % 256;
-			send_signal(x);
+			e = ((unsigned int)ft_atoi(cmd->command[1])) % 256;
+			send_signal(e);
 		}
 		else
 			print_error(12, cmd->command[0], cmd->command[1], 2);
@@ -105,7 +105,7 @@ int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "cd", l) && l == 2)
 		g = cd_builtin(cmd, prompt);
 	else if (!ft_strncmp(a[0], "exit", l) && l == 4)
-		g = exit_builtin(prompt, cmd, 0);
+		g = exit_builtin(prompt, cmd, 0, a);
 	else if (!ft_strncmp(a[0], "echo", l) && l == 4)
 		g = echo_builtin(out, cmd);
 	else if (!ft_strncmp(a[0], "env", l) && l == 3)
@@ -113,7 +113,7 @@ int	choose_builtin(char ***out, t_prompt *prompt, t_cmd *cmd, char **a)
 	else if (!ft_strncmp(a[0], "pwd", l) && l == 3)
 		g = pwd_builtin(out);
 	else
-		g = exec_cmds(&a, cmd->path, cmd->command, prompt->envi);
+		g = exec_cmds(&a, cmd->path, cmd->command, prompt);
 	return (g);
 }
 

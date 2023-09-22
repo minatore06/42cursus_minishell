@@ -24,7 +24,7 @@ int	builtin_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 		}
 	}
 	else if (!ft_strncmp(cmd->command[0], "exit", 4) && p->n_cmds == 1)
-		exit_builtin(p, cmd, 1);
+		exit_builtin(p, cmd, 1, NULL);
 	else
 	{
 		send_signal(exec_builtins(out, cmd, p));
@@ -49,7 +49,7 @@ int	execve_time(int saved_stdin, char ***out, t_cmd *cmd, t_prompt *p)
 			return (-1);
 		return (1);
 	}
-	send_signal(exec_cmds(out, cmd->path, cmd->command, p->envi));
+	send_signal(exec_cmds(out, cmd->path, cmd->command, p));
 	if (!ft_strncmp(cmd->command[0], "clear", 5))
 		cmd->nl = 0;
 	if (g_status)

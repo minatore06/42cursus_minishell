@@ -55,19 +55,23 @@ void	exec_cmds_aux(pid_t pid, int *status)
 		*status = 130;
 }
 
-int	exec_cmds_child(int fd[2], char *cmd, char **args, char **envi)
+int	exec_cmds_child(int fd[2], char *cmd, char **args, t_prompt *p)
 {
+	int	i;
+
 	signal(SIGINT, manage_signal);
 	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
 	if (dup2(fd[1], STDOUT_FILENO) < 0)
 		return (exec_cmds_error(2, NULL));
 	close(fd[1]);
-	execve(cmd, args, envi);
-	exit(exec_cmds_error(-9, cmd));
+	execve(cmd, args, p->envi);
+	i = exec_cmds_error(-9, cmd);
+	ft_free_all(p);
+	exit(i);
 }
 
-int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
+int	exec_cmds(char ***out, char *cmd, char **args, t_prompt *p)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -82,7 +86,7 @@ int	exec_cmds(char ***out, char *cmd, char **args, char **envi)
 		exit(exec_cmds_error(1, NULL));
 	if (!pid)
 	{
-		if (exec_cmds_child(fd, cmd, args, envi))
+		if (exec_cmds_child(fd, cmd, args, p))
 			return (-1);
 	}
 	close(fd[1]);

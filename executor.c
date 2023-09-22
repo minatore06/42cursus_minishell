@@ -23,7 +23,7 @@ int	get_cmd_cmds(t_prompt *prompt, t_cmd **cmd, char *input)
 	cmd_mat = cmd_split_redir_and_pipes(cmd_mat);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
-	cmd_mat = cmd_check_pipes(cmd_mat, 0);
+	cmd_mat = cmd_check_pipes(cmd_mat, 0, prompt);
 	if (g_status)
 		return (get_cmd_return(cmd_mat));
 	send_signal(prompt->saved_g);

@@ -69,6 +69,8 @@ int	exec_builtins_child(int fd[2], t_cmd *cmd, t_prompt *p)
 	i = execute_builtins(&out, p, cmd);
 	print_matrix_fd(out, fd[1], 1);
 	close(fd[1]);
+	free_matrix(out);
+	ft_free_all(p);
 	exit(i);
 }
 
